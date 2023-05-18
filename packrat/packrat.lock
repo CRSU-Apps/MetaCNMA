@@ -18,6 +18,13 @@ Source: CRAN
 Version: 1.1.3
 Hash: 7dcd002c792e29900d0189d8678fea64
 
+Package: DT
+Source: CRAN
+Version: 0.28
+Hash: e724c1c62ff0af426feee1967349dcda
+Requires: crosstalk, htmltools, htmlwidgets, jquerylib, jsonlite,
+    magrittr, promises
+
 Package: R6
 Source: CRAN
 Version: 2.5.1
@@ -36,7 +43,7 @@ Hash: b1bf2b6c6e3387d7f30b7f601eea81cd
 Package: RcppEigen
 Source: CRAN
 Version: 0.3.3.9.3
-Hash: b74beb52bdf94ccb97c12b5ed66ea924
+Hash: a0b4632f196945ee37f6d0517302a4b6
 Requires: Rcpp
 
 Package: abind
@@ -367,7 +374,7 @@ Requires: htmltools, jsonlite, knitr, rmarkdown, yaml
 Package: httpuv
 Source: CRAN
 Version: 1.6.9
-Hash: c73a3b8b4d828f09cd9464acac2bb94e
+Hash: 9857f14e0f0ed6cf0203e7ed719c1863
 Requires: R6, Rcpp, later, promises
 
 Package: httr
@@ -412,7 +419,7 @@ Hash: 7474c78957f4e01d1dd4c04217eab244
 Package: later
 Source: CRAN
 Version: 1.3.0
-Hash: 66092e06f6cb75a6500544fe2802e5be
+Hash: e400d7acc98d75885d145c68dcdbadb2
 Requires: rlang, Rcpp
 
 Package: lazyeval
@@ -442,7 +449,7 @@ Requires: cli, glue, rlang
 Package: lme4
 Source: CRAN
 Version: 1.1-32
-Hash: c22341b2210982d71df60b3ade35246f
+Hash: 818b861b90fee7ebe235e4ab0ccca7d0
 Requires: Rcpp, RcppEigen, minqa, nloptr
 
 Package: lubridate
@@ -505,7 +512,7 @@ Hash: 98a37137be334916af8af26354bb37e9
 Package: minqa
 Source: CRAN
 Version: 1.2.5
-Hash: bcc8bb7ddf0e8bf61231fe71cc3fb6b5
+Hash: 7f80b292cd56351fc60daf2318409a52
 Requires: Rcpp
 
 Package: modelr
@@ -547,7 +554,7 @@ Requires: askpass
 Package: openxlsx
 Source: CRAN
 Version: 4.2.5.1
-Hash: 8d2a80c02a647bab49fb7e77bb3de9b9
+Hash: 7ab3fdea01038decdf63fe85deaf9d47
 Requires: Rcpp, stringi, zip
 
 Package: packrat
@@ -613,7 +620,7 @@ Requires: R6, crayon, hms, prettyunits
 Package: promises
 Source: CRAN
 Version: 1.2.0.1
-Hash: 772bf3af6c490dd8b99fe84b070de62a
+Hash: 6300096113a47534d86021ee4443a50a
 Requires: R6, Rcpp, later, magrittr, rlang
 
 Package: ps
@@ -635,7 +642,7 @@ Hash: fd602edfd7dbf365642e35dd9cc97958
 Package: raster
 Source: CRAN
 Version: 3.6-20
-Hash: b46abdc811341ff9645095a13e2130ac
+Hash: 41ea19e91c69b2bbe561134c749f133b
 Requires: Rcpp, sp, terra
 
 Package: readr
@@ -798,7 +805,7 @@ Hash: 21b50a2d1de81aef7cff670d63572dc7
 Package: terra
 Source: CRAN
 Version: 1.7-29
-Hash: e0c30190db9630366880110fd0afd354
+Hash: 9ba1f2292da317c72543b7c237e9bded
 Requires: Rcpp
 
 Package: testthat
@@ -904,7 +911,7 @@ Requires: cli, diffobj, fansi, glue, rematch2, rlang, tibble
 Package: websocket
 Source: CRAN
 Version: 1.4.1
-Hash: 11028ccaa32594e8fe565cea5959a01a
+Hash: cf378b296165cd6fdf5b02768aa06458
 Requires: AsioHeaders, R6, cpp11, later
 
 Package: withr
