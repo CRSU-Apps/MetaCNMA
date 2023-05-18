@@ -1,0 +1,3 @@
+getDataType <- function(df) {
+  
+}
