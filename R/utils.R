@@ -37,7 +37,7 @@ getDescription <- function(){
 }
 
 getKeywords <- function() {
-  return(getSiteInfoProperty("keywords")[[1]])
+  return(paste(getSiteInfoProperty("keywords")[[1]], collapse = ","))
 }
 
 getRequiredBinaryLongColumns <- function() {
