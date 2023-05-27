@@ -5,11 +5,5 @@ required_binary_long_columns: [Study, Components, Events, Total]
 required_continous_long_columns: [Study, Components, Mean, SD, Total]
 required_binary_wide_columns: [Study, Components.1, Events.1, Total.1]
 required_continous_wide_columns: [Study, Components.1, Mean.1, SD.1, Total.1]
-cookie_message: "<b>In accordance with Data Protection legislation,
-  we would like to inform you of the following before you use our website:</b>
-  <p>We collect your usage data within the MetaCNMA app to perform analytics of usage and improve our app.
-  By clicking I consent below, you consent to the use of data by us through Google Analytics.
-  For details of policy,
-  please check the <a id=\"openPrivacyPolicy\" href=\"#shiny-tab-privacyPolicy\" class=\"action-button shiny-bound-input\" >
-  Privacy Policy</a> tab within the app, 
-  and <a href=\"https://policies.google.com/privacy?hl=en\" target=\"_blank\"> Google Privacy & Terms</a>.</p>"
+description: "MetaCNMA allow you to conduct a Component Network Meta Analysis within a web application"
+keywords: [CNMA, Component, Network, Meta, Analysis]

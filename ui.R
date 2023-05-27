@@ -9,7 +9,12 @@ shinyUI(fluidPage(
     # load custom JS
     tags$script(src = "js.cookie.min.js"),
     tags$script(src = "app.js"),
-    includeHTML("www/favicon/favicon.html")
+    includeHTML("www/favicon/favicon.html"),
+    tags$meta(name="description", content=getDescription()),
+    tags$meta(name="keywords", content=getKeywords()),
+    tags$meta(property="og:title", content=getTitle()),
+    tags$meta(property="og:description", content=getDescription()),
+    tags$meta(property="og:image", content="images/MetaCNMALogo.png")
   ),
   
   useShinyjs(),

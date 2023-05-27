@@ -29,7 +29,15 @@ getAcceptedFileFormats <- function(){
 }
 
 getCookieMessage <- function(){
-  return(getSiteInfoProperty("cookie_message"))
+  includeHTML("html/cookie.html")
+}
+
+getDescription <- function(){
+  return(as.character(getSiteInfoProperty("description")))
+}
+
+getKeywords <- function() {
+  return(getSiteInfoProperty("keywords")[[1]])
 }
 
 getRequiredBinaryLongColumns <- function() {
