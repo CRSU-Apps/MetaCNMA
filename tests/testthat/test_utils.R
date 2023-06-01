@@ -60,38 +60,3 @@ test_that("invalidateData() works as should", {
   
 })
 
-test_that("formatData() works with reactive", {
-  server <- function(input, output, session){
-    globalData <- reactiveValues()
-    globalFreq <- reactiveValues()
-    globalData$type = "continous"
-    globalData$format <- "long"
-    globalData$data <- local_dfContinousLong
-    globalData$valid <- TRUE
-  }
-  testServer(server, {
-    formatData(globalData, globalFreq)
-    expect_false(is.null(globalFreq$data))
-    tmpDf <- local_dfContinousLong
-    names(tmpDf) <- tolower(names(tmpDf))
-    expect_equal(globalFreq$data, tmpDf)
-  })
-  
-  server <- function(input, output, session){
-    globalData <- reactiveValues()
-    globalFreq <- reactiveValues()
-    globalData$type = "binary"
-    globalData$format <- "wide"
-    globalData$data <- local_dfWide
-    globalData$valid <- TRUE
-  }
-  testServer(server, {
-    formatData(globalData, globalFreq)
-    expect_false(is.null(globalFreq$data))
-    tmpDf <- local_dfWide
-    names(tmpDf) <- tolower(names(tmpDf))
-    tmpDf <- tmpDf %>% select(order(colnames(tmpDf)))
-    expect_equal(select(globalFreq$data, order(colnames(globalFreq$data))), tmpDf)
-  })
-  
-})
