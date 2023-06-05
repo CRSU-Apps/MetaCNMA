@@ -30,6 +30,7 @@ formatData <- function(globalData, globalFreq) {
       print("This error occured trying to format the data")
       stop("There is a problem with the data, please check data has been uploaded and is valid")
     }
+    print("formatting data")
     # Copy data from uploaded data to temporary data frame
     tmpDf <- globalData$data
     # Use lowercase column names

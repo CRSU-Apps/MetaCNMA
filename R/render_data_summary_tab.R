@@ -6,7 +6,7 @@ renderDataSummaryTabUI <- function(id){
   )
 }
 
-renderDataSummaryTabServer <- function(id, data, freq, showReloadButton){
+renderDataSummaryTabServer <- function(id, data, freq, tab){
   moduleServer(
     id,
     function(input,
@@ -15,20 +15,30 @@ renderDataSummaryTabServer <- function(id, data, freq, showReloadButton){
              thisId = id,
              globalData = data,
              globalFreq = freq,
-             globalShowReloadButton) {
+             currentTab = tab) {
       
       ns <- NS(id)
-      
+
       observe({
-        tryCatch({
-          if (!isDataValid(globalData)) {
-            output$dataSummary <- defaultNoData(ns)
-          }
-          else{
-            
-          }
-        })
-      })
+        print(currentTab())
+        if(currentTab() == "dataSummary"){
+          print("dataSummary")
+          tryCatch({
+            if (!isDataValid(globalData)) {
+              output$dataSummary <- defaultNoData(ns)
+            }
+            else if (is.null(globalFreq$pairwise)){
+              withProgress({
+                freqPairwise(globalData, globalFreq)
+              },
+              message = "Formatting Data")
+            }
+            else if (!is.null(globalFreq$pairwise)){
+              
+            }
+          })
+        }
+      }) %>% bindEvent(currentTab())
       
       observe({
         loadDefaultData(globalData, globalFreq)

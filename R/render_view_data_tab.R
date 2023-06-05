@@ -6,15 +6,14 @@ renderViewDataTabUI <- function(id) {
 }
 
 renderViewDataTabServer <-
-  function(id, data, freq, showReloadButton) {
+  function(id, data, freq) {
     moduleServer(id,
                  function(input,
                           output,
                           session,
                           thisId = id,
                           globalData = data,
-                          globalFreq = freq,
-                          globalShowReloadButton) {
+                          globalFreq = freq) {
                    ns <- NS(id)
                    
                    observe({

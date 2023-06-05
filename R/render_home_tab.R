@@ -22,7 +22,7 @@ renderHomeTabUI <- function(id) {
   )
 }
 
-renderHomeTabServer <- function(id, data, freq, showReloadButton){
+renderHomeTabServer <- function(id, data, freq){
   moduleServer(
     id,
     function(input,
@@ -30,8 +30,7 @@ renderHomeTabServer <- function(id, data, freq, showReloadButton){
              session,
              thisId = id,
              globalData = data,
-             globalFreq = freq,
-             globalShowReloadButton) {
+             globalFreq = freq) {
       
       ns <- NS(id)
       

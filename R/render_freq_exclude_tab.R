@@ -5,7 +5,7 @@ renderFreqExcludeTabUI <- function(id) {
     )
 }
 
-renderFreqExcludeTabServer <- function(id, data, freq, showReloadButton){
+renderFreqExcludeTabServer <- function(id, data, freq){
   moduleServer(
     id,
     function(input,
@@ -13,8 +13,7 @@ renderFreqExcludeTabServer <- function(id, data, freq, showReloadButton){
              session,
              thisId = id,
              globalData = data,
-             globalFreq = freq,
-             globalShowReloadButton) {
+             globalFreq = freq) {
       
       ns <- NS(id)
       

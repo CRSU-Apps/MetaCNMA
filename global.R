@@ -27,4 +27,3 @@ library(shinyjs)
 # Global Reactive Values
 data <- reactiveValues()
 freq <- reactiveValues()
-showReloadButton <- reactiveVal(F)

@@ -20,7 +20,7 @@ renderDataUploadTabUI <- function(id) {
   ))
 }
 
-renderDataUploadTabServer <- function(id, data, freq, showReloadButton){
+renderDataUploadTabServer <- function(id, data, freq){
   moduleServer(
     id,
     function(input,
@@ -28,8 +28,7 @@ renderDataUploadTabServer <- function(id, data, freq, showReloadButton){
              session,
              thisId = id,
              globalData = data,
-             globalFreq = freq,
-             globalShowReloadButton) {
+             globalFreq = freq) {
       
       ns <- NS(id)
       output$fileInput <- defaultFileInput(ns)

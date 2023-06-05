@@ -6,7 +6,7 @@ renderFreqOutcomeTabUI <- function(id) {
   )
 }
 
-renderFreqOutcomeTabServer <- function(id, data, freq, showReloadButton){
+renderFreqOutcomeTabServer <- function(id, data, freq){
   moduleServer(
     id,
     function(input,
@@ -14,8 +14,7 @@ renderFreqOutcomeTabServer <- function(id, data, freq, showReloadButton){
              session,
              thisId = id,
              globalData = data,
-             globalFreq = freq,
-             globalShowReloadButton) {
+             globalFreq = freq) {
       
       ns <- NS(id)
       observe({

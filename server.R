@@ -12,31 +12,32 @@ shinyServer(function(input, output, session){
   renderDataUploadTabServer(
     "dataUpload_1",
     data,
-    freq,
-    showReloadButton
+    freq
   )
   renderHomeTabServer(
     "home_1",
     data,
-    freq,
-    showReloadButton
+    freq
   )
   renderViewDataTabServer(
     "viewData_1",
     data,
-    freq,
-    showReloadButton
+    freq
   )
   renderFreqOutcomeTabServer(
     "freqOutcome_1",
     data,
-    freq,
-    showReloadButton
+    freq
   )
   renderFreqExcludeTabServer(
     "freqExclude_1",
     data,
+    freq
+  )
+  renderDataSummaryTabServer(
+    "dataSummary_1",
+    data,
     freq,
-    showReloadButton
+    reactive(input$tabs)
   )
 })
