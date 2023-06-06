@@ -2,7 +2,7 @@ renderDataSummaryTabUI <- function(id){
   ns <- NS(id)
   tagList(
     h1("Data Summary", class = "text-center"),
-    uiOutput("dataSummary")
+    uiOutput(ns("dataSummary"))
   )
 }
 
@@ -18,7 +18,7 @@ renderDataSummaryTabServer <- function(id, data, freq, tab){
              currentTab = tab) {
       
       ns <- NS(id)
-
+      # To do change tab names to namespace (to allow reuse of module)
       observe({
         print(currentTab())
         if(currentTab() == "dataSummary"){
@@ -29,12 +29,13 @@ renderDataSummaryTabServer <- function(id, data, freq, tab){
             }
             else if (is.null(globalFreq$pairwise)){
               withProgress({
-                freqPairwise(globalData, globalFreq)
+                globalFreq$pairwise <- freqPairwise(globalData, globalFreq)
               },
               message = "Formatting Data")
+              output$dataSummary <- renderFreqSummary(globalFreq$pairwise)
             }
             else if (!is.null(globalFreq$pairwise)){
-              
+              output$dataSummary <- renderFreqSummary(globalFreq$pairwise)
             }
           })
         }

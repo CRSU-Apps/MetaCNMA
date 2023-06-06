@@ -100,8 +100,8 @@ getCombinationComponents <- function(pw){
     levelList[levels(components)[[i]]] = 0
   }
   for(component in components){
-    print(component)
-    print(levelList[[component]])
+    #print(component)
+    #print(levelList[[component]])
     levelList[[component]] =  levelList[[component]] + 1
   }
   return(levelList)
@@ -112,6 +112,32 @@ getSummary <- function(pw){
     nStudies = nrow(pw),
     components = getComponents(pw),
     combinationComponents = getCombinationComponents(pw)
+  )
+}
+
+componentSummaryAsDataFrame <- function(componentSummary){
+  components <- as_tibble_col(as.numeric(componentSummary), column_name = "Number of Studies")
+  components <- as_tibble(components)
+  components <- cbind(`Combination of components` = names(componentSummary), components)
+  components <- components %>% arrange(desc(`Number of Studies`))
+  return(components)
+}
+
+renderFreqSummary <- function(pw){
+  pwSummary <- getSummary(pw)
+  print(pwSummary)
+  renderUI(
+    tagList(
+      tags$ul(
+        tags$li(paste0("Number of Studies: ", pwSummary$nStudies)),
+        tags$li(paste0("Number of Components: ", length(pwSummary$components))),
+        tags$li(paste0("Components: ", paste0(pwSummary$components, collapse = ", ")))
+      ),
+      DT::renderDataTable(componentSummaryAsDataFrame(pwSummary$combinationComponents),
+                          filter='top',
+                          options = list(scrollX = T, pageLength = 10, info = FALSE,
+                                         lengthMenu = list(c(10, -1), c("10", "All")) ))
+    )
   )
 }
 
