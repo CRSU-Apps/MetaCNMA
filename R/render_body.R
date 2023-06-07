@@ -15,7 +15,7 @@ renderBody <- function() {
     tabItem(tabName = "freqExclude",
             renderFreqExcludeTabUI("freqExclude_1")),
     tabItem(tabName = "forestPlot",
-            renderForestPlotTab()),
+            renderForestPlotTabUI("forestPlot_1")),
     tabItem(tabName = "privacyPolicy",
             renderStaticPageUI("privacyPolicy", "md/privacy_policy.md")),
     tabItem(tabName = "readme",

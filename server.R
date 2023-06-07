@@ -40,4 +40,10 @@ shinyServer(function(input, output, session){
     freq,
     reactive(input$tabs)
   )
+  renderForestPlotTabServer(
+    "forestPlot_1",
+    data,
+    freq,
+    reactive(input$tabs)
+  )
 })

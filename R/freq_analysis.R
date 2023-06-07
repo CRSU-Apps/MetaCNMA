@@ -141,6 +141,12 @@ renderFreqSummary <- function(pw){
   )
 }
 
+getMostFreqComponent <- function(pw){
+  pwSummary <- getSummary(pw)
+  componentSummary <- componentSummaryAsDataFrame(pwSummary$combinationComponents)
+  componentSummary$`Combination of components`[1]
+}
+
 runNetmeta <- function(pw, ref = "Control", comb.random = T){
   net1 <- netmeta(pw, ref= ref, comb.random= comb.random)
 }

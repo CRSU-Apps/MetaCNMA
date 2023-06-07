@@ -58,6 +58,13 @@ getRequiredContinousWideColumns <- function() {
 
 invalidateData <- function(globalData, globalFreq){
   globalData$valid = F
+  invalidateFreq(globalFreq)
+}
+
+invalidateFreq <- function(globalFreq){
+  globalFreq$pairwise
+  globalFreq$nm
+  globalFreq$nc
   globalFreq$valid = F
 }
 
