@@ -2,7 +2,7 @@ renderDataSummaryTabUI <- function(id){
   ns <- NS(id)
   tagList(
     h1("Data Summary", class = "text-center"),
-    uiOutput(ns("dataSummary"))
+    withSpinner(uiOutput(ns("dataSummary")), type = "6")
   )
 }
 

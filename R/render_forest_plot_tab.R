@@ -2,8 +2,10 @@ renderForestPlotTabUI <- function(id) {
   ns <- NS(id)
   tagList(
     h1("Forest Plot"),
+    uiOutput(ns("warning")),
+    uiOutput(ns("info")),
     uiOutput(ns("comparitor")),
-    uiOutput(ns("plot"))
+    withSpinner(uiOutput(ns("plot")), type = 6)
   )
 }
 
@@ -24,33 +26,48 @@ renderForestPlotTabServer <- function(id, data, freq, tab){
       observe({
         print(currentTab())
         if(currentTab() == "forestPlot"){
+          output$warning <- NULL
+          output$info <- NULL
           print("forestPlot")
           tryCatch({
-            if (!isDataValid(globalData)) {
-              output$compator <- defaultNoData(ns)
-              output$plot <- NULL
-              return(NULL)
-            }
-            if (is.null(globalFreq$pairwise)){
-              withProgress({
-                globalFreq$pairwise <- freqPairwise(globalData, globalFreq)
+            withCallingHandlers(
+              warning = function(cond){
+                output$warning <- warningAlert(cond)
               },
-              message = "Formatting Data")
-            }
-            if(is.null(globalFreq$nm)){
-              withProgress({
-                globalFreq$nm <- runNetmeta(globalFreq$pairwise, ref = getMostFreqComponent(globalFreq$pairwise))
+              message = function(cond){
+                output$message <- messageAlert(cond)
               },
-              message = "Running Network Meta Analysis")
-            }
-            if(is.null(globalFreq$nc)){
-              withProgress({
-                globalFreq$nc <- runNetcomb(globalFreq$nm, inactive = getMostFreqComponent(globalFreq$pairwise))
-              },
-              message = "Running Network Meta Analysis")
-            }
-            output$plot <- renderUI(renderNetForest(globalFreq$nc))
-            
+              {
+                if (!isDataValid(globalData)) {
+                  output$compator <- defaultNoData(ns)
+                  output$plot <- NULL
+                  return(NULL)
+                }
+                if (is.null(globalFreq$pairwise)){
+                  withProgress({
+                    globalFreq$pairwise <- freqPairwise(globalData, globalFreq)
+                  },
+                  message = "Formatting Data")
+                }
+                if(is.null(globalFreq$nm)){
+                  withProgress({
+                    globalFreq$nm <- runNetmeta(globalFreq$pairwise, ref = getMostFreqComponent(globalFreq$pairwise))
+                  },
+                  message = "Running Network Meta Analysis")
+                }
+                if(is.null(globalFreq$nc)){
+                  withProgress({
+                    globalFreq$nc <- runNetcomb(globalFreq$nm, inactive = getMostFreqComponent(globalFreq$pairwise))
+                  },
+                  message = "Running Network Meta Analysis")
+                }
+                output$plot <- renderUI(renderNetForest(globalFreq$nc))
+              }
+            )
+          },
+          error = function(e) {
+            errorAlert(e$message)
+            invalidateData(globalData, globalFreq)
           })
         }
       }) %>% bindEvent(currentTab())
