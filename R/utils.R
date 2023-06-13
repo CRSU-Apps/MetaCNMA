@@ -94,6 +94,7 @@ loadDefaultData <- function(globalData, globalFreq) {
     globalData$default = T
     globalData$data <- NULL
     globalData$data <- tmpData$dataFrame
+    globalFreq$valid <- F
     globalData$valid = T
     return(T)
   },

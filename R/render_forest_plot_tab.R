@@ -28,6 +28,7 @@ renderForestPlotTabServer <- function(id, data, freq, tab){
         if(currentTab() == "forestPlot"){
           output$warning <- NULL
           output$info <- NULL
+          output$comparitor <- NULL
           print("forestPlot")
           tryCatch({
             withCallingHandlers(
@@ -39,7 +40,7 @@ renderForestPlotTabServer <- function(id, data, freq, tab){
               },
               {
                 if (!isDataValid(globalData)) {
-                  output$compator <- defaultNoData(ns)
+                  output$comparitor <- defaultNoData(ns)
                   output$plot <- NULL
                   return(NULL)
                 }
@@ -70,11 +71,17 @@ renderForestPlotTabServer <- function(id, data, freq, tab){
             invalidateData(globalData, globalFreq)
           })
         }
-      }) %>% bindEvent(currentTab())
+      }) %>% bindEvent(currentTab(), input$defaultData)
       
       observe({
         loadDefaultData(globalData, globalFreq)
       }) %>% bindEvent(input$defaultData)
+      
+      observe({
+        globalFreq$pairwise <- NULL
+        globalFreq$nm <- NULL
+        globalFreq$nc <- NULL
+      }) %>% bindEvent(globalFreq$valid)
       
     })
 }
