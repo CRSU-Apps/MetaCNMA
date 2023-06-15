@@ -58,13 +58,13 @@ runPairwiseContinous <- function(df){
   
 }
 
-runPairwiseLong <- function(df){
+runPairwiseBinary <- function(df){
   
   pairwise(
     treat = components,
     n = total,
     event = events,
-    studlab = author,
+    studlab = study,
     data = df
   )
   

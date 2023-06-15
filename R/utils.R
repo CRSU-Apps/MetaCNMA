@@ -62,9 +62,10 @@ invalidateData <- function(globalData, globalFreq){
 }
 
 invalidateFreq <- function(globalFreq){
-  globalFreq$pairwise
-  globalFreq$nm
-  globalFreq$nc
+  globalFreq$data <- NULL
+  globalFreq$pairwise <- NULL
+  globalFreq$nm <- NULL
+  globalFreq$nc <- NULL
   globalFreq$valid = F
 }
 
