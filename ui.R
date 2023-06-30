@@ -5,10 +5,10 @@
 shinyUI(fluidPage(
   tags$head(
     # load custom stylesheet
-    includeCSS("www/app.css"),
+    tags$link(rel = "stylesheet", type = "text/css", href = "app.css"),
     # load custom JS
-    tags$script(src = "js.cookie.min.js"),
-    tags$script(src = "app.js"),
+    tags$script(src="js.cookie.min.js"),
+    tags$script(src="app.js"),
     includeHTML("www/favicon/favicon.html"),
     tags$meta(name="description", content=getDescription()),
     tags$meta(name="keywords", content=getKeywords()),
