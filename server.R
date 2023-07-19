@@ -4,6 +4,7 @@
 ##                          Ryan Field                          ##
 ##################################################################
 shinyServer(function(input, output, session){
+  # Load the cookie module from R/cookies.R
   cookieServer(
     id = "cookies_1", 
     globalCookies = reactive(input$cookies),
