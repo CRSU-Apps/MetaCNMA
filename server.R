@@ -4,12 +4,17 @@
 ##                          Ryan Field                          ##
 ##################################################################
 shinyServer(function(input, output, session){
+  # Reactive Values
+  data <- reactiveValues()
+  freq <- reactiveValues()
+  tabs <- reactive(input$tabs)
+  log <- reactiveValues()
   # Load the cookie module from R/cookies.R
   cookieServer(
     id = "cookies_1", 
-    globalCookies = reactive(input$cookies),
-    globalOpenPrivacyPolicy = reactive(input$openPrivacyPolicy),
-    globalSession = reactive(session))
+    cookies = reactive(input$cookies),
+    openPrivacyPolicy = reactive(input$openPrivacyPolicy),
+    parentSession = reactive(session))
   renderDataUploadTabServer(
     "dataUpload_1",
     data,
@@ -39,12 +44,12 @@ shinyServer(function(input, output, session){
     "dataSummary_1",
     data,
     freq,
-    reactive(input$tabs)
+    tabs
   )
   renderForestPlotTabServer(
     "forestPlot_1",
     data,
     freq,
-    reactive(input$tabs)
+    tabs
   )
 })

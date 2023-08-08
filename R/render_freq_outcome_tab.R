@@ -11,18 +11,15 @@ renderFreqOutcomeTabServer <- function(id, data, freq){
     id,
     function(input,
              output,
-             session,
-             thisId = id,
-             globalData = data,
-             globalFreq = freq) {
+             session) {
       
       ns <- NS(id)
       observe({
-        if(!isDataValid(globalData)){
+        if(!isDataValid(data)){
           output$outcome <- defaultNoData(ns)
         }
         else{
-          if(globalData$type == "continous"){
+          if(data$type == "continous"){
             output$outcome <- renderUI(
               tagList(
                 radioButtons(
@@ -30,19 +27,19 @@ renderFreqOutcomeTabServer <- function(id, data, freq){
                   "Select an outcome measure:",
                   c("Mean Difference (MD)" = "md",
                     "Standardised Mean Difference (SMD)" = "smd"),
-                  selected = if_else(!is.null(globalData$measure), globalData$measure, "md")
+                  selected = if_else(!is.null(data$measure), data$measure, "md")
                 ),
                 radioButtons(
                   ns("desirable"),
                   "For treatment rankings a smaller outcome value (MD / SMD) is:",
                   c("Desirable" = 1,
                     "Undesirable" = 0),
-                  selected = if_else(!is.null(globalData$desirable), as.numeric(globalData$desirable), 1)
+                  selected = if_else(!is.null(data$desirable), as.numeric(data$desirable), 1)
                 )
               )
             )
           }
-          else if(globalData$type == "binary"){
+          else if(data$type == "binary"){
             output$outcome <- renderUI(
               tagList(
                 radioButtons(
@@ -51,32 +48,32 @@ renderFreqOutcomeTabServer <- function(id, data, freq){
                   c("Odds Ratio (OR)" = "or",
                     "Risk Ratio (RR)" = "rr",
                     "Risk Difference (RD)" = "rd"),
-                  selected = if_else(!is.null(globalData$measure), globalData$measure, "or")
+                  selected = if_else(!is.null(data$measure), data$measure, "or")
                 ),
                 radioButtons(
                   ns("desirable"),
                   "For treatment rankings an outcome value (OR / RR / RR) less than 1 is:",
                   c("Desirable" = 1,
                     "Undesirable" = 0),
-                  selected = if_else(!is.null(globalData$desirable), as.numeric(globalData$desirable), 0)
+                  selected = if_else(!is.null(data$desirable), as.numeric(data$desirable), 0)
                 )
               )
             )
           }
         }
-      }) %>% bindEvent(globalData$valid)
+      }) %>% bindEvent(data$valid)
       
       observe({
         print("setting outcome measure")
-        globalFreq$outcome <- input$outcome
+        freq$outcome <- input$outcome
         print("setting desirable")
-        globalFreq$desirable <- as.logical(input$desirable)
-        globalFreq$valid <- F
+        freq$desirable <- as.logical(input$desirable)
+        freq$valid <- F
       }) %>% bindEvent(input$outcome, input$desirable)
       
       
       observe({
-        loadDefaultData(globalData, globalFreq)
+        loadDefaultData(data, freq)
       }) %>% bindEvent(input$defaultData)
       
     })

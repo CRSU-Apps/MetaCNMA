@@ -12,18 +12,14 @@ renderDataSummaryTabServer <- function(id, data, freq, tab) {
   moduleServer(id,
                function(input,
                         output,
-                        session,
-                        thisId = id,
-                        globalData = data,
-                        globalFreq = freq,
-                        currentTab = tab) {
+                        session) {
                  ns <- NS(id)
-                 # To do change tab names to namespace (to allow reuse of module)
                  observe({
-                   print(currentTab())
+                   print(tab())
                    output$warning <- NULL
                    output$info <- NULL
-                   if (currentTab() == "dataSummary") {
+                   if (tab() == id) {
+                     print(paste0("tab: ", id))
                      print("dataSummary")
                      tryCatch({
                        withCallingHandlers(
@@ -34,29 +30,29 @@ renderDataSummaryTabServer <- function(id, data, freq, tab) {
                            output$message <- messageAlert(cond)
                          },
                          {
-                           if (!isDataValid(globalData)) {
+                           if (!isDataValid(data)) {
                              output$dataSummary <- defaultNoData(ns)
                            }
-                           else if (is.null(globalFreq$pairwise)) {
+                           else if (is.null(freq$pairwise)) {
                              withProgress({
-                               globalFreq$pairwise <- freqPairwise(globalData, globalFreq)
+                               freq$pairwise <- freqPairwise(data, freq)
                              },
                              message = "Formatting Data")
                              output$dataSummary <-
-                               renderFreqSummary(globalFreq$pairwise)
+                               renderFreqSummary(freq$pairwise)
                            }
-                           else if (!is.null(globalFreq$pairwise)) {
-                             output$dataSummary <- renderFreqSummary(globalFreq$pairwise)
+                           else if (!is.null(freq$pairwise)) {
+                             output$dataSummary <- renderFreqSummary(freq$pairwise)
                            }
                          }
                        )
                        
                      })
                    }
-                 }) %>% bindEvent(currentTab())
+                 }) %>% bindEvent(tab())
                  
                  observe({
-                   loadDefaultData(globalData, globalFreq)
+                   loadDefaultData(data, freq)
                  }) %>% bindEvent(input$defaultData)
                  
                  

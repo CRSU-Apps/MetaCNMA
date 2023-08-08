@@ -14,18 +14,14 @@ renderForestPlotTabServer <- function(id, data, freq, tab){
     id,
     function(input,
              output,
-             session,
-             thisId = id,
-             globalData = data,
-             globalFreq = freq,
-             currentTab = tab) {
+             session) {
       
       ns <- NS(id)
       
       # To do change tab names to namespace (to allow reuse of module)
       observe({
-        print(currentTab())
-        if(currentTab() == "forestPlot"){
+        print(tab())
+        if(tab() == id){
           output$warning <- NULL
           output$info <- NULL
           output$comparitor <- NULL
@@ -39,49 +35,49 @@ renderForestPlotTabServer <- function(id, data, freq, tab){
                 output$message <- messageAlert(cond)
               },
               {
-                if (!isDataValid(globalData)) {
+                if (!isDataValid(data)) {
                   output$comparitor <- defaultNoData(ns)
                   output$plot <- NULL
                   return(NULL)
                 }
-                if (is.null(globalFreq$pairwise)){
+                if (is.null(freq$pairwise)){
                   withProgress({
-                    globalFreq$pairwise <- freqPairwise(globalData, globalFreq)
+                    freq$pairwise <- freqPairwise(data, freq)
                   },
                   message = "Formatting Data")
                 }
-                if(is.null(globalFreq$nm)){
+                if(is.null(freq$nm)){
                   withProgress({
-                    globalFreq$nm <- runNetmeta(globalFreq$pairwise, ref = getMostFreqComponent(globalFreq$pairwise))
+                    freq$nm <- runNetmeta(freq$pairwise, ref = getMostFreqComponent(freq$pairwise))
                   },
                   message = "Running Network Meta Analysis")
                 }
-                if(is.null(globalFreq$nc)){
+                if(is.null(freq$nc)){
                   withProgress({
-                    globalFreq$nc <- runNetcomb(globalFreq$nm, inactive = getMostFreqComponent(globalFreq$pairwise))
+                    freq$nc <- runNetcomb(freq$nm, inactive = getMostFreqComponent(freq$pairwise))
                   },
                   message = "Running Network Meta Analysis")
                 }
-                output$plot <- renderUI(renderNetForest(globalFreq$nc))
+                output$plot <- renderUI(renderNetForest(freq$nc))
               }
             )
           },
           error = function(e) {
             errorAlert(e$message)
-            invalidateData(globalData, globalFreq)
+            invalidateData(data, freq)
           })
         }
-      }) %>% bindEvent(currentTab(), input$defaultData)
+      }) %>% bindEvent(tab(), input$defaultData)
       
       observe({
-        loadDefaultData(globalData, globalFreq)
+        loadDefaultData(data, freq)
       }) %>% bindEvent(input$defaultData)
       
       observe({
-        globalFreq$pairwise <- NULL
-        globalFreq$nm <- NULL
-        globalFreq$nc <- NULL
-      }) %>% bindEvent(globalFreq$valid)
+        freq$pairwise <- NULL
+        freq$nm <- NULL
+        freq$nc <- NULL
+      }) %>% bindEvent(freq$valid)
       
     })
 }

@@ -27,16 +27,13 @@ renderHomeTabServer <- function(id, data, freq){
     id,
     function(input,
              output,
-             session,
-             thisId = id,
-             globalData = data,
-             globalFreq = freq) {
+             session) {
       
       ns <- NS(id)
       
       observe({
-        globalData$type = input$dataType
-        print(globalData$type)
+        data$type = input$dataType
+        print(data$type)
       }) %>% bindEvent(input$dataType)
       
     }

@@ -12,14 +12,10 @@ renderViewDataTabServer <-
     moduleServer(id,
                  function(input,
                           output,
-                          session,
-                          thisId = id,
-                          globalData = data,
-                          globalFreq = freq) {
+                          session) {
                    ns <- NS(id)
                    
                    observe({
-                     #print(globalData)
                      output$warning <- NULL
                      output$info <- NULL
                      tryCatch({
@@ -31,15 +27,15 @@ renderViewDataTabServer <-
                            output$message <- messageAlert(cond)
                          },
                          {
-                           if (!is.null(globalData$data) &
-                               as.logical(globalData$valid)) {
-                             if (!is.null(globalData$default) & as.logical(globalData$default)) {
-                               if (!is.null(globalData$type) & globalData$type == "binary")
+                           if (!is.null(data$data) &
+                               as.logical(data$valid)) {
+                             if (!is.null(data$default) & as.logical(data$default)) {
+                               if (!is.null(data$type) & data$type == "binary")
                                {
                                  output$citation <-
                                    renderUI(includeMarkdown("md/binary_citation.md"))
-                               } else if (!is.null(globalData$type) &
-                                          globalData$type == "continous") {
+                               } else if (!is.null(data$type) &
+                                          data$type == "continous") {
                                  output$citation <-
                                    renderUI(includeMarkdown("md/continous_citation.md"))
                                }
@@ -50,7 +46,7 @@ renderViewDataTabServer <-
                              print("Rendering Data")
                              output$data <- renderUI(tagList(
                                DT::renderDataTable(
-                                 globalData$data,
+                                 data$data,
                                  filter = 'top',
                                  options = list(
                                    scrollX = T,
@@ -74,10 +70,10 @@ renderViewDataTabServer <-
                        output$data <- NULL
                        errorAlert(e$message)
                      })
-                   }) %>% bindEvent(globalData$valid)
+                   }) %>% bindEvent(data$valid)
                    
                    observe({
-                     loadDefaultData(globalData, globalFreq)
+                     loadDefaultData(data, freq)
                    }) %>% bindEvent(input$defaultData)
                    
                    

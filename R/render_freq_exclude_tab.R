@@ -9,10 +9,7 @@ renderFreqExcludeTabServer <- function(id, data, freq) {
   moduleServer(id,
                function(input,
                         output,
-                        session,
-                        thisId = id,
-                        globalData = data,
-                        globalFreq = freq) {
+                        session) {
                  ns <- NS(id)
                  
                  observe({
@@ -27,17 +24,17 @@ renderFreqExcludeTabServer <- function(id, data, freq) {
                          output$message <- messageAlert(cond)
                        },
                        {
-                         if (!isDataValid(globalData)) {
+                         if (!isDataValid(data)) {
                            output$exclude <- defaultNoData(ns)
                          }
                          else{
-                           if (is.null(globalFreq$data)) {
+                           if (is.null(freq$data)) {
                              withProgress({
-                               formatData(globalData, globalFreq)
+                               formatData(data, freq)
                              },
                              message = "Formatting Data")
                            }
-                           studies <- getStudies(globalData, globalFreq)
+                           studies <- getStudies(data, freq)
                            output$exclude <- renderUI(tagList(fluidRow(
                              column(
                                3,
@@ -50,7 +47,7 @@ renderFreqExcludeTabServer <- function(id, data, freq) {
                                9,
                                h3("Data"),
                                DT::renderDataTable(
-                                 globalFreq$data,
+                                 freq$data,
                                  filter = 'top',
                                  options = list(
                                    scrollX = T,
@@ -68,12 +65,12 @@ renderFreqExcludeTabServer <- function(id, data, freq) {
                    error = function(e) {
                      print("this error occured trying to render the studies")
                      errorAlert(e$message)
-                     invalidateData(globalData, globalFreq)
+                     invalidateData(data, freq)
                    })
-                 }) %>% bindEvent(globalData$valid)
+                 }) %>% bindEvent(data$valid)
                  
                  observe({
-                   loadDefaultData(globalData, globalFreq)
+                   loadDefaultData(data, freq)
                  }) %>% bindEvent(input$defaultData)
                  
                })
