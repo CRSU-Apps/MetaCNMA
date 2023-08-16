@@ -36,13 +36,14 @@ renderDataSummaryTabServer <- function(id, data, freq, tab) {
                            else if (is.null(freq$pairwise)) {
                              withProgress({
                                freq$pairwise <- freqPairwise(data, freq)
+                               freq$nConnection <- runNetconnection(freq$pairwise)
                              },
                              message = "Formatting Data")
                              output$dataSummary <-
-                               renderFreqSummary(freq$pairwise)
+                               renderFreqSummary(freq$pairwise, freq$nConnection)
                            }
                            else if (!is.null(freq$pairwise)) {
-                             output$dataSummary <- renderFreqSummary(freq$pairwise)
+                             output$dataSummary <- renderFreqSummary(freq$pairwise, freq$nConnection)
                            }
                          }
                        )

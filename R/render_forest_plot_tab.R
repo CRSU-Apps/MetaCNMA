@@ -43,6 +43,7 @@ renderForestPlotTabServer <- function(id, data, freq, tab){
                 if (is.null(freq$pairwise)){
                   withProgress({
                     freq$pairwise <- freqPairwise(data, freq)
+                    freq$nConnection <- runNetconnection(freq$pairwise)
                   },
                   message = "Formatting Data")
                 }
@@ -58,7 +59,10 @@ renderForestPlotTabServer <- function(id, data, freq, tab){
                   },
                   message = "Running Network Meta Analysis")
                 }
-                output$plot <- renderUI(renderNetForest(freq$nc))
+                if(getOutcomeMeasure(freq$outcome) == "Outcome Measure"){
+                  warning("No Outcome Measure Selected")
+                }
+                output$plot <- renderUI(renderNetForest(freq$nc, getOutcomeMeasure(freq$outcome)))
               }
             )
           },

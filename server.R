@@ -15,13 +15,13 @@ shinyServer(function(input, output, session){
     cookies = reactive(input$cookies),
     openPrivacyPolicy = reactive(input$openPrivacyPolicy),
     parentSession = reactive(session))
-  renderDataUploadTabServer(
-    "dataUpload_1",
+  renderHomeTabServer(
+    "home_1",
     data,
     freq
   )
-  renderHomeTabServer(
-    "home_1",
+  renderDataUploadTabServer(
+    "dataUpload_1",
     data,
     freq
   )

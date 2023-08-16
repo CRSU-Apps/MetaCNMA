@@ -82,6 +82,7 @@ invalidateFreq <- function(freq){
 #' @examples
 loadDefaultData <- function(data, freq) {
   tryCatch({
+    invalidateData(data, freq)
     # Determine which data to load and store in a temporary dataframe
     if (data$type == "binary") {
       tmpData <- defaultDataBinary()
@@ -133,4 +134,18 @@ getStudies <- function(data, freq){
     errorAlert(e$message)
     invalidateData(data, freq)
   })
+}
+
+getOutcomeMeasure <- function(outcome_measure){
+  if(is.null(outcome_measure)){
+    return("Outcome Measure")
+  }
+  case_when(
+    outcome_measure == "md" ~ "Mean Difference (MD)",
+    outcome_measure == "smd" ~ "Standardised Mean Difference (SMD)",
+    outcome_measure == "or" ~ "Odds Ratio (OR)",
+    outcome_measure == "rr" ~ "Risk Ratio (RR)",
+    outcome_measure == "rd" ~ "Risk Difference (RD)",
+    T ~ "Outcome Measure"
+  )
 }

@@ -16,9 +16,11 @@ renderFreqOutcomeTabServer <- function(id, data, freq){
       ns <- NS(id)
       observe({
         if(!isDataValid(data)){
+          print("Data not valid")
           output$outcome <- defaultNoData(ns)
         }
         else{
+          print(paste0("Data Measure: ", data$measure))
           if(data$type == "continous"){
             output$outcome <- renderUI(
               tagList(
@@ -66,12 +68,12 @@ renderFreqOutcomeTabServer <- function(id, data, freq){
       observe({
         print("setting outcome measure")
         freq$outcome <- input$outcome
+        print(paste0("Outcome Measure Set to ", freq$outcome))
         print("setting desirable")
         freq$desirable <- as.logical(input$desirable)
         freq$valid <- F
-      }) %>% bindEvent(input$outcome, input$desirable)
-      
-      
+      }) %>% bindEvent(input$outcome, input$desirable, ignoreInit = T)
+
       observe({
         loadDefaultData(data, freq)
       }) %>% bindEvent(input$defaultData)

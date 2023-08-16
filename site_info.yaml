@@ -5,5 +5,5 @@ required_binary_long_columns: [Study, Components, Events, Total]
 required_continous_long_columns: [Study, Components, Mean, SD, Total]
 required_binary_wide_columns: [Study, Components.1, Events.1, Total.1]
 required_continous_wide_columns: [Study, Components.1, Mean.1, SD.1, Total.1]
-description: "MetaCNMA allow you to conduct a Component Network Meta Analysis within a web application"
+description: "MetaCNMA allows you to conduct a Component Network Meta Analysis within a web application"
 keywords: [CNMA, Component, Network, Meta, Analysis]

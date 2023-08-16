@@ -123,7 +123,7 @@ componentSummaryAsDataFrame <- function(componentSummary){
   return(components)
 }
 
-renderFreqSummary <- function(pw){
+renderFreqSummary <- function(pw, nConnection){
   pwSummary <- getSummary(pw)
   print(pwSummary)
   renderUI(
@@ -131,7 +131,8 @@ renderFreqSummary <- function(pw){
       tags$ul(
         tags$li(paste0("Number of Studies: ", pwSummary$nStudies)),
         tags$li(paste0("Number of Components: ", length(pwSummary$components))),
-        tags$li(paste0("Components: ", paste0(pwSummary$components, collapse = ", ")))
+        tags$li(paste0("Components: ", paste0(pwSummary$components, collapse = ", "))),
+        tags$li(paste0("Is the Network Connected: ", !nConnection$details.disconnected))
       ),
       DT::renderDataTable(componentSummaryAsDataFrame(pwSummary$combinationComponents),
                           filter='top',
@@ -147,18 +148,22 @@ getMostFreqComponent <- function(pw){
   componentSummary$`Combination of components`[1]
 }
 
+runNetconnection <- function(pw){
+  return(netmeta::netconnection(pw))
+}
+
 runNetmeta <- function(pw, ref = "Control", comb.random = T){
-  net1 <- netmeta(pw, ref= ref, comb.random= comb.random)
+  net1 <- netmeta::netmeta(pw, ref= ref, comb.random= comb.random)
 }
 
 renderNetplot <- function(nm){
   renderPlot(
-    netgraph(nm)
+    netmeta::netgraph(nm)
   )
 }
 
 runNetcomb <- function(nm, inactive = "Control"){
-  netcomb(nm, inactive = inactive)
+  netmeta::netcomb(nm, inactive = inactive)
 }
 
 netcombSummary <- function(nc){
@@ -177,12 +182,16 @@ netcombSummary <- function(nc){
   )
 }
 
-renderNetForest <- function(nc, component = T){
+renderNetForest <- function(nc, outcome_measure = "Outcome Measure", component = T){
   if(component){
     print("rendering plot")
     return(renderPlot(forest(nc$Comp.random,
                              sei= nc$seComp.random,
-                             slab = nc$comps)))
+                             slab = nc$comps,
+                             xlab=outcome_measure,
+                             refline=1,
+                             header=c("Component", paste0(outcome_measure, " (95% CrI)")))
+                             ))
   }
   renderPlot(forest(nc))
 }
