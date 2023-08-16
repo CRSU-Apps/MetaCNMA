@@ -1,16 +1,16 @@
 renderSideBar <- function() {
   sidebarMenu(
     id = "tabs",
-    menuItem("Home", tabName = "home", icon = icon("home")),
+    menuItem("Home", tabName = "home_1", icon = icon("home")),
     menuItem(
       "Data",
       icon = icon("database"),
       startExpanded = T,
-      menuSubItem("Upload Data", tabName = "dataUpload", icon = icon("file")),
-      menuSubItem("View Data", tabName = "viewData", icon = icon("table")),
+      menuSubItem("Upload Data", tabName = "dataUpload_1", icon = icon("file")),
+      menuSubItem("View Data", tabName = "viewData_1", icon = icon("table")),
       menuSubItem(
         "Help",
-        tabName = "dataHelp",
+        tabName = "dataHelp_1",
         icon = icon("question")
       )
     ),
@@ -20,22 +20,22 @@ renderSideBar <- function() {
       startExpanded = T,
       menuSubItem(
         "Outcome",
-        tabName = "freqOutcome",
+        tabName = "freqOutcome_1",
         icon = icon("equals")
       ),
       menuSubItem(
         "Exclude Studies",
-        tabName = "freqExclude",
+        tabName = "freqExclude_1",
         icon = icon("text-slash")
       ),
       menuSubItem(
         "Data Summary",
-        tabName = "dataSummary",
+        tabName = "dataSummary_1",
         icon = icon("clipboard-list")
       ),
       menuSubItem(
         "Forest Plot",
-        tabName = "forestPlot",
+        tabName = "forestPlot_1",
         icon = icon("chart-bar")
       )
     ),

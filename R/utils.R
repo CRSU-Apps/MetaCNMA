@@ -56,52 +56,52 @@ getRequiredContinousWideColumns <- function() {
   return(getSiteInfoProperty("required_continous_wide_columns")[[1]])
 }
 
-invalidateData <- function(globalData, globalFreq){
-  globalData$valid = F
-  invalidateFreq(globalFreq)
+invalidateData <- function(data, freq){
+  data$valid = F
+  invalidateFreq(freq)
 }
 
-invalidateFreq <- function(globalFreq){
-  globalFreq$data <- NULL
-  globalFreq$pairwise <- NULL
-  globalFreq$nm <- NULL
-  globalFreq$nc <- NULL
-  globalFreq$valid = F
+invalidateFreq <- function(freq){
+  freq$data <- NULL
+  freq$pairwise <- NULL
+  freq$nm <- NULL
+  freq$nc <- NULL
+  freq$valid = F
 }
 
 
 #' Function to load the default data depending on selected outcome
-#' data is loaded to \code{globalData$data} and sets appropriate values
+#' data is loaded to \code{data$data} and sets appropriate values
 #'
-#' @param globalData reactive values variable for data (see global.R)
-#' @param globalFreq globalFreq reactive values variable for frequentest analysis (see global.R)
+#' @param data reactive values variable for data (see global.R)
+#' @param freq freq reactive values variable for frequentest analysis (see global.R)
 #'
 #' @return True if default data was loaded
 #' @export
 #'
 #' @examples
-loadDefaultData <- function(globalData, globalFreq) {
+loadDefaultData <- function(data, freq) {
   tryCatch({
     # Determine which data to load and store in a temporary dataframe
-    if (globalData$type == "binary") {
+    if (data$type == "binary") {
       tmpData <- defaultDataBinary()
     } else {
       tmpData <- defaultDataContinous()
     }
-    # Set reactive values (ensure globalData$valid is set last)
-    globalData$format <- tmpData$format
-    globalData$measure <- tmpData$measure
-    globalData$desirable <- tmpData$desirable
-    globalData$default = T
-    globalData$data <- NULL
-    globalData$data <- tmpData$dataFrame
-    globalFreq$valid <- F
-    globalData$valid = T
+    # Set reactive values (ensure data$valid is set last)
+    data$format <- tmpData$format
+    data$measure <- tmpData$measure
+    data$desirable <- tmpData$desirable
+    data$default = T
+    data$data <- NULL
+    data$data <- tmpData$dataFrame
+    freq$valid <- F
+    data$valid = T
     return(T)
   },
   error = function(e) {
     errorAlert(e$message)
-    invalidateData(globalData, globalFreq)
+    invalidateData(data, freq)
     return(F)
   })
   
@@ -109,28 +109,28 @@ loadDefaultData <- function(globalData, globalFreq) {
 
 #' Get the studies from the formatted data
 #'
-#' @param globalData reactive values variable for data (see global.R)
-#' @param globalFreq reactive values variable for frequentest analysis (see global.R)
+#' @param data reactive values variable for data (see global.R)
+#' @param freq reactive values variable for frequentest analysis (see global.R)
 #'
-#' @return a \code{list} of studies derived from the formatted data (globalFreq$data)
+#' @return a \code{list} of studies derived from the formatted data (freq$data)
 #' @export
 #'
 #' @examples
-getStudies <- function(globalData, globalFreq){
+getStudies <- function(data, freq){
   tryCatch({
     # If the data is not valid do not try to determine the studies
-    if( !isDataValid(globalData) | is.null(globalFreq$data)){
+    if( !isDataValid(data) | is.null(freq$data)){
       print("this error occured trying to determine the studies from the data")
       stop("There is a problem with the data, please check data has been uploaded and is valid")
     }
-    if(is.null(globalFreq$studies)){
-      studies <- as.factor(globalFreq$data$study)
-      globalFreq$studies <- levels(studies)
+    if(is.null(freq$studies)){
+      studies <- as.factor(freq$data$study)
+      freq$studies <- levels(studies)
     }
-    return(globalFreq$studies)
+    return(freq$studies)
   },
   error = function(e) {
     errorAlert(e$message)
-    invalidateData(globalData, globalFreq)
+    invalidateData(data, freq)
   })
 }

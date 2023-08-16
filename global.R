@@ -23,7 +23,3 @@ library(leaflet)
 library(collapsibleTree)
 library(shinycssloaders)
 library(shinyjs)
-
-# Global Reactive Values
-data <- reactiveValues()
-freq <- reactiveValues()

@@ -26,10 +26,8 @@ renderDataUploadTabServer <- function(id, data, freq) {
   moduleServer(id,
                function(input,
                         output,
-                        session,
-                        thisId = id,
-                        globalData = data,
-                        globalFreq = freq) {
+                        session) 
+                        {
                  ns <- NS(id)
                  output$fileInput <- defaultFileInput(ns)
                  
@@ -37,8 +35,7 @@ renderDataUploadTabServer <- function(id, data, freq) {
                    print("Invalidating Data")
                    output$reloadButton <- NULL
                    output$fileInput <- defaultFileInput(ns)
-                   invalidateData(globalData, globalFreq)
-                   #globalData$data <- NULL
+                   invalidateData(data, freq)
                  }) %>% bindEvent(input$reloadButton)
                  
                  observe({
@@ -53,26 +50,20 @@ renderDataUploadTabServer <- function(id, data, freq) {
                          output$message <- messageAlert(cond)
                        },
                        {
-                         invalidateData(globalData, globalFreq)
-                         if (validateInput(input$data, globalData$type)) {
+                         invalidateData(data, freq)
+                         if (validateInput(input$data, data$type)) {
                            output$reloadButton <- defaultReloadButton(ns)
                            tmpData <- rio::import(input$data$datapath)
-                           globalData$format <-
+                           data$format <-
                              if_else(suppressMessages(isWide(tmpData)), "wide", "long")
-                           globalData$default = F
-                           globalFreq$valid = F
-                           #globalData$data <- NULL
-                           globalData$data <- tmpData
-                           globalData$valid = T
-                           # print(globalData$data)
-                           # print(globalData$format)
-                           # print(globalData$default)
-                           # print(globalData$valid)
-                           # print(globalFreq$valid)
+                           data$default = F
+                           freq$valid = F
+                           data$data <- tmpData
+                           data$valid = T
                            print("Data valid and loaded")
                          }
                          else{
-                           invalidateData(globalData, globalFreq)
+                           invalidateData(data, freq)
                          }
                        }
                      )
@@ -80,18 +71,18 @@ renderDataUploadTabServer <- function(id, data, freq) {
                    },
                    error = function(e) {
                      errorAlert(e$message)
-                     invalidateData(globalData, globalFreq)
+                     invalidateData(data, freq)
                    })
                    
                  }) %>% bindEvent(input$data)
                  
                  observe({
-                   if (!is.null(globalData$valid) & !as.logical(globalData$valid)) {
+                   if (!is.null(data$valid) & !as.logical(data$valid)) {
                      print("Resetting File Input")
                      output$fileInput <- defaultFileInput(ns)
                      output$reloadData <- NULL
                    }
-                 }) %>% bindEvent(globalData$valid, ignoreInit = T)
+                 }) %>% bindEvent(data$valid, ignoreInit = T)
                  
                  observe({
                    output$warning <- NULL
@@ -106,17 +97,17 @@ renderDataUploadTabServer <- function(id, data, freq) {
                        },
                        {
                          print("resetting data")
-                         invalidateData(globalData, globalFreq)
+                         invalidateData(data, freq)
                          print("loading default data")
-                         loadDefaultData(globalData, globalFreq)
+                         loadDefaultData(data, freq)
                        }
                      )
                    },
                    error = function(e) {
                      errorAlert(e$message)
-                     invalidateData(globalData, globalFreq)
+                     invalidateData(data, freq)
                    })
-                 }) %>% bindEvent(globalData$type)
+                 }) %>% bindEvent(data$type)
                  
                  
                })
