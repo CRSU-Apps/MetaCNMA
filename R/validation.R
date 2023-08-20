@@ -112,8 +112,8 @@ validateBinaryLong <- function(df){
   validateColumnNames(df, requiredColumns)
 }
 
-validateContinousLong <- function(df){
-  requiredColumns <- getRequiredContinousLongColumns()
+validateContinuousLong <- function(df){
+  requiredColumns <- getRequiredContinuousLongColumns()
   validateColumnNames(df, requiredColumns)
 }
 
@@ -122,8 +122,8 @@ validateBinaryWide <- function(df){
   validateWide(df, requiredColumns)
 }
 
-validateContinousWide <- function(df){
-  requiredColumns <- getRequiredContinousWideColumns()
+validateContinuousWide <- function(df){
+  requiredColumns <- getRequiredContinuousWideColumns()
   validateWide(df, requiredColumns)
 }
 
@@ -171,8 +171,8 @@ validateInput <- function(inputFile, type){
       if(type == "binary"){
         return(validateBinaryWide(df))
       }
-      else if(type == "continous"){
-        validateContinousWide(df)
+      else if(type == "continuous"){
+        validateContinuousWide(df)
       }
     }
     else {
@@ -180,8 +180,8 @@ validateInput <- function(inputFile, type){
       if(type == "binary"){
         return(validateBinaryLong(df))
       }
-      else if(type == "continous"){
-        return(validateContinousLong(df))
+      else if(type == "continuous"){
+        return(validateContinuousLong(df))
       }
     }
     return(F)

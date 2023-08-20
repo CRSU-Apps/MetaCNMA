@@ -34,13 +34,14 @@ defaultNoData <- function(ns){
 }
   
 
-defaultDataContinous<- function(){
+defaultDataContinuous<- function(){
   return(list(
-    dataFrame = import("data/continous.Rds"),
-    type = "continous",
+    dataFrame = import("data/continuous.Rds"),
+    type = "continuous",
     format = "long",
     measure = "md",
-    desirable = T
+    desirable = T,
+    outcomeName = "Total cholesterol, mmol/L"
   ))
 }
 
@@ -50,7 +51,8 @@ defaultDataBinary<- function(){
     type = "binary",
     format = "long",
     measure = "or",
-    desirable = F
+    desirable = F,
+    outcomeName = "Incidence of Delirium"
   ))
 }
 

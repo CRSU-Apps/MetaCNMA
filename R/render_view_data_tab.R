@@ -35,9 +35,9 @@ renderViewDataTabServer <-
                                  output$citation <-
                                    renderUI(includeMarkdown("md/binary_citation.md"))
                                } else if (!is.null(data$type) &
-                                          data$type == "continous") {
+                                          data$type == "continuous") {
                                  output$citation <-
-                                   renderUI(includeMarkdown("md/continous_citation.md"))
+                                   renderUI(includeMarkdown("md/continuous_citation.md"))
                                }
                              }
                              else {

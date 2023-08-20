@@ -13,7 +13,7 @@ renderHomeTabUI <- function(id) {
       radioButtons(
         ns("dataType"),
         "Select the Type of Data",
-        c("Continous" = "continous",
+        c("Continuous" = "continuous",
           "Binary" = "binary")
       ),
       offset = 3

@@ -20,7 +20,7 @@ shinyUI(
       # Open Graph Tags
       tags$meta(property="og:title", content=getTitle()), # getTitle from R/utils.R
       tags$meta(property="og:description", content=getDescription()), # getDescription from R/utils.R
-      tags$meta(property="og:image", content="images/MetaCNMALogo.png")
+      tags$meta(property="og:image", content="https://raw.githubusercontent.com/CRSU-Apps/MetaDTA/main/www/images/MetaCNMALogo.png")
     ),
     
     # Set up Shinyjs

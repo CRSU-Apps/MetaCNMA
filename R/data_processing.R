@@ -39,8 +39,8 @@ formatData <- function(data, freq) {
     reqColumns <- NULL
     # If long format
     if(data$format == "long"){
-      if(data$type == "continous"){
-        reqColumns <- tolower(getRequiredContinousLongColumns())
+      if(data$type == "continuous"){
+        reqColumns <- tolower(getRequiredContinuousLongColumns())
       }
       else {
         reqColumns <- tolower(getRequiredBinaryLongColumns())
@@ -48,8 +48,8 @@ formatData <- function(data, freq) {
     }
     # Else if wide
     else if(data$format == "wide") {
-      if(data$type == "continous"){
-        reqColumns <- tolower(getRequiredContinousWideColumns())
+      if(data$type == "continuous"){
+        reqColumns <- tolower(getRequiredContinuousWideColumns())
       }
       else {
         reqColumns <- tolower(getRequiredBinaryWideColumns())

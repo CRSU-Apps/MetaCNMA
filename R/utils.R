@@ -44,16 +44,16 @@ getRequiredBinaryLongColumns <- function() {
   return(getSiteInfoProperty("required_binary_long_columns")[[1]])
 }
 
-getRequiredContinousLongColumns <- function() {
-  return(getSiteInfoProperty("required_continous_long_columns")[[1]])
+getRequiredContinuousLongColumns <- function() {
+  return(getSiteInfoProperty("required_continuous_long_columns")[[1]])
 }
 
 getRequiredBinaryWideColumns <- function() {
   return(getSiteInfoProperty("required_binary_wide_columns")[[1]])
 }
 
-getRequiredContinousWideColumns <- function() {
-  return(getSiteInfoProperty("required_continous_wide_columns")[[1]])
+getRequiredContinuousWideColumns <- function() {
+  return(getSiteInfoProperty("required_continuous_wide_columns")[[1]])
 }
 
 invalidateData <- function(data, freq){
@@ -87,12 +87,13 @@ loadDefaultData <- function(data, freq) {
     if (data$type == "binary") {
       tmpData <- defaultDataBinary()
     } else {
-      tmpData <- defaultDataContinous()
+      tmpData <- defaultDataContinuous()
     }
     # Set reactive values (ensure data$valid is set last)
     data$format <- tmpData$format
     data$measure <- tmpData$measure
     data$desirable <- tmpData$desirable
+    data$outcomeName <- tmpData$outcomeName
     data$default = T
     data$data <- NULL
     data$data <- tmpData$dataFrame

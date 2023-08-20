@@ -19,7 +19,7 @@ renderSideBar <- function() {
       icon = icon("microscope"),
       startExpanded = T,
       menuSubItem(
-        "Outcome",
+        "Outcome & Model Settings",
         tabName = "freqOutcome_1",
         icon = icon("equals")
       ),

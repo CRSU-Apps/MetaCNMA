@@ -28,8 +28,8 @@ freqPairwise <- function(globalData, globalFreq){
       stop("Error: DF001 data format unknown")
     }
     print("running pairwise")
-    if(globalData$type == "continous"){
-      globalFreq$pairwise <- runPairwiseContinous(tmpData)
+    if(globalData$type == "continuous"){
+      globalFreq$pairwise <- runPairwiseContinuous(tmpData)
     }
     else if(globalData$type == "binary"){
       globalFreq$pairwise <- runPairwiseBinary(tmpData)
@@ -45,7 +45,7 @@ freqPairwise <- function(globalData, globalFreq){
   })
 }
 
-runPairwiseContinous <- function(df){
+runPairwiseContinuous <- function(df){
   
   pairwise(
     treat = components,
@@ -118,7 +118,7 @@ getSummary <- function(pw){
 componentSummaryAsDataFrame <- function(componentSummary){
   components <- as_tibble_col(as.numeric(componentSummary), column_name = "Number of Studies")
   components <- as_tibble(components)
-  components <- cbind(`Combination of components` = names(componentSummary), components)
+  components <- cbind(`Combination of Components` = names(componentSummary), components)
   components <- components %>% arrange(desc(`Number of Studies`))
   return(components)
 }
@@ -145,15 +145,16 @@ renderFreqSummary <- function(pw, nConnection){
 getMostFreqComponent <- function(pw){
   pwSummary <- getSummary(pw)
   componentSummary <- componentSummaryAsDataFrame(pwSummary$combinationComponents)
-  componentSummary$`Combination of components`[1]
+  componentSummary$`Combination of Components`[1]
 }
 
 runNetconnection <- function(pw){
   return(netmeta::netconnection(pw))
 }
 
-runNetmeta <- function(pw, ref = "Control", comb.random = T){
-  net1 <- netmeta::netmeta(pw, ref= ref, comb.random= comb.random)
+runNetmeta <- function(pw, ref = "Control", random_eff = F){
+  print("running netmeta")
+  return(netmeta::netmeta(pw, ref= ref, comb.random= random_eff))
 }
 
 renderNetplot <- function(nm){
@@ -163,7 +164,8 @@ renderNetplot <- function(nm){
 }
 
 runNetcomb <- function(nm, inactive = "Control"){
-  netmeta::netcomb(nm, inactive = inactive)
+  print("running netcomb")
+  return(netmeta::netcomb(nm, inactive = inactive))
 }
 
 netcombSummary <- function(nc){
@@ -182,16 +184,19 @@ netcombSummary <- function(nc){
   )
 }
 
-renderNetForest <- function(nc, outcome_measure = "Outcome Measure", component = T){
+renderNetForest <- function(nc, data_type, outcome_measure = "Outcome Measure", component_labels = NULL, component = T){
   if(component){
     print("rendering plot")
-    return(renderPlot(forest(nc$Comp.random,
-                             sei= nc$seComp.random,
-                             slab = nc$comps,
-                             xlab=outcome_measure,
-                             refline=1,
-                             header=c("Component", paste0(outcome_measure, " (95% CrI)")))
-                             ))
+    
+    return(renderPlot(
+      metafor::forest(ifelse(rep(nc$random, length(nc$comps)), nc$Comp.random, nc$Comp.common),
+             sei= ifelse(rep(nc$random, length(nc$comps)), nc$seComp.random, nc$seComp.common),
+             slab = ifelse(rep(!is.null(component_labels), length(nc$comps)), component_labels, nc$comps),
+             xlab=outcome_measure,
+             refline= ifelse(data_type == "binary", 1, 0),
+             transf= ifelse(data_type == "binary", exp, function(x){x}),
+             header=c("Component", paste0(outcome_measure, " (95% CrI)")))
+    ))
   }
   renderPlot(forest(nc))
 }

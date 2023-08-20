@@ -14,13 +14,13 @@ local_dfWide <- data.frame(
 )
 
 #print(getwd())
-local_dfContinousLong <- import("../../data/continous.Rds")
+local_dfContinuousLong <- import("../../data/continuous.Rds")
 local_dfBinaryLong <- import("../../data/binary.Rds")
 
 context("Testing Utils")
 
 test_that("isDataValid() works as should", {
-  local_globalData <- list(type = "continous")
+  local_globalData <- list(type = "continuous")
   expect_false(isDataValid(local_globalData))
   local_globalData$format <- "long"
   expect_false(isDataValid(local_globalData))
@@ -36,7 +36,7 @@ test_that("isDataValid() works with reactive", {
     globalFreq <- reactiveValues()
   }
   testServer(server, {
-    globalData$type = "continous"
+    globalData$type = "continuous"
     expect_false(isDataValid(globalData))
     globalData$format <- "long"
     expect_false(isDataValid(globalData))

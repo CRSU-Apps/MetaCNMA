@@ -23,7 +23,7 @@ renderDataHelpBinaryTab <- function() {
     )
   )}
 
-renderDataHelpContinousTab <- function() {
+renderDataHelpContinuousTab <- function() {
   tagList(
     h1("Coninous Data"),
     box(
@@ -34,7 +34,7 @@ renderDataHelpContinousTab <- function() {
       solidHeader = FALSE, 
       collapsible = TRUE,
       div(class = "cnma-table",
-      includeMarkdown("md/continous_long.md"))
+      includeMarkdown("md/continuous_long.md"))
     ),
     box(
       title = "Wide Format", 
@@ -44,7 +44,7 @@ renderDataHelpContinousTab <- function() {
       solidHeader = FALSE, 
       collapsible = TRUE,
       div(class = "cnma-table",
-      includeMarkdown("md/continous_wide.md"))
+      includeMarkdown("md/continuous_wide.md"))
     )
   )}
 
@@ -54,7 +54,7 @@ renderDataHelpTab <- function(){
     p("Data needs to be in arm-based format and can be uploaded as either a csv or excel (xlsx)"),
     
     tabsetPanel(type = "tabs",
-                tabPanel("Continous data", renderDataHelpContinousTab()),
+                tabPanel("Continuous data", renderDataHelpContinuousTab()),
                 tabPanel("Binary Data", renderDataHelpBinaryTab())
     )
     

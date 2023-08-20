@@ -14,7 +14,7 @@ local_dfWide <- data.frame(
 )
 
 #print(getwd())
-local_dfContinousLong <- import("../../data/continous.Rds")
+local_dfContinuousLong <- import("../../data/continuous.Rds")
 local_dfBinaryLong <- import("../../data/binary.Rds")
 
 context("Testing data_processing")
@@ -23,15 +23,15 @@ test_that("formatData() works with reactive", {
   server <- function(input, output, session){
     globalData <- reactiveValues()
     globalFreq <- reactiveValues()
-    globalData$type = "continous"
+    globalData$type = "continuous"
     globalData$format <- "long"
-    globalData$data <- local_dfContinousLong
+    globalData$data <- local_dfContinuousLong
     globalData$valid <- TRUE
   }
   testServer(server, {
     formatData(globalData, globalFreq)
     expect_false(is.null(globalFreq$data))
-    tmpDf <- local_dfContinousLong
+    tmpDf <- local_dfContinuousLong
     names(tmpDf) <- tolower(names(tmpDf))
     expect_equal(globalFreq$data, tmpDf)
   })
