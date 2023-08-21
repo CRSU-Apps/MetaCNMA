@@ -57,12 +57,16 @@ getRequiredContinuousWideColumns <- function() {
 }
 
 invalidateData <- function(data, freq){
-  data$valid = F
   invalidateFreq(freq)
+  data$valid = F
 }
 
 invalidateFreq <- function(freq){
   freq$data <- NULL
+  freq$outcome <- NULL
+  freq$desirable <- NULL
+  freq$randomEffects <- NULL
+  freq$outcomeName <- NULL
   freq$pairwise <- NULL
   freq$nm <- NULL
   freq$nc <- NULL
@@ -94,6 +98,7 @@ loadDefaultData <- function(data, freq) {
     data$measure <- tmpData$measure
     data$desirable <- tmpData$desirable
     data$outcomeName <- tmpData$outcomeName
+    data$randomEffects <- tmpData$randomEffects
     data$default = T
     data$data <- NULL
     data$data <- tmpData$dataFrame

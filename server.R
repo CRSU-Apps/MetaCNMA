@@ -33,7 +33,8 @@ shinyServer(function(input, output, session){
   renderFreqOutcomeTabServer(
     "freqOutcome_1",
     data,
-    freq
+    freq,
+    tabs
   )
   renderFreqExcludeTabServer(
     "freqExclude_1",

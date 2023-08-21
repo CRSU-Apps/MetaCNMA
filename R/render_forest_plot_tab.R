@@ -49,7 +49,7 @@ renderForestPlotTabServer <- function(id, data, freq, tab){
                 }
                 if(is.null(freq$nm)){
                   withProgress({
-                    freq$nm <- runNetmeta(freq$pairwise, ref = getMostFreqComponent(freq$pairwise), random_eff = freq$randomEffects)
+                    freq$nm <- runNetmeta(freq$pairwise, ref = getMostFreqComponent(freq$pairwise), random_eff = as.logical(freq$randomEffects))
                   },
                   message = "Running Network Meta Analysis")
                 }
@@ -62,7 +62,7 @@ renderForestPlotTabServer <- function(id, data, freq, tab){
                 if(getOutcomeMeasure(freq$outcome) == "Outcome Measure"){
                   warning("No Outcome Measure Selected")
                 }
-                output$comparitor <- renderUI(h4(paste0("Forest plot of the ", getOutcomeMeasure(freq$outcome), " of ", freq$outcomeName, " of Components when Compared Against the Component: ", getMostFreqComponent(freq$pairwise))))
+                output$comparitor <- renderUI(h4(paste0("Forest plot showing the ", getOutcomeMeasure(freq$outcome), " of ", freq$outcomeName, " when compared against ", getMostFreqComponent(freq$pairwise))))
                 output$plot <- renderUI(renderNetForest(freq$nc, data$type, getOutcomeMeasure(freq$outcome)))
               }
             )

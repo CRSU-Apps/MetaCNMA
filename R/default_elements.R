@@ -40,8 +40,9 @@ defaultDataContinuous<- function(){
     type = "continuous",
     format = "long",
     measure = "md",
-    desirable = T,
-    outcomeName = "Total cholesterol, mmol/L"
+    desirable = 1,
+    randomEffects = 0,
+    outcomeName = "Total Cholesterol Level (mmol/L)"
   ))
 }
 
@@ -51,7 +52,8 @@ defaultDataBinary<- function(){
     type = "binary",
     format = "long",
     measure = "or",
-    desirable = F,
+    desirable = 0,
+    randomEffects = 0,
     outcomeName = "Incidence of Delirium"
   ))
 }

@@ -195,7 +195,7 @@ renderNetForest <- function(nc, data_type, outcome_measure = "Outcome Measure", 
              xlab=outcome_measure,
              refline= ifelse(data_type == "binary", 1, 0),
              transf= ifelse(data_type == "binary", exp, function(x){x}),
-             header=c("Component", paste0(outcome_measure, " (95% CrI)")))
+             header=c("Component", paste0(outcome_measure, " (95% CI)")))
     ))
   }
   renderPlot(forest(nc))
