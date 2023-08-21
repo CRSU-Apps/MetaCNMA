@@ -58,7 +58,11 @@ renderFreqOutcomeTabServer <- function(id, data, freq, tab){
                     "Risk Ratio (RR)" = "rr",
                     "Risk Difference (RD)" = "rd"),
                   selected = ifelse(!is.null(freq$measure), freq$measure, "or")
-                ),
+                )
+              )
+            )
+            output$desirable <- renderUI(
+              tagList(
                 radioButtons(
                   ns("desirable"),
                   "For treatment rankings an outcome value (OR / RR / RR) less than 1 is:",
@@ -92,6 +96,14 @@ renderFreqOutcomeTabServer <- function(id, data, freq, tab){
         }
       }) %>% bindEvent(data$valid)
       
+      outcomeName <- reactiveValues()
+      observe({
+        if(tab() == id){
+          invalidateLater(3000, session)
+          outcomeName$text <- isolate(input$outcomeName)
+        }
+      }) %>% bindEvent(input$outcomeName, ignoreInit = T)
+      
       observe({
         if(tab() != id & data$default){
           print("Setting default measures")
@@ -115,11 +127,7 @@ renderFreqOutcomeTabServer <- function(id, data, freq, tab){
           print(paste0("Outcome Name Set to ", freq$outcomeName))
         }
         freq$valid <- F
-      }) %>% bindEvent(input$outcome, input$desirable, input$randomEffects)
-      
-      # debounced <- reactive({
-      #   debounce(input$outcomeName, 5000)
-      # })
+      }) %>% bindEvent(input$outcome, input$desirable, input$randomEffects, data$type, outcomeName$text)
       
       observe({
         loadDefaultData(data, freq)
