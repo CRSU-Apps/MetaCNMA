@@ -1,6 +1,6 @@
-tabLink <- function(tabName = "tab name", linkText = "tab link"){
+tab_link <- function(tabName = "tab name", linkText = "tab link") {
   return(
-    actionLink("updateSidebar",
+    shiny::actionLink("updateSidebar",
                linkText,
                `data-toggle`= "tab",
                `data-value` = tabName,
@@ -8,35 +8,34 @@ tabLink <- function(tabName = "tab name", linkText = "tab link"){
   )
 }
 
-defaultFileInput <- function(ns){
-  renderUI({
-    fileInput(
+default_file_input <- function(ns) {
+  shiny::renderUI({
+    shiny::fileInput(
       inputId = ns("data"),
       label = "",
-      buttonLabel = list(icon("file"), "Select File"),
+      buttonLabel = list(shiny::icon("file"), "Select File"),
       placeholder = "No file selected",
       accept = c(".csv", ".xlsx")
     )
   })
 }
 
-defaultNoData <- function(ns){
-  renderUI(tagList(p("No data loaded"),
-                   div(
-                     actionButton(
+default_no_data <- function(ns) {
+  shiny::renderUI(shiny::tagList(p("No data loaded"),
+                   shiny::div(
+                     shiny::actionButton(
                        ns("defaultData"),
                        "Reload Default Data",
-                       icon("arrows-rotate"),
+                       shiny::icon("arrows-rotate"),
                        style =
                          "color: #fff; background-color: #dc3545; border-color: #dc3545"
                      )
                    )))
 }
-  
 
-defaultDataContinuous<- function(){
+default_data_continuous <- function() {
   return(list(
-    dataFrame = import("data/continuous.Rds"),
+    dataFrame = rio::import("data/continuous.Rds"),
     type = "continuous",
     format = "long",
     measure = "md",
@@ -46,9 +45,9 @@ defaultDataContinuous<- function(){
   ))
 }
 
-defaultDataBinary<- function(){
+default_data_binary <- function() {
   return(list(
-    dataFrame = import("data/binary.Rds"),
+    dataFrame = rio::import("data/binary.Rds"),
     type = "binary",
     format = "long",
     measure = "or",
@@ -59,10 +58,10 @@ defaultDataBinary<- function(){
 }
 
 
-defaultReloadButton <- function(ns, buttonText = "Delete Data"){
-  renderUI({
-    div(
-      actionButton(ns("reloadButton"), buttonText, icon("trash"),
+default_reload_button <- function(ns, buttonText = "Delete Data") {
+  shiny::renderUI({
+    shiny::div(
+      shiny::actionButton(ns("reloadButton"), buttonText, shiny::icon("trash"),
                    style =
                      "color: #fff; background-color: #dc3545; border-color: #dc3545")
     )

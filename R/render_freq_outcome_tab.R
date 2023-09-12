@@ -19,9 +19,9 @@ renderFreqOutcomeTabServer <- function(id, data, freq, tab){
       
       observe({
         print("data change")
-        if(!isDataValid(data)){
+        if(!is_data_valid(data)){
           print("Data not valid")
-          output$outcome <- defaultNoData(ns)
+          output$outcome <- default_no_data(ns)
         }
         else{
           if(data$type == "continuous"){
@@ -130,7 +130,7 @@ renderFreqOutcomeTabServer <- function(id, data, freq, tab){
       }) %>% bindEvent(input$outcome, input$desirable, input$randomEffects, data$type, outcomeName$text)
       
       observe({
-        loadDefaultData(data, freq)
+        load_default_data(data, freq)
       }) %>% bindEvent(input$defaultData)
       
     })

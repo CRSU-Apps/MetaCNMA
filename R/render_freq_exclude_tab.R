@@ -18,23 +18,23 @@ renderFreqExcludeTabServer <- function(id, data, freq) {
                    tryCatch({
                      withCallingHandlers(
                        warning = function(cond) {
-                         output$warning <- warningAlert(cond)
+                         output$warning <- warning_alert(cond)
                        },
                        message = function(cond) {
-                         output$message <- messageAlert(cond)
+                         output$message <- message_alert(cond)
                        },
                        {
-                         if (!isDataValid(data)) {
-                           output$exclude <- defaultNoData(ns)
+                         if (!is_data_valid(data)) {
+                           output$exclude <- default_no_data(ns)
                          }
                          else{
                            if (is.null(freq$data)) {
                              withProgress({
-                               formatData(data, freq)
+                               format_data(data, freq)
                              },
                              message = "Formatting Data")
                            }
-                           studies <- getStudies(data, freq)
+                           studies <- get_studies(data, freq)
                            output$exclude <- renderUI(tagList(fluidRow(
                              column(
                                3,
@@ -64,13 +64,13 @@ renderFreqExcludeTabServer <- function(id, data, freq) {
                    },
                    error = function(e) {
                      print("this error occured trying to render the studies")
-                     errorAlert(e$message)
-                     invalidateData(data, freq)
+                     error_alert(e$message)
+                     invalidate_data(data, freq)
                    })
                  }) %>% bindEvent(data$valid)
                  
                  observe({
-                   loadDefaultData(data, freq)
+                   load_default_data(data, freq)
                  }) %>% bindEvent(input$defaultData)
                  
                  observe({

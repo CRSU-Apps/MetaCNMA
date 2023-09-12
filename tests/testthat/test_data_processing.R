@@ -19,7 +19,7 @@ local_dfBinaryLong <- import("../../data/binary.Rds")
 
 context("Testing data_processing")
 
-test_that("formatData() works with reactive", {
+test_that("format_data() works with reactive", {
   server <- function(input, output, session){
     globalData <- reactiveValues()
     globalFreq <- reactiveValues()
@@ -29,7 +29,7 @@ test_that("formatData() works with reactive", {
     globalData$valid <- TRUE
   }
   testServer(server, {
-    formatData(globalData, globalFreq)
+    format_data(globalData, globalFreq)
     expect_false(is.null(globalFreq$data))
     tmpDf <- local_dfContinuousLong
     names(tmpDf) <- tolower(names(tmpDf))
@@ -45,7 +45,7 @@ test_that("formatData() works with reactive", {
     globalData$valid <- TRUE
   }
   testServer(server, {
-    formatData(globalData, globalFreq)
+    format_data(globalData, globalFreq)
     expect_false(is.null(globalFreq$data))
     tmpDf <- local_dfWide
     names(tmpDf) <- tolower(names(tmpDf))

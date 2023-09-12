@@ -1,33 +1,33 @@
-errorAlert <- function(msg, title = ""){
-  customAlert(title, msg, "error")
+error_alert <- function(msg, title = "") {
+  custom_alert(title, msg, "error")
 }
 
-customAlert <- function(title, msg, type){
+custom_alert <- function(title, msg, type) {
   tryCatch({
-    shinyalert(
+    shinyalert::shinyalert(
       title = title, text = msg, type = type, confirmButtonText = "Close"
     )
-  }, 
-  error = function(e){
+  },
+  error = function(e) {
     # Do Nothing
-  }, 
+  },
   finally = {
     print(paste(title, msg, sep = ": "))
   })
 }
 
-warningAlert <- function(msg){
-  renderUI(
-    tags$div(
-      class= "alert alert-warning", role= "alert", paste0(msg)
+warning_alert <- function(msg) {
+  shiny::renderUI(
+    shiny::tags$div(
+      class = "alert alert-warning", role = "alert", paste0(msg)
     )
   )
 }
 
-messageAlert <- function(msg){
-  renderUI(
-    tags$div(
-      class= "alert alert-info", role= "alert", paste0(msg)
+message_alert <- function(msg) {
+  shiny::renderUI(
+    shiny::tags$div(
+      class = "alert alert-info", role = "alert", paste0(msg)
     )
   )
 }

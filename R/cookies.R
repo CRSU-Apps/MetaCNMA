@@ -1,6 +1,6 @@
 cookieAlert <- function(){
   shinyalert(
-    text = getCookieMessage(), type = "info", html = T, confirmButtonText = "Accept", inputId = "cookieAccept"
+    text = get_cookie_message(), type = "info", html = T, confirmButtonText = "Accept", inputId = "cookieAccept"
   )
 }
 

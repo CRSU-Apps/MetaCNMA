@@ -1,11 +1,11 @@
-siteInfo <- read_yaml("site_info.yaml")
+site_info <- read_yaml("site_info.yaml")
 
-getSiteInfoProperty <- function(property) {
+get_site_info_property <- function(property) {
   rtn <- tryCatch({
-    if (is.null(siteInfo[property])) {
+    if (is.null(site_info[property])) {
       return("")
     }
-    siteInfo[property]
+    site_info[property]
   },
   error = function(e) {
     return("")
@@ -16,52 +16,52 @@ getSiteInfoProperty <- function(property) {
   return(rtn)
 }
 
-getTitle <- function(){
-  return(as.character(getSiteInfoProperty("title")))
+get_title <- function(){
+  return(as.character(get_site_info_property("title")))
 }
 
-getVersion <- function(){
-  return(as.character(getSiteInfoProperty("version")))
+get_version <- function(){
+  return(as.character(get_site_info_property("version")))
 }
 
-getAcceptedFileFormats <- function(){
-  return(getSiteInfoProperty("accepted_file_formats")[[1]])
+get_accepted_file_formats <- function(){
+  return(get_site_info_property("accepted_file_formats")[[1]])
 }
 
-getCookieMessage <- function(){
-  includeHTML("html/cookie.html")
+get_cookie_message <- function(){
+  shiny::includeHTML("html/cookie.html")
 }
 
-getDescription <- function(){
-  return(as.character(getSiteInfoProperty("description")))
+get_description <- function(){
+  return(as.character(get_site_info_property("description")))
 }
 
-getKeywords <- function() {
-  return(paste(getSiteInfoProperty("keywords")[[1]], collapse = ","))
+get_keywords <- function() {
+  return(paste(get_site_info_property("keywords")[[1]], collapse = ","))
 }
 
-getRequiredBinaryLongColumns <- function() {
-  return(getSiteInfoProperty("required_binary_long_columns")[[1]])
+get_required_binary_long_columns <- function() { # nolint
+  return(get_site_info_property("required_binary_long_columns")[[1]])
 }
 
-getRequiredContinuousLongColumns <- function() {
-  return(getSiteInfoProperty("required_continuous_long_columns")[[1]])
+get_required_continuous_long_columns <- function() { # nolint
+  return(get_site_info_property("required_continuous_long_columns")[[1]])
 }
 
-getRequiredBinaryWideColumns <- function() {
-  return(getSiteInfoProperty("required_binary_wide_columns")[[1]])
+get_required_binary_wide_columns <- function() { # nolint
+  return(get_site_info_property("required_binary_wide_columns")[[1]])
 }
 
-getRequiredContinuousWideColumns <- function() {
-  return(getSiteInfoProperty("required_continuous_wide_columns")[[1]])
+get_required_continuous_wide_columns <- function() { # nolint
+  return(get_site_info_property("required_continuous_wide_columns")[[1]])
 }
 
-invalidateData <- function(data, freq){
-  invalidateFreq(freq)
+invalidate_data <- function(data, freq){
+  invalidate_freq(freq)
   data$valid = F
 }
 
-invalidateFreq <- function(freq){
+invalidate_freq <- function(freq){
   freq$data <- NULL
   freq$outcome <- NULL
   freq$desirable <- NULL
@@ -84,14 +84,14 @@ invalidateFreq <- function(freq){
 #' @export
 #'
 #' @examples
-loadDefaultData <- function(data, freq) {
+load_default_data <- function(data, freq) {
   tryCatch({
-    invalidateData(data, freq)
+    invalidate_data(data, freq)
     # Determine which data to load and store in a temporary dataframe
     if (data$type == "binary") {
-      tmpData <- defaultDataBinary()
+      tmpData <- default_data_binary()
     } else {
-      tmpData <- defaultDataContinuous()
+      tmpData <- default_data_continuous()
     }
     # Set reactive values (ensure data$valid is set last)
     data$format <- tmpData$format
@@ -107,8 +107,8 @@ loadDefaultData <- function(data, freq) {
     return(T)
   },
   error = function(e) {
-    errorAlert(e$message)
-    invalidateData(data, freq)
+    error_alert(e$message)
+    invalidate_data(data, freq)
     return(F)
   })
   
@@ -123,10 +123,10 @@ loadDefaultData <- function(data, freq) {
 #' @export
 #'
 #' @examples
-getStudies <- function(data, freq){
+get_studies <- function(data, freq) {
   tryCatch({
     # If the data is not valid do not try to determine the studies
-    if( !isDataValid(data) | is.null(freq$data)){
+    if( !is_data_valid(data) | is.null(freq$data)) {
       print("this error occured trying to determine the studies from the data")
       stop("There is a problem with the data, please check data has been uploaded and is valid")
     }
@@ -137,12 +137,12 @@ getStudies <- function(data, freq){
     return(freq$studies)
   },
   error = function(e) {
-    errorAlert(e$message)
-    invalidateData(data, freq)
+    error_alert(e$message) # nolint
+    invalidate_data(data, freq)
   })
 }
 
-getOutcomeMeasure <- function(outcome_measure){
+get_outcome_measure <- function(outcome_measure){
   if(is.null(outcome_measure)){
     return("Outcome Measure")
   }

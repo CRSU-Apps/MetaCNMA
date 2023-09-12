@@ -29,14 +29,14 @@ renderForestPlotTabServer <- function(id, data, freq, tab){
           tryCatch({
             withCallingHandlers(
               warning = function(cond){
-                output$warning <- warningAlert(cond)
+                output$warning <- warning_alert(cond)
               },
               message = function(cond){
-                output$message <- messageAlert(cond)
+                output$message <- message_alert(cond)
               },
               {
-                if (!isDataValid(data)) {
-                  output$comparitor <- defaultNoData(ns)
+                if (!is_data_valid(data)) {
+                  output$comparitor <- default_no_data(ns)
                   output$plot <- NULL
                   return(NULL)
                 }
@@ -59,23 +59,23 @@ renderForestPlotTabServer <- function(id, data, freq, tab){
                   },
                   message = "Running Network Meta Analysis")
                 }
-                if(getOutcomeMeasure(freq$outcome) == "Outcome Measure"){
+                if(get_outcome_measure(freq$outcome) == "Outcome Measure"){
                   warning("No Outcome Measure Selected")
                 }
-                output$comparitor <- renderUI(h4(paste0("Forest plot showing the ", getOutcomeMeasure(freq$outcome), " of ", freq$outcomeName, " when compared against ", getMostFreqComponent(freq$pairwise))))
-                output$plot <- renderUI(renderNetForest(freq$nc, data$type, getOutcomeMeasure(freq$outcome)))
+                output$comparitor <- renderUI(h4(paste0("Forest plot showing the ", get_outcome_measure(freq$outcome), " of ", freq$outcomeName, " when compared against ", getMostFreqComponent(freq$pairwise))))
+                output$plot <- renderUI(renderNetForest(freq$nc, data$type, get_outcome_measure(freq$outcome)))
               }
             )
           },
           error = function(e) {
-            errorAlert(e$message)
-            invalidateData(data, freq)
+            error_alert(e$message)
+            invalidate_data(data, freq)
           })
         }
       }) %>% bindEvent(tab(), input$defaultData)
       
       observe({
-        loadDefaultData(data, freq)
+        load_default_data(data, freq)
       }) %>% bindEvent(input$defaultData)
       
       observe({

@@ -21,10 +21,10 @@ renderViewDataTabServer <-
                      tryCatch({
                        withCallingHandlers(
                          warning = function(cond) {
-                           output$warning <- warningAlert(cond)
+                           output$warning <- warning_alert(cond)
                          },
                          message = function(cond) {
-                           output$message <- messageAlert(cond)
+                           output$message <- message_alert(cond)
                          },
                          {
                            if (!is.null(data$data) &
@@ -60,7 +60,7 @@ renderViewDataTabServer <-
                            }
                            else {
                              output$citation <- NULL
-                             output$data <- defaultNoData(ns)
+                             output$data <- default_no_data(ns)
                            }
                          }
                        )
@@ -68,12 +68,12 @@ renderViewDataTabServer <-
                      error = function(e) {
                        output$citation <- NULL
                        output$data <- NULL
-                       errorAlert(e$message)
+                       error_alert(e$message)
                      })
                    }) %>% bindEvent(data$valid)
                    
                    observe({
-                     loadDefaultData(data, freq)
+                     load_default_data(data, freq)
                    }) %>% bindEvent(input$defaultData)
                    
                    

@@ -24,14 +24,14 @@ renderDataSummaryTabServer <- function(id, data, freq, tab) {
                      tryCatch({
                        withCallingHandlers(
                          warning = function(cond) {
-                           output$warning <- warningAlert(cond)
+                           output$warning <- warning_alert(cond)
                          },
                          message = function(cond) {
-                           output$message <- messageAlert(cond)
+                           output$message <- message_alert(cond)
                          },
                          {
-                           if (!isDataValid(data)) {
-                             output$dataSummary <- defaultNoData(ns)
+                           if (!is_data_valid(data)) {
+                             output$dataSummary <- default_no_data(ns)
                            }
                            else if (is.null(freq$pairwise)) {
                              withProgress({
@@ -53,7 +53,7 @@ renderDataSummaryTabServer <- function(id, data, freq, tab) {
                  }) %>% bindEvent(tab())
                  
                  observe({
-                   loadDefaultData(data, freq)
+                   load_default_data(data, freq)
                  }) %>% bindEvent(input$defaultData)
                  
                  

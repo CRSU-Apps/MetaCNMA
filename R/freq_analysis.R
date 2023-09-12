@@ -3,7 +3,7 @@ freqPairwise <- function(globalData, globalFreq){
     # Reset pairwise
     globalFreq$pairwise <- NULL
     # If the data is not valid do not format the data
-    if( !isDataValid(globalData) ){
+    if( !is_data_valid(globalData) ){
       print("This error occured trying to format the data")
       stop("There is a problem with the data, please check data has been uploaded and is valid")
     }
@@ -11,7 +11,7 @@ freqPairwise <- function(globalData, globalFreq){
     if(is.null(globalFreq$data)){
       if (is.null(globalFreq$data)) {
         withProgress({
-          formatData(globalData, globalFreq)
+          format_data(globalData, globalFreq)
         },
         message = "Formatting Data")
       }
@@ -19,7 +19,7 @@ freqPairwise <- function(globalData, globalFreq){
     # Initialise temporary dataframe
     tmpData <- NULL
     if(globalData$format == "wide"){
-      tmpData <- dataWideToLong(globalFreq$data)
+      tmpData <- data_wide_to_long(globalFreq$data)
     }
     else if(globalData$format == "long"){
       tmpData <- globalFreq$data
@@ -39,8 +39,8 @@ freqPairwise <- function(globalData, globalFreq){
     }
   },
   error = function(e) {
-    errorAlert(e$message)
-    invalidateData(globalData, globalFreq)
+    error_alert(e$message)
+    invalidate_data(globalData, globalFreq)
     return(F)
   })
 }
