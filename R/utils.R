@@ -56,62 +56,62 @@ get_required_continuous_wide_columns <- function() { # nolint
   return(get_site_info_property("required_continuous_wide_columns")[[1]])
 }
 
-invalidate_data <- function(data, freq){
-  invalidate_freq(freq)
-  data$valid = F
+invalidate_reactive <- function(reactive_data, reactive_freq){
+  reactive_data()$invalidate()
+  reactive_freq()$invalidate()
+  # invalidate_freq(freq)
+  # data$valid = F
 }
 
 invalidate_freq <- function(freq){
-  freq$data <- NULL
-  freq$outcome <- NULL
-  freq$desirable <- NULL
-  freq$randomEffects <- NULL
-  freq$outcomeName <- NULL
-  freq$pairwise <- NULL
-  freq$nm <- NULL
-  freq$nc <- NULL
-  freq$valid = F
+  # freq$data <- NULL
+  # freq$outcome <- NULL
+  # freq$desirable <- NULL
+  # freq$randomEffects <- NULL
+  # freq$outcomeName <- NULL
+  # freq$pairwise <- NULL
+  # freq$nm <- NULL
+  # freq$nc <- NULL
+  # freq$valid = F
 }
 
 
 #' Function to load the default data depending on selected outcome
 #' data is loaded to \code{data$data} and sets appropriate values
 #'
-#' @param data reactive values variable for data (see global.R)
-#' @param freq freq reactive values variable for frequentest analysis (see global.R)
+#' @param reactive_data reactive values variable for data (see global.R)
+#' @param reactive_freq freq reactive values variable
+#' for frequentest analysis (see global.R)
 #'
 #' @return True if default data was loaded
 #' @export
 #'
 #' @examples
-load_default_data <- function(data, freq) {
+load_default_data <- function(reactive_data, reactive_freq) {
   tryCatch({
-    invalidate_data(data, freq)
+    invalidate_reactive(reactive_data, reactive_freq)
     # Determine which data to load and store in a temporary dataframe
-    if (data$type == "binary") {
-      tmpData <- default_data_binary()
+    if (reactive_data()$type == "binary") {
+      tmp_data <- default_data_binary() # nolint: object_name
     } else {
-      tmpData <- default_data_continuous()
+      tmp_data <- default_data_continuous() # nolint: object_name
     }
     # Set reactive values (ensure data$valid is set last)
-    data$format <- tmpData$format
-    data$measure <- tmpData$measure
-    data$desirable <- tmpData$desirable
-    data$outcomeName <- tmpData$outcomeName
-    data$randomEffects <- tmpData$randomEffects
-    data$default = T
-    data$data <- NULL
-    data$data <- tmpData$dataFrame
-    freq$valid <- F
-    data$valid = T
-    return(T)
+    #reactive_freq$valid <- FALSE
+    reactive_data()$load_data(
+      tmp_data$format,
+      TRUE,
+      tmp_data$measure,
+      tmp_data$desirable,
+      tmp_data$outcome_name
+    )
+    return(TRUE)
   },
   error = function(e) {
-    error_alert(e$message)
-    invalidate_data(data, freq)
-    return(F)
+    error_alert(e$message) # nolint: object_name
+    invalidate_reactive(reactive_data, reactive_freq)
+    return(FALSE)
   })
-  
 }
 
 #' Get the studies from the formatted data

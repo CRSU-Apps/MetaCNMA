@@ -17,16 +17,16 @@ data_upload_tab_server <- function(id, reactive_data, reactive_freq) {
       output$inputs <- shiny::renderUI(shiny::fluidRow(
         shiny::column(
           width = 6,
-          shiny::uiOutput(ns("fileInput")),
+          shiny::uiOutput(ns("file_input")),
           offset = 2
         ),
         shiny::column(
           width = 6,
-          shiny::uiOutput(ns("reloadButton"))
+          shiny::uiOutput(ns("reload_button"))
         ),
         class = "vertical-align"
       ))
-      output$fileInput <- default_file_input(ns) # nolint: object_usage
+      output$file_input <- default_file_input(ns) # nolint: object_usage
 
       shiny::observe({
         # Reset any previous warnings / messages
@@ -45,33 +45,44 @@ data_upload_tab_server <- function(id, reactive_data, reactive_freq) {
                 output$message <- message_alert(cond) # nolint: object_usage
               },
               {
-                reactive_data()$invalidate()
-                reactive_freq()$invalidate()
                 # Validate the input file
-                if (validate_input(input$data, data$type)) { # nolint: object_usage 
+                if (validate_input(input$data, reactive_data()$data_type())) { # nolint: object_usage 
                   # Render the reload button
-                  output$reloadButton <- default_reload_button(ns) # nolint: object_usage
+                  output$reload_button <- default_reload_button(ns) # nolint: object_usage
                   # Temporarily load the date
-                  tmp_data <- rio::import(input$data$datapath)
-                  data$format <-
-                    dplyr::if_else(suppressMessages(is_wide(tmp_data)), "wide", "long") #nolint
-                  data$default <- F
-                  freq$valid <- F
-                  data$data <- tmp_data
-                  data$valid <- T
+                  .data <- rio::import(input$data$datapath)
+                  .format <-
+                    dplyr::if_else(suppressMessages(is_wide(.data)), "wide", "long") #nolint
+                  reactive_data()$load_data(.format, .data)
                   print("Data valid and loaded")
                 } else {
-                  invalidate_data(data, freq)
+                  invalidate_reactive(reactive_data, reactive_freq) # nolint: object_usage
                 }
               }
             )
           },
           error = function(e) {
             error_alert(e$message) # nolint: object_usage
-            invalidate_data(data, freq)
+            invalidate_reactive(reactive_data, reactive_freq) # nolint: object_usage
           }
         )
       }) %>% shiny::bindEvent(input$data)
+
+      shiny::observe({
+        if (!is.null(reactive_data()$valid()) &
+              !as.logical(reactive_data()$valid())) {
+          print("Resetting File Input")
+          output$file_input <- default_file_input(ns) # nolint: object_usage
+          output$reload_button <- NULL
+        }
+      }) %>% shiny::bindEvent(reactive_data(), ignoreInit = TRUE)
+
+      shiny::observe({
+        invalidate_reactive(reactive_data, reactive_freq) # nolint: object_usage
+      }) %>% shiny::bindEvent(input$reload_button,
+                              ignoreNULL = TRUE,
+                              ignoreInit = TRUE)
+
     }
   )
 }
