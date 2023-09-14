@@ -22,10 +22,10 @@ default_file_input <- function(ns) {
 }
 
 default_no_data <- function(ns) {
-  shiny::renderUI(shiny::tagList(p("No data loaded"),
+  shiny::renderUI(shiny::tagList(shiny::p("No data loaded"),
                                  shiny::div(
                                    shiny::actionButton(
-                                     ns("defaultData"),
+                                     ns("default_data"),
                                      "Reload Default Data",
                                      shiny::icon("arrows-rotate"),
                                      style =

@@ -54,7 +54,7 @@ renderDataSummaryTabServer <- function(id, data, freq, tab) {
                  
                  observe({
                    load_default_data(data, freq)
-                 }) %>% bindEvent(input$defaultData)
+                 }) %>% bindEvent(input$default_data)
                  
                  
                })

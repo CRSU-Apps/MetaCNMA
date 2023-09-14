@@ -47,6 +47,7 @@ data_upload_tab_server <- function(id, reactive_data, reactive_freq) {
               {
                 # Validate the input file
                 if (validate_input(input$data, reactive_data()$data_type())) { # nolint: object_usage 
+                  invalidate_reactive(reactive_data, reactive_freq)
                   # Render the reload button
                   output$reload_button <- default_reload_button(ns) # nolint: object_usage
                   # Temporarily load the date
@@ -69,13 +70,16 @@ data_upload_tab_server <- function(id, reactive_data, reactive_freq) {
       }) %>% shiny::bindEvent(input$data)
 
       shiny::observe({
-        if (!is.null(reactive_data()$valid()) &
-              !as.logical(reactive_data()$valid())) {
+        print(reactive_data()$print())
+        print(reactive_data()$valid())
+        if (reactive_data()$valid() == FALSE) {
           print("Resetting File Input")
           output$file_input <- default_file_input(ns) # nolint: object_usage
           output$reload_button <- NULL
         }
-      }) %>% shiny::bindEvent(reactive_data(), ignoreInit = TRUE)
+      }) %>% shiny::bindEvent(reactive_data()$valid(),
+        ignoreInit = TRUE, ignoreNULL = TRUE
+      )
 
       shiny::observe({
         invalidate_reactive(reactive_data, reactive_freq) # nolint: object_usage

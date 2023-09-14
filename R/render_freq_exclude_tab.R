@@ -71,7 +71,7 @@ renderFreqExcludeTabServer <- function(id, data, freq) {
                  
                  observe({
                    load_default_data(data, freq)
-                 }) %>% bindEvent(input$defaultData)
+                 }) %>% bindEvent(input$default_data)
                  
                  observe({
                    data$exclude <- input$exclude

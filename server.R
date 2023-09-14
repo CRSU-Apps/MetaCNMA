@@ -13,10 +13,11 @@ shinyServer(function(input, output, session){
   log <- reactiveValues()
   # Load the cookie module from R/cookies.R
   cookieServer(
-    id = "cookies_1", 
+    id = "cookies_1",
     cookies = reactive(input$cookies),
     openPrivacyPolicy = reactive(input$openPrivacyPolicy),
-    parentSession = reactive(session))
+    parentSession = reactive(session)
+  )
   home_tab_server(
     "home_1",
     reactive_data,
@@ -27,11 +28,11 @@ shinyServer(function(input, output, session){
     reactive_data,
     reactive_freq
   )
-  # renderViewDataTabServer(
-  #   "viewData_1",
-  #   data,
-  #   freq
-  # )
+  view_data_tab_server(
+    "viewData_1",
+    reactive_data,
+    reactive_freq
+  )
   # renderFreqOutcomeTabServer(
   #   "freqOutcome_1",
   #   data,

@@ -1,18 +1,28 @@
-renderSideBar <- function() {
-  sidebarMenu(
+render_side_bar <- function() {
+  shinydashboard::sidebarMenu(
     id = "tabs",
-    menuItem("Home", tabName = "home_1", icon = icon("home")),
-    menuItem(
+    shinydashboard::menuItem("Home",
+      tabName = "home_1",
+      icon = shiny::icon("home")
+    ),
+    shinydashboard::menuItem(
       "Data",
       icon = icon("database"),
-      startExpanded = T,
-      menuSubItem("Upload Data", tabName = "data_upload_1", icon = icon("file"))#,
-    #   menuSubItem("View Data", tabName = "viewData_1", icon = icon("table")),
-    #   menuSubItem(
-    #     "Help",
-    #     tabName = "dataHelp_1",
-    #     icon = icon("question")
-    #   )
+      startExpanded = TRUE,
+      shinydashboard::menuSubItem("Upload Data",
+        tabName = "data_upload_1",
+        icon = shiny::icon("file")
+      ),
+      shinydashboard::menuSubItem(
+        "View Data",
+        tabName = "viewData_1",
+        icon = shiny::icon("table")
+      ),
+      shinydashboard::menuSubItem(
+        "Help",
+        tabName = "dataHelp_1",
+        icon = shiny::icon("question")
+      )
     )#,
     # menuItem(
     #   "Frequentist Analysis",

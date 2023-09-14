@@ -72,11 +72,11 @@ renderForestPlotTabServer <- function(id, data, freq, tab){
             invalidate_data(data, freq)
           })
         }
-      }) %>% bindEvent(tab(), input$defaultData)
+      }) %>% bindEvent(tab(), input$default_data)
       
       observe({
         load_default_data(data, freq)
-      }) %>% bindEvent(input$defaultData)
+      }) %>% bindEvent(input$default_data)
       
       observe({
         freq$pairwise <- NULL

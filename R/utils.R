@@ -59,20 +59,6 @@ get_required_continuous_wide_columns <- function() { # nolint
 invalidate_reactive <- function(reactive_data, reactive_freq){
   reactive_data()$invalidate()
   reactive_freq()$invalidate()
-  # invalidate_freq(freq)
-  # data$valid = F
-}
-
-invalidate_freq <- function(freq){
-  # freq$data <- NULL
-  # freq$outcome <- NULL
-  # freq$desirable <- NULL
-  # freq$randomEffects <- NULL
-  # freq$outcomeName <- NULL
-  # freq$pairwise <- NULL
-  # freq$nm <- NULL
-  # freq$nc <- NULL
-  # freq$valid = F
 }
 
 
@@ -88,18 +74,18 @@ invalidate_freq <- function(freq){
 #'
 #' @examples
 load_default_data <- function(reactive_data, reactive_freq) {
+  print("Attempting to Load Default Data")
   tryCatch({
     invalidate_reactive(reactive_data, reactive_freq)
     # Determine which data to load and store in a temporary dataframe
-    if (reactive_data()$type == "binary") {
+    if (reactive_data()$data_type() == "binary") {
       tmp_data <- default_data_binary() # nolint: object_name
     } else {
       tmp_data <- default_data_continuous() # nolint: object_name
     }
-    # Set reactive values (ensure data$valid is set last)
-    #reactive_freq$valid <- FALSE
     reactive_data()$load_data(
       tmp_data$format,
+      tmp_data$data_frame,
       TRUE,
       tmp_data$measure,
       tmp_data$desirable,
