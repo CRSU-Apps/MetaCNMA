@@ -42,6 +42,7 @@ view_data_tab_server <- function(id, reactive_data, reactive_freq) {
                   output$static_content <- NULL
                 }
                 print("Rendering Data")
+                print(reactive_data())
                 output$outputs <- shiny::renderUI(shiny::tagList(
                   DT::renderDataTable(
                     reactive_data()$data(),

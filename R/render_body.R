@@ -14,7 +14,7 @@ render_body <- function() {
     ),
     shinydashboard::tabItem(tabName = "dataHelp_1",
       data_help_tab() # nolint object_usage
-    )#,
+    ),
 #     tabItem(tabName = "dataSummary_1",
 #             renderDataSummaryTabUI("dataSummary_1")),
 #     tabItem(tabName = "freqOutcome_1",
@@ -23,9 +23,11 @@ render_body <- function() {
 #             renderFreqExcludeTabUI("freqExclude_1")),
 #     tabItem(tabName = "forestPlot_1",
 #             renderForestPlotTabUI("forestPlot_1")),
-#     tabItem(tabName = "privacyPolicy",
-#             renderStaticPageUI("privacyPolicy", "md/privacy_policy.md")),
-#     tabItem(tabName = "readme",
-#             renderStaticPageUI("readme", "readme.md"))
+    tabItem(tabName = "privacy_policy",
+      static_page_ui("privacy_policy", "md/privacy_policy.md") # nolint object_usage
+    ),
+    tabItem(tabName = "readme",
+      static_page_ui("readme", "readme.md") # nolint object_usage
+    )
   )
 }

@@ -75,14 +75,17 @@ invalidate_reactive <- function(reactive_data, reactive_freq){
 #' @examples
 load_default_data <- function(reactive_data, reactive_freq) {
   print("Attempting to Load Default Data")
+  # Try catch to display an error if one occures
   tryCatch({
+    # Invalidate any currently loaded data
     invalidate_reactive(reactive_data, reactive_freq)
-    # Determine which data to load and store in a temporary dataframe
+    # Determine whether to load binary or continous data
     if (reactive_data()$data_type() == "binary") {
       tmp_data <- default_data_binary() # nolint: object_name
     } else {
       tmp_data <- default_data_continuous() # nolint: object_name
     }
+    # Load the data
     reactive_data()$load_data(
       tmp_data$format,
       tmp_data$data_frame,

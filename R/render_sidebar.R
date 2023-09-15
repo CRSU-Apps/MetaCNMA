@@ -1,4 +1,4 @@
-render_side_bar <- function() {
+render_sidebar <- function() {
   shinydashboard::sidebarMenu(
     id = "tabs",
     shinydashboard::menuItem("Home",
@@ -23,7 +23,7 @@ render_side_bar <- function() {
         tabName = "dataHelp_1",
         icon = shiny::icon("question")
       )
-    )#,
+    ),
     # menuItem(
     #   "Frequentist Analysis",
     #   icon = icon("microscope"),
@@ -49,11 +49,15 @@ render_side_bar <- function() {
     #     icon = icon("chart-bar")
     #   )
     # ),
-    # menuItem(
-    #   "Privacy Policy",
-    #   tabName = "privacyPolicy",
-    #   icon = icon("lock")
-    # ),
-    # menuItem("Readme", tabName = "readme", icon = icon("readme"))
+    shinydashboard::menuItem(
+      "Privacy Policy",
+      tabName = "privacy_policy",
+      icon = icon("lock")
+    ),
+    shinydashboard::menuItem(
+      "Readme",
+      tabName = "readme",
+      icon = shiny::icon("readme")
+    )
   )
 }

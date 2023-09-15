@@ -10,8 +10,8 @@ cookieUI <- function(id){
 
 cookieServer <- function(id,
                          cookies,
-                         openPrivacyPolicy,
-                         parentSession) {
+                         open_privacy_policy,
+                         parent_session) {
   moduleServer(id, function(input,
                             output,
                             session) {
@@ -41,9 +41,9 @@ cookieServer <- function(id,
     
     observe({
       print("Open Privacy Policy")
-      updateTabItems(parentSession(), "tabs", "privacyPolicy")
+      updateTabItems(parent_session(), "tabs", "privacy_policy")
       closeAlert()
       shinyjs::delay(60000, cookieAlert())
-    }) %>% bindEvent(openPrivacyPolicy())
+    }) %>% bindEvent(open_privacy_policy())
   })
 }

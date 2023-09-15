@@ -30,7 +30,7 @@ shinyUI(
     shinydashboardPlus::dashboardPage(
       header = shinydashboardPlus::dashboardHeader(title = get_title(), titleWidth = 300), # Header with title from R/utils.R
       sidebar = shinydashboardPlus::dashboardSidebar(width = 300, # Sidebar (Navigation)
-                                 render_side_bar(), # Render sidebar from R/render_sidebar.R
+                                 render_sidebar(), # Render sidebar from R/render_sidebar.R
                                  id = "sidebar" # ID for access from modules
       ),
       body = shinydashboard::dashboardBody(

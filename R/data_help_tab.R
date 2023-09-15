@@ -1,7 +1,7 @@
 data_help_binary_tab <- function() {
   shiny::tagList(
     shiny::h1("Binary Data"),
-    box(
+    shinydashboardPlus::box(
       title = "Long Format",
       closable = FALSE,
       width = 12,
@@ -12,7 +12,7 @@ data_help_binary_tab <- function() {
         shiny::includeMarkdown("md/binary_long.md")
       )
     ),
-    box(
+    shinydashboardPlus::box(
       title = "Wide Format",
       closable = FALSE,
       width = 12,
@@ -29,7 +29,7 @@ data_help_binary_tab <- function() {
 data_help_continuous_tab <- function() {
   shiny::tagList(
     shiny::h1("Coninous Data"),
-    box(
+    shinydashboardPlus::box(
       title = "Long Format",
       closable = FALSE,
       width = 12,
@@ -40,7 +40,7 @@ data_help_continuous_tab <- function() {
         shiny::includeMarkdown("md/continuous_long.md")
       )
     ),
-    box(
+    shinydashboardPlus::box(
       title = "Wide Format",
       closable = FALSE,
       width = 12,

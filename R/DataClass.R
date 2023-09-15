@@ -6,8 +6,6 @@ Data <- R6::R6Class( # nolint: object_name
     .default = NULL,
     .format = NULL,
     .valid = NULL,
-    .valid_dep = NULL,
-    .valid_reactive = NULL,
     .data = NULL,
     .measure = NULL,
     .desirable = NULL,
@@ -15,14 +13,14 @@ Data <- R6::R6Class( # nolint: object_name
   ),
   public = list(
     initialize = function() {
-      private$.valid_dep <- function(x) NULL
+      private$.valid <- reactiveVal(FALSE)
       super$initialize()
     },
     print = function() {
       cat("Data Type: ", private$.data_type, "\n",
         "Default: ", private$.default, "\n",
         "Format: ", private$.format, "\n",
-        #"Valid: ", private$.valid(), "\n",
+        "Valid: ", private$.valid(), "\n",
         #"Data: ", private$.data, "\n",
         "Measure: ", private$.measure, "\n",
         "Desirable: ", private$.desirable, "\n",
@@ -36,8 +34,7 @@ Data <- R6::R6Class( # nolint: object_name
       private$.measure <- NULL
       private$.desirable <- NULL
       private$.outcome_name <- NULL
-      private$.valid <- FALSE
-      private$.valid_dep(FALSE)
+      private$.valid <- reactiveVal(FALSE)
       super$invalidate("Data")
     },
     data_type = function(value) {
@@ -64,18 +61,11 @@ Data <- R6::R6Class( # nolint: object_name
     },
     valid = function(value) {
       if (missing(value)) {
-        if (is.null(private$.valid_reactive)) {
-          private$.valid_reactive <- reactive({
-            private$.valid_dep <- reactiveVal(FALSE)
-            private$.valid
-          })
-        }
         print("Returning Valid as Reactive")
-        private$.valid_reactive()
+        private$.valid()
       } else {
         print("Setting Valid")
-        private$.valid <- value
-        private$.valid_dep(value)
+        private$.valid <- reactiveVal(value)
         invisible()
       }
     },
@@ -119,8 +109,7 @@ Data <- R6::R6Class( # nolint: object_name
       private$.measure <- measure
       private$.desirable <- desirable
       private$.outcome_name <- outcome_name
-      private$.valid <- TRUE
-      private$.valid_dep(TRUE)
+      private$.valid <- reactiveVal(TRUE)
     }
   )
 )
