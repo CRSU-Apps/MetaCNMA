@@ -1,4 +1,3 @@
-require(dplyr)
 home_tab_server <- function(id, reactive_data, reactive_freq) {
   shiny::moduleServer(
     id,
@@ -6,6 +5,8 @@ home_tab_server <- function(id, reactive_data, reactive_freq) {
              output,
              session) {
       ns <- shiny::NS(id)
+
+      require(dplyr)
 
       output$static_content <- shiny::renderUI(shiny::tagList(
         shiny::img(

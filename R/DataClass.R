@@ -87,7 +87,7 @@ Data <- R6::R6Class( # nolint: object_name
       if (missing(value)) {
         private$.desirable
       } else {
-        private$desirable <- value
+        private$.desirable <- value
       }
     },
     outcome_name = function(value) {

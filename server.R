@@ -28,21 +28,21 @@ shinyServer(function(input, output, session){
     reactive_freq
   )
   view_data_tab_server(
-    "viewData_1",
+    "view_data_1",
     reactive_data,
     reactive_freq
   )
-  # renderFreqOutcomeTabServer(
-  #   "freqOutcome_1",
-  #   data,
-  #   freq,
-  #   tabs
-  # )
-  # renderFreqExcludeTabServer(
-  #   "freqExclude_1",
-  #   data,
-  #   freq
-  # )
+  freq_outcome_tab_server(
+    "freq_outcome_1",
+    reactive_data,
+    reactive_freq,
+    tabs
+  )
+  freq_exclude_tab_server(
+    "freq_exclude_1",
+    reactive_data,
+    reactive_freq
+  )
   # renderDataSummaryTabServer(
   #   "dataSummary_1",
   #   data,

@@ -15,29 +15,29 @@ render_sidebar <- function() {
       ),
       shinydashboard::menuSubItem(
         "View Data",
-        tabName = "viewData_1",
+        tabName = "view_data_1",
         icon = shiny::icon("table")
       ),
       shinydashboard::menuSubItem(
         "Help",
-        tabName = "dataHelp_1",
+        tabName = "data_help_1",
         icon = shiny::icon("question")
       )
     ),
-    # menuItem(
-    #   "Frequentist Analysis",
-    #   icon = icon("microscope"),
-    #   startExpanded = T,
-    #   menuSubItem(
-    #     "Outcome & Model Settings",
-    #     tabName = "freqOutcome_1",
-    #     icon = icon("equals")
-    #   ),
-    #   menuSubItem(
-    #     "Exclude Studies",
-    #     tabName = "freqExclude_1",
-    #     icon = icon("text-slash")
-    #   ),
+    menuItem(
+      "Frequentist Analysis",
+      icon = icon("microscope"),
+      startExpanded = TRUE,
+      menuSubItem(
+        "Outcome & Model Settings",
+        tabName = "freq_outcome_1",
+        icon = icon("equals")
+      ),
+      menuSubItem(
+        "Exclude Studies",
+        tabName = "freq_exclude_1",
+        icon = icon("text-slash")
+      )#,
     #   menuSubItem(
     #     "Data Summary",
     #     tabName = "dataSummary_1",
@@ -48,7 +48,7 @@ render_sidebar <- function() {
     #     tabName = "forestPlot_1",
     #     icon = icon("chart-bar")
     #   )
-    # ),
+    ),
     shinydashboard::menuItem(
       "Privacy Policy",
       tabName = "privacy_policy",

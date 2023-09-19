@@ -94,6 +94,7 @@ load_default_data <- function(reactive_data, reactive_freq) {
       tmp_data$desirable,
       tmp_data$outcome_name
     )
+    reactive_freq()$measure(tmp_data$measure)
     return(TRUE)
   },
   error = function(e) {
@@ -103,44 +104,16 @@ load_default_data <- function(reactive_data, reactive_freq) {
   })
 }
 
-#' Get the studies from the formatted data
-#'
-#' @param data reactive values variable for data (see global.R)
-#' @param freq reactive values variable for frequentest analysis (see global.R)
-#'
-#' @return a \code{list} of studies derived from the formatted data (freq$data)
-#' @export
-#'
-#' @examples
-get_studies <- function(data, freq) {
-  tryCatch({
-    # If the data is not valid do not try to determine the studies
-    if( !is_data_valid(data) | is.null(freq$data)) {
-      print("this error occured trying to determine the studies from the data")
-      stop("There is a problem with the data, please check data has been uploaded and is valid")
-    }
-    if(is.null(freq$studies)){
-      studies <- as.factor(freq$data$study)
-      freq$studies <- levels(studies)
-    }
-    return(freq$studies)
-  },
-  error = function(e) {
-    error_alert(e$message) # nolint
-    invalidate_data(data, freq)
-  })
-}
-
-get_outcome_measure <- function(outcome_measure){
-  if(is.null(outcome_measure)){
+get_outcome_measure <- function(outcome_measure) {
+  if (is.null(outcome_measure)) {
     return("Outcome Measure")
   }
-  case_when(
+  dplyr::case_when(
     outcome_measure == "md" ~ "Mean Difference (MD)",
     outcome_measure == "smd" ~ "Standardised Mean Difference (SMD)",
     outcome_measure == "or" ~ "Odds Ratio (OR)",
     outcome_measure == "rr" ~ "Risk Ratio (RR)",
     outcome_measure == "rd" ~ "Risk Difference (RD)",
-    T ~ "Outcome Measure"
+    TRUE ~ "Outcome Measure"
   )
 }

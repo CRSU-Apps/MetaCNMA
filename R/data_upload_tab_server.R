@@ -47,7 +47,7 @@ data_upload_tab_server <- function(id, reactive_data, reactive_freq) {
               {
                 # Validate the input file
                 if (validate_input(input$data, reactive_data()$data_type())) { # nolint: object_usage 
-                  invalidate_reactive(reactive_data, reactive_freq)
+                  invalidate_reactive(reactive_data, reactive_freq) # nolint: object_usage
                   # Render the reload button
                   output$reload_button <- default_reload_button(ns) # nolint: object_usage
                   # Temporarily load the date
