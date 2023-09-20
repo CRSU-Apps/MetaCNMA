@@ -8,6 +8,7 @@ freq_outcome_tab_server <- function(id, reactive_data, reactive_freq, tab) {
       ns <- shiny::NS(id)
 
       output$inputs <- NULL
+      output$outputs <- NULL
       shiny::outputOptions(output, "inputs", suspendWhenHidden = FALSE)
 
       shiny::observe({

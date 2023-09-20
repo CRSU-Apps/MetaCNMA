@@ -7,6 +7,6 @@ reactive_page <- function(id, title = "") {
     shiny::uiOutput(ns("info")),
     shiny::uiOutput(ns("static_content")),
     shiny::uiOutput(ns("inputs")),
-    shiny::uiOutput(ns("outputs"))
+    withSpinner(shiny::uiOutput(ns("outputs")), type = 6)
   )
 }

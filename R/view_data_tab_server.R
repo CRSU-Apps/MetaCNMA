@@ -7,6 +7,8 @@ view_data_tab_server <- function(id, reactive_data, reactive_freq) {
              session) {
       ns <- shiny::NS(id)
 
+      output$outputs <- NULL
+
       shiny::observe({
         output$warning <- NULL
         output$info <- NULL

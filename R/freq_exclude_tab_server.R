@@ -7,6 +7,8 @@ freq_exclude_tab_server <- function(id, reactive_data, reactive_freq) {
 
       require(dplyr)
 
+      output$outputs <- NULL
+
       shiny::observe({
         output$warning <- NULL
         output$info <- NULL
@@ -29,6 +31,7 @@ freq_exclude_tab_server <- function(id, reactive_data, reactive_freq) {
                   },
                   message = "Formatting Data")
                 }
+                # Setting Studies
                 studies <- reactive_freq()$studies()
                 if (is.null(studies)) {
                   stop(paste0("Error ST001: There is an issue with the 

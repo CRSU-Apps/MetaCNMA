@@ -8,6 +8,8 @@ home_tab_server <- function(id, reactive_data, reactive_freq) {
 
       require(dplyr)
 
+      output$outputs <- NULL
+
       output$static_content <- shiny::renderUI(shiny::tagList(
         shiny::img(
           src = "images/MetaCNMALogo.png",

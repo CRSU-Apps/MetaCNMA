@@ -1,53 +1,49 @@
-freqPairwise <- function(globalData, globalFreq){
+require(dplyr)
+freq_pairwise <- function(reactive_data, reactive_freq) {
   tryCatch({
     # Reset pairwise
-    globalFreq$pairwise <- NULL
+    reactive_freq()$pairwise(NULL)
     # If the data is not valid do not format the data
-    if( !is_data_valid(globalData) ){
+    if (! reactive_data()$valid()) {
       print("This error occured trying to format the data")
-      stop("There is a problem with the data, please check data has been uploaded and is valid")
+      stop("There is a problem with the data, 
+      please check data has been uploaded and is valid")
     }
     # If the data has not been formatted yet, format it now.
-    if(is.null(globalFreq$data)){
-      if (is.null(globalFreq$data)) {
-        withProgress({
-          format_data(globalData, globalFreq)
-        },
-        message = "Formatting Data")
-      }
+    if (is.null(reactive_freq()$formatted_data())) {
+      shiny::withProgress({
+        format_data(reactive_data, reactive_freq) # nolint: object_usage
+      },
+      message = "Formatting Data")
     }
     # Initialise temporary dataframe
-    tmpData <- NULL
-    if(globalData$format == "wide"){
-      tmpData <- data_wide_to_long(globalFreq$data)
-    }
-    else if(globalData$format == "long"){
-      tmpData <- globalFreq$data
-    }
-    else{
+    tmp_data <- NULL
+    if (reactive_data()$format() == "wide") {
+      tmp_data <- data_wide_to_long(reactive_freq()$formatted_data())
+    } else if (reactive_data()$format() == "long") {
+      tmp_data <- reactive_freq()$formatted_data()
+    } else {
       stop("Error: DF001 data format unknown")
     }
     print("running pairwise")
-    if(globalData$type == "continuous"){
-      globalFreq$pairwise <- runPairwiseContinuous(tmpData)
-    }
-    else if(globalData$type == "binary"){
-      globalFreq$pairwise <- runPairwiseBinary(tmpData)
-    }
-    else{
+    if (reactive_data()$data_type() == "continuous") {
+      reactive_freq()$pairwise(run_pairwise_continuous(tmp_data))
+    } else if (reactive_data()$data_type() == "binary") {
+      reactive_freq()$pairwise(run_pairwise_binary(tmp_data))
+    } else {
       stop("Error: DT001 data type unknown")
     }
   },
   error = function(e) {
     error_alert(e$message)
-    invalidate_data(globalData, globalFreq)
-    return(F)
+    invalidate_reactive(reactive_data, reactive_freq)
+    return(FALSE)
   })
 }
 
-runPairwiseContinuous <- function(df){
-  
-  pairwise(
+run_pairwise_continuous <- function(df) {
+
+  netmeta::pairwise(
     treat = components,
     n = total,
     mean = mean,
@@ -55,30 +51,31 @@ runPairwiseContinuous <- function(df){
     studlab = study,
     data = df
   )
-  
+
 }
 
-runPairwiseBinary <- function(df){
-  
-  pairwise(
+run_pairwise_binary <- function(df) {
+
+  netmeta::pairwise(
     treat = components,
     n = total,
     event = events,
     studlab = study,
     data = df
   )
-  
+
 }
 
-getComponents <- function(pw){
+get_components <- function(pw) {
   # Get all the components (treat columns)
   components <- pw %>% select(contains("treat"))
-  tmpComp <- NULL
-  for(i in 1:ncol(components)){
-    tmpComp <- cbind(tmpComp, components[[i]])
+  tmp_comp <- NULL
+  for (i in seq_len(ncol(components))) {
+    tmp_comp <- cbind(tmp_comp, components[[i]])
   }
-  components <- tmpComp
-  # Add all components to a single character vector separating with extra + signs
+  components <- tmp_comp
+  # Add all components to a single character
+  # vector separating with extra + signs
   components <- paste(components, collapse = "+")
   # Split the single vector apart by +
   components <- strsplit(components, "\\+")[[1]]
@@ -88,87 +85,105 @@ getComponents <- function(pw){
   components <- levels(components)
 }
 
-getCombinationComponents <- function(pw){
+get_combination_components <- function(pw) {
   components <- pw %>% select(contains("treat"))
-  tmpComp <- NULL
-  for(i in 1:ncol(components)){
-    tmpComp <- cbind(tmpComp, components[[i]])
+  tmp_comp <- NULL
+  for (i in seq_len(ncol(components))) {
+    tmp_comp <- cbind(tmp_comp, components[[i]])
   }
-  components <- as.factor(tmpComp)
-  levelList <- list()
-  for(i in 1:length(levels(components))){
-    levelList[levels(components)[[i]]] = 0
+  components <- as.factor(tmp_comp)
+  level_list <- list()
+  for (i in seq_len(length(levels(components)))) {
+    level_list[levels(components)[[i]]] <- 0
   }
-  for(component in components){
-    #print(component)
-    #print(levelList[[component]])
-    levelList[[component]] =  levelList[[component]] + 1
+  for (component in components){
+    level_list[[component]] <-  level_list[[component]] + 1
   }
-  return(levelList)
+  return(level_list)
 }
 
-getSummary <- function(pw){
+get_summary <- function(pw) {
   list(
-    nStudies = nrow(pw),
-    components = getComponents(pw),
-    combinationComponents = getCombinationComponents(pw)
+    n_studies = nrow(pw),
+    components = get_components(pw),
+    combination_components = get_combination_components(pw)
   )
 }
 
-componentSummaryAsDataFrame <- function(componentSummary){
-  components <- as_tibble_col(as.numeric(componentSummary), column_name = "Number of Studies")
+component_summary_as_df <- function(component_summary){
+  components <- tibble::as_tibble_col(
+    as.numeric(component_summary), column_name = "Number of Studies"
+  )
   components <- as_tibble(components)
-  components <- cbind(`Combination of Components` = names(componentSummary), components)
+  components <- cbind(
+    `Combination of Components` = names(component_summary),
+    components
+  )
   components <- components %>% arrange(desc(`Number of Studies`))
   return(components)
 }
 
-renderFreqSummary <- function(pw, nConnection){
-  pwSummary <- getSummary(pw)
-  print(pwSummary)
-  renderUI(
-    tagList(
-      tags$ul(
-        tags$li(paste0("Number of Studies: ", pwSummary$nStudies)),
-        tags$li(paste0("Number of Components: ", length(pwSummary$components))),
-        tags$li(paste0("Components: ", paste0(pwSummary$components, collapse = ", "))),
-        tags$li(paste0("Is the Network Connected: ", !nConnection$details.disconnected))
+render_freq_summary <- function(pw, n_connection) {
+  pw_summary <- get_summary(pw)
+  print(pw_summary)
+  shiny::renderUI(
+    shiny::tagList(
+      shiny::tags$ul(
+        shiny::tags$li(paste0("Number of Studies: ",
+          pw_summary$n_studies
+        )),
+        shiny::tags$li(paste0("Number of Components: ",
+          length(pw_summary$components)
+        )),
+        shiny::tags$li(paste0("Components: ",
+          paste0(pw_summary$components, collapse = ", ")
+        )),
+        shiny::tags$li(paste0("Is the Network Connected: ",
+          !n_connection$details.disconnected
+        ))
       ),
-      DT::renderDataTable(componentSummaryAsDataFrame(pwSummary$combinationComponents),
-                          filter='top',
-                          options = list(scrollX = T, pageLength = 10, info = FALSE,
-                                         lengthMenu = list(c(10, -1), c("10", "All")) ))
+      DT::renderDataTable(
+        component_summary_as_df(pw_summary$combination_components),
+        filter = "top",
+        options = list(scrollX = TRUE,
+          pageLength = 10,
+          info = FALSE,
+          lengthMenu = list(c(10, -1), c("10", "All"))
+        )
+      )
     )
   )
 }
 
-getMostFreqComponent <- function(pw){
-  pwSummary <- getSummary(pw)
-  componentSummary <- componentSummaryAsDataFrame(pwSummary$combinationComponents)
-  componentSummary$`Combination of Components`[1]
+get_most_freq_component <- function(pw) {
+  pw_summary <- get_summary(pw)
+  component_summary <- component_summary_as_df(
+    pw_summary$combination_components
+  )
+  component_summary$`Combination of Components`[1]
 }
 
-runNetconnection <- function(pw){
+run_net_connection <- function(pw) {
   return(netmeta::netconnection(pw))
 }
 
-runNetmeta <- function(pw, ref = "Control", random_eff = F){
+run_netmeta <- function(pw, ref = "Control", random_eff = FALSE) {
   print("running netmeta")
-  return(netmeta::netmeta(pw, ref= ref, comb.random= random_eff))
+  return(netmeta::netmeta(pw, ref = ref, comb.random = random_eff))
 }
 
-renderNetplot <- function(nm){
-  renderPlot(
+render_netplot <- function(nm) {
+  shiny::renderPlot(
     netmeta::netgraph(nm)
   )
 }
 
-runNetcomb <- function(nm, inactive = "Control"){
+run_netcomb <- function(nm, inactive = "Control") {
   print("running netcomb")
   return(netmeta::netcomb(nm, inactive = inactive))
 }
 
-netcombSummary <- function(nc){
+netcomb_summary <- function(nc) {
   nc.summary <- summary(nc)
   data.frame(
     "Characteristic" = c(
@@ -184,19 +199,37 @@ netcombSummary <- function(nc){
   )
 }
 
-renderNetForest <- function(nc, data_type, outcome_measure = "Outcome Measure", component_labels = NULL, component = T){
-  if(component){
+render_net_forest <- function(
+  nc,
+  data_type,
+  outcome_measure = "Outcome Measure",
+  component_labels = NULL,
+  component = TRUE
+) {
+  if (component) {
     print("rendering plot")
-    
-    return(renderPlot(
-      metafor::forest(ifelse(rep(nc$random, length(nc$comps)), nc$Comp.random, nc$Comp.common),
-             sei= ifelse(rep(nc$random, length(nc$comps)), nc$seComp.random, nc$seComp.common),
-             slab = ifelse(rep(!is.null(component_labels), length(nc$comps)), component_labels, nc$comps),
-             xlab=outcome_measure,
-             refline= ifelse(data_type == "binary", 1, 0),
-             transf= ifelse(data_type == "binary", exp, function(x){x}),
-             header=c("Component", paste0(outcome_measure, " (95% CI)")))
-    ))
+    return(
+      shiny::renderPlot(
+        metafor::forest(
+          ifelse(rep(nc$random, length(nc$comps)),
+            nc$Comp.random, nc$Comp.common
+          ),
+          se = ifelse(rep(nc$random, length(nc$comps)),
+            nc$seComp.random, nc$seComp.common
+          ),
+          slab = ifelse(rep(!is.null(component_labels), length(nc$comps)),
+            component_labels, nc$comps
+          ),
+          xlab=outcome_measure,
+          refline = ifelse(data_type == "binary", 1, 0),
+          transf = ifelse(data_type == "binary",
+            exp,
+            function(x){x} # nolint: brace_linter
+          ),
+          header = c("Component", paste0(outcome_measure, " (95% CI)"))
+        )
+      )
+    )
   }
-  renderPlot(forest(nc))
+  shiny::renderPlot(metafor::forest(nc))
 }

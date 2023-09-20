@@ -43,16 +43,16 @@ shinyServer(function(input, output, session){
     reactive_data,
     reactive_freq
   )
-  # renderDataSummaryTabServer(
-  #   "dataSummary_1",
-  #   data,
-  #   freq,
-  #   tabs
-  # )
-  # renderForestPlotTabServer(
-  #   "forestPlot_1",
-  #   data,
-  #   freq,
-  #   tabs
-  # )
+  data_summary_tab_server(
+    "data_summary_1",
+    reactive_data,
+    reactive_freq,
+    tabs
+  )
+  forest_plot_tab_server(
+    "forest_plot_1",
+    reactive_data,
+    reactive_freq,
+    tabs
+  )
 })

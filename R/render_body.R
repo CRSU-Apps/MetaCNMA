@@ -15,18 +15,21 @@ render_body <- function() {
     shinydashboard::tabItem(tabName = "data_help_1",
       data_help_tab() # nolint object_usage
     ),
-#     tabItem(tabName = "dataSummary_1",
-#             renderDataSummaryTabUI("dataSummary_1")),
+    shinydashboard::tabItem(tabName = "data_summary_1",
+      reactive_page("data_summary_1", "Data Summary") # nolint object_usage
+    ),
     shinydashboard::tabItem(tabName = "freq_outcome_1",
       reactive_page("freq_outcome_1",
       "Outcome Measure and Model Settings") # nolint object_usage
     ),
-    tabItem(tabName = "freq_exclude_1",
+    shinydashboard::tabItem(tabName = "freq_exclude_1",
       reactive_page("freq_exclude_1",
       "Outcome Measure and Model Settings") # nolint object_usage
     ),
-#     tabItem(tabName = "forestPlot_1",
-#             renderForestPlotTabUI("forestPlot_1")),
+    shinydashboard::tabItem(tabName = "forest_plot_1",
+      reactive_page("forest_plot_1",
+      "Forest Plot") # nolint object_usage
+    ),
     tabItem(tabName = "privacy_policy",
       static_page_ui("privacy_policy", "md/privacy_policy.md") # nolint object_usage
     ),

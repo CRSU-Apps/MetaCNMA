@@ -6,15 +6,16 @@ Freq <- R6::R6Class( # nolint: object_name
     .measure = NULL,
     .random_effects = NULL,
     .formatted_data = NULL,
+    .pairwise = NULL,
+    .n_connection = NULL,
+    .netmeta = NULL,
+    .netcomb = NULL,
     .valid = NULL
   ),
   public = list(
     initialize = function() {
-      private$.valid <- reactiveVal(FALSE)
       private$.random_effects <- 0
-      private$.desirable <- NULL
-      private$.measure <- NULL
-      private$.formatted_data <- NULL
+      private$.valid <- reactiveVal(FALSE)
       super$initialize()
     },
     print = function() {
@@ -22,6 +23,12 @@ Freq <- R6::R6Class( # nolint: object_name
     invalidate = function() {
       private$.measure <- NULL
       private$.random_effects <- NULL
+      private$.desirable <- NULL
+      private$.formatted_data <- NULL
+      private$.pairwise <- NULL
+      private$.n_connection <- NULL
+      private$.netmeta <- NULL
+      private$.netcomb <- NULL
       private$.valid <- reactiveVal(FALSE)
       super$invalidate("Frequentist")
     },
@@ -42,6 +49,26 @@ Freq <- R6::R6Class( # nolint: object_name
         private$.measure <- value
       }
     },
+    formatted_data = function(value) {
+      if (missing(value)) {
+        private$.formatted_data
+      } else {
+        private$.formatted_data <- value
+      }
+    },
+    outcome_measure = function() {
+      if (is.null(private$.outcome_measure)) {
+        return("Outcome Measure")
+      }
+      dplyr::case_when(
+        outcome_measure == "md" ~ "Mean Difference (MD)",
+        outcome_measure == "smd" ~ "Standardised Mean Difference (SMD)",
+        outcome_measure == "or" ~ "Odds Ratio (OR)",
+        outcome_measure == "rr" ~ "Risk Ratio (RR)",
+        outcome_measure == "rd" ~ "Risk Difference (RD)",
+        TRUE ~ "Outcome Measure"
+      )
+    },
     random_effects = function(value) {
       if (missing(value)) {
         private$.random_effects
@@ -49,11 +76,32 @@ Freq <- R6::R6Class( # nolint: object_name
         private$.random_effects <- value
       }
     },
-    formatted_data = function(value) {
+    pairwise = function(value) {
       if (missing(value)) {
-        private$.formatted_data
+        private$.pairwise
       } else {
-        private$.formatted_data <- value
+        private$.pairwise <- value
+      }
+    },
+    n_connection = function(value) {
+      if (missing(value)) {
+        private$.n_connection
+      } else {
+        private$.n_connection <- value
+      }
+    },
+    netmeta = function(value) {
+      if (missing(value)) {
+        private$.netmeta
+      } else {
+        private$.netmeta <- value
+      }
+    },
+    netcomb = function(value) {
+      if (missing(value)) {
+        private$.netcomb
+      } else {
+        private$.netcomb <- value
       }
     },
     studies = function() {

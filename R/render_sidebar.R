@@ -37,17 +37,17 @@ render_sidebar <- function() {
         "Exclude Studies",
         tabName = "freq_exclude_1",
         icon = icon("text-slash")
-      )#,
-    #   menuSubItem(
-    #     "Data Summary",
-    #     tabName = "dataSummary_1",
-    #     icon = icon("clipboard-list")
-    #   ),
-    #   menuSubItem(
-    #     "Forest Plot",
-    #     tabName = "forestPlot_1",
-    #     icon = icon("chart-bar")
-    #   )
+      ),
+      menuSubItem(
+        "Data Summary",
+        tabName = "data_summary_1",
+        icon = icon("clipboard-list")
+      ),
+      menuSubItem(
+        "Forest Plot",
+        tabName = "forest_plot_1",
+        icon = icon("chart-bar")
+      )
     ),
     shinydashboard::menuItem(
       "Privacy Policy",

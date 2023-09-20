@@ -7,6 +7,8 @@ data_upload_tab_server <- function(id, reactive_data, reactive_freq) {
              session) {
       ns <- shiny::NS(id)
 
+      output$outputs <- NULL
+
       output$static_content <- shiny::renderUI(shiny::tagList(
         shiny::p("Data should be uploaded as either a .csv or .xlsx file"),
         shiny::p(
