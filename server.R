@@ -41,7 +41,8 @@ shinyServer(function(input, output, session){
   freq_exclude_tab_server(
     "freq_exclude_1",
     reactive_data,
-    reactive_freq
+    reactive_freq,
+    tabs
   )
   data_summary_tab_server(
     "data_summary_1",

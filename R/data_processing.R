@@ -55,6 +55,7 @@ format_data <- function(reactive_data, reactive_freq) {
       stop("An error occured with the data, 
       the format of the data could not be determined.")
     }
+    print("Saving formatted data")
     reactive_freq()$formatted_data(dplyr::select(tmp_df, all_of(req_columns)))
     return(TRUE)
   },

@@ -24,7 +24,7 @@ render_body <- function() {
     ),
     shinydashboard::tabItem(tabName = "freq_exclude_1",
       reactive_page("freq_exclude_1",
-      "Outcome Measure and Model Settings") # nolint object_usage
+      "Exclude Studies") # nolint object_usage
     ),
     shinydashboard::tabItem(tabName = "forest_plot_1",
       reactive_page("forest_plot_1",

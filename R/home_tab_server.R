@@ -35,7 +35,6 @@ home_tab_server <- function(id, reactive_data, reactive_freq) {
         reactive_data()$data_type(input$dataType)
         reactive_freq()$invalidate()
         load_default_data(reactive_data, reactive_freq) # nolint object_usage
-        print(reactive_data()$data_type())
       }) %>%
         shiny::bindEvent(input$dataType, ignoreInit = FALSE, ignoreNULL = TRUE)
     }

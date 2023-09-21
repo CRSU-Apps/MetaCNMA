@@ -25,7 +25,6 @@ forest_plot_tab_server <- function(id, reactive_data, reactive_freq, tab) {
                 output$message <- message_alert(conditionMessage(cond)) # nolint: object_name
               },
               {
-                print(reactive_data())
                 if (!reactive_data()$valid()) {
                   output$inputs <- default_no_data(ns) # nolint: object_name
                   output$outputs <- NULL

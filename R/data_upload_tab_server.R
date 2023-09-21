@@ -72,8 +72,6 @@ data_upload_tab_server <- function(id, reactive_data, reactive_freq) {
       }) %>% shiny::bindEvent(input$data)
 
       shiny::observe({
-        print(reactive_data()$print())
-        print(reactive_data()$valid())
         if (reactive_data()$valid() == FALSE) {
           print("Resetting File Input")
           output$file_input <- default_file_input(ns) # nolint: object_usage

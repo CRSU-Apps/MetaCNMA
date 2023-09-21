@@ -12,9 +12,7 @@ freq_outcome_tab_server <- function(id, reactive_data, reactive_freq, tab) {
       shiny::outputOptions(output, "inputs", suspendWhenHidden = FALSE)
 
       shiny::observe({
-        print("data change")
         if (! reactive_data()$valid()) {
-          print("Data not valid")
           output$inputs <- default_no_data(ns) # nolint object_usage
         } else {
           input_options <- shiny::tagList()
@@ -120,33 +118,21 @@ freq_outcome_tab_server <- function(id, reactive_data, reactive_freq, tab) {
       }) %>% shiny::bindEvent(input$outcome_name, ignoreInit = TRUE)
 
       shiny::observe({
-        # Set defaults for default data
-        print("setting outcome measure")
-        reactive_freq()$measure(input$outcome)
-        print(paste0("Outcome Measure Set to ", reactive_freq()$measure()))
-        print("setting desirable")
-        reactive_data()$desirable(input$desirable)
-        print("setting random effects")
-        reactive_freq()$random_effects(input$random_effects)
-        print(
-          paste0(
-            "Random Effects Set to ",
-            reactive_freq()$random_effects()
-          )
-        )
-        reactive_data()$outcome_name(input$outcome_name)
-        print("setting outcome name")
-        print(paste0("Outcome Name Set to ", reactive_data()$outcome_name()))
-        reactive_freq()$valid(FALSE)
-        print(reactive_data())
+        if (reactive_data()$valid()){
+          # Set defaults for default data
+          reactive_freq()$measure(input$outcome)
+          reactive_data()$desirable(input$desirable)
+          reactive_freq()$random_effects(input$random_effects)
+          reactive_data()$outcome_name(input$outcome_name)
+          reactive_freq()$valid(FALSE)
+        }
       }) %>% shiny::bindEvent(
         input$outcome,
         input$desirable,
         input$random_effects,
         outcome_name$text,
-        reactive_data()$valid(),
-        reactive_freq(),
-        ignoreNULL = TRUE
+        ignoreNULL = TRUE,
+        ignoreInit = TRUE
       )
 
       shiny::observe({

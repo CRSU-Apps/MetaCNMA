@@ -8,15 +8,12 @@ data_summary_tab_server <- function(id, reactive_data, reactive_freq, tab) {
       require(dplyr)
 
       shiny::observe({
-        print(tab())
         output$warning <- NULL
         output$info <- NULL
         output$inputs <- NULL
         output$static_content <- NULL
         output$outputs <- NULL
         if (tab() == id) {
-          print(paste0("tab: ", id))
-          print("data_summary")
           tryCatch({
             withCallingHandlers(
               warning = function(cond) {
