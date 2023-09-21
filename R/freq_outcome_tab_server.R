@@ -104,7 +104,9 @@ freq_outcome_tab_server <- function(id, reactive_data, reactive_freq, tab) {
           )
           output$inputs <- shiny::renderUI(input_options)
         }
-      }) %>% shiny::bindEvent(reactive_data(), reactive_data()$valid())
+      }) %>% shiny::bindEvent(
+        reactive_data()$valid()
+      )
 
       outcome_name <- shiny::reactiveValues()
       shiny::observe({
@@ -138,7 +140,7 @@ freq_outcome_tab_server <- function(id, reactive_data, reactive_freq, tab) {
         input$outcome,
         input$desirable,
         input$random_effects,
-        reactive_data(),
+        reactive_data()$valid(),
         outcome_name$text,
         ignoreNULL = TRUE
       )

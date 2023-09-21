@@ -15,10 +15,10 @@ freq_exclude_tab_server <- function(id, reactive_data, reactive_freq) {
         tryCatch({
           withCallingHandlers(
             warning = function(cond) {
-              output$warning <- warning_alert(cond) # nolint: object_usage
+              output$warning <- warning_alert(conditionMessage(cond)) # nolint: object_usage
             },
             message = function(cond) {
-              output$message <- message_alert(cond) # nolint: object_usage
+              output$message <- message_alert(conditionMessage(cond)) # nolint: object_usage
             },
             {
               if (! reactive_data()$valid()) {

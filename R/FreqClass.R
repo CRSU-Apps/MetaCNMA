@@ -38,6 +38,13 @@ Freq <- R6::R6Class( # nolint: object_name
         private$.valid()
       } else {
         print("Setting Valid")
+        if (!value) {
+          private$.formatted_data <- NULL
+          private$.pairwise <- NULL
+          private$.n_connection <- NULL
+          private$.netmeta <- NULL
+          private$.netcomb <- NULL
+        }
         private$.valid <- reactiveVal(value)
         invisible()
       }
@@ -57,15 +64,15 @@ Freq <- R6::R6Class( # nolint: object_name
       }
     },
     outcome_measure = function() {
-      if (is.null(private$.outcome_measure)) {
+      if (is.null(private$.measure)) {
         return("Outcome Measure")
       }
       dplyr::case_when(
-        outcome_measure == "md" ~ "Mean Difference (MD)",
-        outcome_measure == "smd" ~ "Standardised Mean Difference (SMD)",
-        outcome_measure == "or" ~ "Odds Ratio (OR)",
-        outcome_measure == "rr" ~ "Risk Ratio (RR)",
-        outcome_measure == "rd" ~ "Risk Difference (RD)",
+        private$.measure == "md" ~ "Mean Difference (MD)",
+        private$.measure == "smd" ~ "Standardised Mean Difference (SMD)",
+        private$.measure == "or" ~ "Odds Ratio (OR)",
+        private$.measure == "rr" ~ "Risk Ratio (RR)",
+        private$.measure == "rd" ~ "Risk Difference (RD)",
         TRUE ~ "Outcome Measure"
       )
     },
@@ -75,6 +82,12 @@ Freq <- R6::R6Class( # nolint: object_name
       } else {
         private$.random_effects <- value
       }
+    },
+    random_effects_logical = function() {
+      if (private$.random_effects == 1) {
+        return(TRUE)
+      }
+      return(FALSE)
     },
     pairwise = function(value) {
       if (missing(value)) {

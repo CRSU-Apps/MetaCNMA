@@ -220,7 +220,7 @@ render_net_forest <- function(
           slab = ifelse(rep(!is.null(component_labels), length(nc$comps)),
             component_labels, nc$comps
           ),
-          xlab=outcome_measure,
+          xlab = outcome_measure,
           refline = ifelse(data_type == "binary", 1, 0),
           transf = ifelse(data_type == "binary",
             exp,

@@ -41,10 +41,10 @@ data_upload_tab_server <- function(id, reactive_data, reactive_freq) {
               warning = function(cond) {
                 # If a warning occurs display the warning formatting it using
                 # the warning_alert function in R/alerts.r
-                output$warning <- warning_alert(cond) # nolint: object_usage
+                output$warning <- warning_alert(conditionMessage(cond)) # nolint: object_usage
               },
               message = function(cond) {
-                output$message <- message_alert(cond) # nolint: object_usage
+                output$message <- message_alert(conditionMessage(cond)) # nolint: object_usage
               },
               {
                 # Validate the input file
