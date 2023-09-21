@@ -103,6 +103,7 @@ freq_outcome_tab_server <- function(id, reactive_data, reactive_freq, tab) {
             )
           )
           output$inputs <- shiny::renderUI(input_options)
+          shiny::outputOptions(output, "inputs", suspendWhenHidden = FALSE)
         }
       }) %>% shiny::bindEvent(
         reactive_data()$valid()
@@ -112,6 +113,8 @@ freq_outcome_tab_server <- function(id, reactive_data, reactive_freq, tab) {
       shiny::observe({
         if (tab() == id) {
           shiny::invalidateLater(3000, session)
+          outcome_name$text <- shiny::isolate(input$outcome_name)
+        } else {
           outcome_name$text <- shiny::isolate(input$outcome_name)
         }
       }) %>% shiny::bindEvent(input$outcome_name, ignoreInit = TRUE)
@@ -140,8 +143,9 @@ freq_outcome_tab_server <- function(id, reactive_data, reactive_freq, tab) {
         input$outcome,
         input$desirable,
         input$random_effects,
-        reactive_data()$valid(),
         outcome_name$text,
+        reactive_data()$valid(),
+        reactive_freq(),
         ignoreNULL = TRUE
       )
 

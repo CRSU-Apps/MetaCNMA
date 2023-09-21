@@ -56,11 +56,10 @@ get_required_continuous_wide_columns <- function() { # nolint
   return(get_site_info_property("required_continuous_wide_columns")[[1]])
 }
 
-invalidate_reactive <- function(reactive_data, reactive_freq){
+invalidate_reactive <- function(reactive_data, reactive_freq) {
   reactive_data()$invalidate()
   reactive_freq()$invalidate()
 }
-
 
 #' Function to load the default data depending on selected outcome
 #' data is loaded to \code{data$data} and sets appropriate values

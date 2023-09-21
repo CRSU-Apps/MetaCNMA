@@ -19,6 +19,11 @@ Freq <- R6::R6Class( # nolint: object_name
       super$initialize()
     },
     print = function() {
+      cat("Desirable: ", private$.data_type, "\n",
+        "Measure: ", private$.default, "\n",
+        "Random Effects: ", private$.format, "\n",
+        "Valid: ", private$.valid(), "\n"
+      )
     },
     invalidate = function() {
       private$.measure <- NULL
