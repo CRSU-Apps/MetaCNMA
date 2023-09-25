@@ -199,6 +199,27 @@ netcomb_summary <- function(nc) {
   )
 }
 
+render_net_graph <- function(nm, components) {
+  print("Rendering netgraph")
+  shiny::renderPlot(
+    netmeta::netgraph(
+      nm,
+      plastic = FALSE,
+      col = "black",
+      points = TRUE,
+      col.points = "blue",
+      number.of.studies = FALSE,
+      seq = components,
+      thickness = "number.of.studies",
+      cex.points = 2,
+      offset = 0.05,
+      scale = 0.7,
+      cex = 0.8
+
+    )
+  )
+}
+
 render_net_forest <- function(
   nc,
   data_type,

@@ -24,6 +24,20 @@ render_sidebar <- function() {
         icon = shiny::icon("question")
       )
     ),
+    shinydashboard::menuItem(
+      "Network Infomation",
+      icon = shiny::icon("diagram-project"),
+      menuSubItem(
+        "Data Summary",
+        tabName = "data_summary_1",
+        icon = icon("clipboard-list")
+      ),
+      menuSubItem(
+        "Network Diagram",
+        tabName = "net_graph_1",
+        icon = icon("circle-nodes")
+      )
+    ),
     menuItem(
       "Frequentist Analysis",
       icon = icon("microscope"),
@@ -37,11 +51,6 @@ render_sidebar <- function() {
         "Exclude Studies",
         tabName = "freq_exclude_1",
         icon = icon("text-slash")
-      ),
-      menuSubItem(
-        "Data Summary",
-        tabName = "data_summary_1",
-        icon = icon("clipboard-list")
       ),
       menuSubItem(
         "Forest Plot",

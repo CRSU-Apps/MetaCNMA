@@ -18,6 +18,9 @@ render_body <- function() {
     shinydashboard::tabItem(tabName = "data_summary_1",
       reactive_page("data_summary_1", "Data Summary") # nolint object_usage
     ),
+    shinydashboard::tabItem(tabName = "net_graph_1",
+      reactive_page("net_graph_1", "Network Diagram") # nolint object_usage
+    ),
     shinydashboard::tabItem(tabName = "freq_outcome_1",
       reactive_page("freq_outcome_1",
       "Outcome Measure and Model Settings") # nolint object_usage
