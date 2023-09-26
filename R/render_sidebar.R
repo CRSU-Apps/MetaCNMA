@@ -36,6 +36,11 @@ render_sidebar <- function() {
         "Network Diagram",
         tabName = "net_graph_1",
         icon = icon("circle-nodes")
+      ),
+      menuSubItem(
+        "Correlation Plot",
+        tabName = "correlation_plot_1",
+        icon = icon("chart-simple")
       )
     ),
     menuItem(
@@ -55,7 +60,7 @@ render_sidebar <- function() {
       menuSubItem(
         "Forest Plot",
         tabName = "forest_plot_1",
-        icon = icon("chart-bar")
+        icon = icon("chart-gantt")
       )
     ),
     shinydashboard::menuItem(

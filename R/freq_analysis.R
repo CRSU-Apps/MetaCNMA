@@ -231,14 +231,14 @@ render_net_graph <- function(nm, components) {
 }
 
 render_correlation_plot <- function(data, components) {
-  components <- levels(as.factor(data$components))
+  print(components)
+  components <- levels(as.factor(components))
   components <- paste(components, collapse = "+")
   components <- strsplit(components, "\\+")[[1]]
   # Convert to factor (for speed)
   components <- as.factor(components)
   # Use levels to get unique components
   components <- levels(components)
-  components <- components[! components == "Control"]
 
   tmp_df <- dplyr::select(data, study, components)
 
@@ -250,6 +250,7 @@ render_correlation_plot <- function(data, components) {
   )
 
   for (i in seq_len(nrow(tmp_df))) {
+    tmp_components <- list()
     for (component in components) {
       current_components <- tmp_df[i, ]$components
       current_components <- paste(current_components, collapse = "+")

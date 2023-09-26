@@ -56,6 +56,12 @@ shinyServer(function(input, output, session){
     reactive_freq,
     tabs
   )
+  correlation_plot_tab_server(
+    "correlation_plot_1",
+    reactive_data,
+    reactive_freq,
+    tabs
+  )
   forest_plot_tab_server(
     "forest_plot_1",
     reactive_data,

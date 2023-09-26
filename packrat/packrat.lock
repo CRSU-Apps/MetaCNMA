@@ -25,6 +25,29 @@ Hash: e724c1c62ff0af426feee1967349dcda
 Requires: crosstalk, htmltools, htmlwidgets, jquerylib, jsonlite,
     magrittr, promises
 
+Package: R.cache
+Source: CRAN
+Version: 0.16.0
+Hash: 655828989def6c11ec371cfa37495497
+Requires: digest, R.methodsS3, R.oo, R.utils
+
+Package: R.methodsS3
+Source: CRAN
+Version: 1.8.2
+Hash: 3a58d8c2b2990638fb9752e4c409e8c1
+
+Package: R.oo
+Source: CRAN
+Version: 1.25.0
+Hash: 7041b6e288f06baec6120dd6185bebb5
+Requires: R.methodsS3
+
+Package: R.utils
+Source: CRAN
+Version: 2.12.2
+Hash: 6bbfbbbce33f0a5b75f15b232a83e87c
+Requires: R.methodsS3, R.oo
+
 Package: R6
 Source: CRAN
 Version: 2.5.1
@@ -43,7 +66,7 @@ Hash: b1bf2b6c6e3387d7f30b7f601eea81cd
 Package: RcppEigen
 Source: CRAN
 Version: 0.3.3.9.3
-Hash: a0b4632f196945ee37f6d0517302a4b6
+Hash: b74beb52bdf94ccb97c12b5ed66ea924
 Requires: Rcpp
 
 Package: abind
@@ -88,6 +111,11 @@ Source: CRAN
 Version: 1.2.3
 Hash: 1a3fe072eda0c329d735715cb8c3b5ad
 Requires: rlang, vctrs
+
+Package: brew
+Source: CRAN
+Version: 1.0-8
+Hash: 92d9122b8651c8b8fa2b0625a52ca76b
 
 Package: brio
 Source: CRAN
@@ -155,6 +183,11 @@ Version: 0.1.7
 Hash: 77a2783951d87c9272d275d03dbf343a
 Requires: data.tree, htmlwidgets
 
+Package: collections
+Source: CRAN
+Version: 0.3.7
+Hash: dcc3cb11185d0c90302cf076681e605f
+
 Package: colorspace
 Source: CRAN
 Version: 2.1-0
@@ -164,6 +197,11 @@ Package: commonmark
 Source: CRAN
 Version: 1.8.1
 Hash: c59da55cb7c5ea6187c51cd1e7808150
+
+Package: corrplot
+Source: CRAN
+Version: 0.92
+Hash: 4ee7c2290d1b7747bdd9a77ccd2f3d11
 
 Package: cpp11
 Source: CRAN
@@ -185,6 +223,12 @@ Package: curl
 Source: CRAN
 Version: 5.0.0
 Hash: b24b4649334d4dae257595125a21ecdc
+
+Package: cyclocomp
+Source: CRAN
+Version: 1.1.1
+Hash: 637654dfe48ee52f8ae98e0daee3390f
+Requires: callr, crayon, withr, desc, remotes
 
 Package: data.table
 Source: CRAN
@@ -374,7 +418,7 @@ Requires: htmltools, jsonlite, knitr, rmarkdown, yaml
 Package: httpuv
 Source: CRAN
 Version: 1.6.9
-Hash: 9857f14e0f0ed6cf0203e7ed719c1863
+Hash: c73a3b8b4d828f09cd9464acac2bb94e
 Requires: R6, Rcpp, later, promises
 
 Package: httr
@@ -416,10 +460,17 @@ Source: CRAN
 Version: 0.4.2
 Hash: 7474c78957f4e01d1dd4c04217eab244
 
+Package: languageserver
+Source: CRAN
+Version: 0.3.16
+Hash: a60dc8bae8219cc7ce121db449aa4b33
+Requires: R6, callr, collections, fs, jsonlite, stringi, lintr,
+    roxygen2, styler, xml2, xmlparsedata
+
 Package: later
 Source: CRAN
 Version: 1.3.0
-Hash: e400d7acc98d75885d145c68dcdbadb2
+Hash: 66092e06f6cb75a6500544fe2802e5be
 Requires: rlang, Rcpp
 
 Package: lazyeval
@@ -446,10 +497,17 @@ Version: 1.0.3
 Hash: 4a4f777d6c5faae89b4b73c13a5ceebd
 Requires: cli, glue, rlang
 
+Package: lintr
+Source: CRAN
+Version: 3.1.0
+Hash: 3d7408efa387bbf5b9f11dbe03520194
+Requires: backports, cyclocomp, digest, glue, knitr, rex, xml2,
+    xmlparsedata
+
 Package: lme4
 Source: CRAN
 Version: 1.1-32
-Hash: 818b861b90fee7ebe235e4ab0ccca7d0
+Hash: c22341b2210982d71df60b3ade35246f
 Requires: Rcpp, RcppEigen, minqa, nloptr
 
 Package: lubridate
@@ -490,7 +548,7 @@ Package: meta
 Source: CRAN
 Version: 6.2-1
 Hash: 87c99f98e9fdf91f1f6a459436967675
-Requires: CompQuadForm, lme4, metafor, xml2
+Requires: CompQuadForm, lme4, xml2, metafor
 
 Package: metadat
 Source: CRAN
@@ -512,7 +570,7 @@ Hash: 98a37137be334916af8af26354bb37e9
 Package: minqa
 Source: CRAN
 Version: 1.2.5
-Hash: 7f80b292cd56351fc60daf2318409a52
+Hash: bcc8bb7ddf0e8bf61231fe71cc3fb6b5
 Requires: Rcpp
 
 Package: modelr
@@ -554,7 +612,7 @@ Requires: askpass
 Package: openxlsx
 Source: CRAN
 Version: 4.2.5.1
-Hash: 7ab3fdea01038decdf63fe85deaf9d47
+Hash: 8d2a80c02a647bab49fb7e77bb3de9b9
 Requires: Rcpp, stringi, zip
 
 Package: packrat
@@ -620,7 +678,7 @@ Requires: R6, crayon, hms, prettyunits
 Package: promises
 Source: CRAN
 Version: 1.2.0.1
-Hash: 6300096113a47534d86021ee4443a50a
+Hash: 772bf3af6c490dd8b99fe84b070de62a
 Requires: R6, Rcpp, later, magrittr, rlang
 
 Package: ps
@@ -642,7 +700,7 @@ Hash: fd602edfd7dbf365642e35dd9cc97958
 Package: raster
 Source: CRAN
 Version: 3.6-20
-Hash: 41ea19e91c69b2bbe561134c749f133b
+Hash: b46abdc811341ff9645095a13e2130ac
 Requires: Rcpp, sp, terra
 
 Package: readr
@@ -669,12 +727,23 @@ Version: 2.1.2
 Hash: b6823f74d6525d39d153620d21e206df
 Requires: tibble
 
+Package: remotes
+Source: CRAN
+Version: 2.4.2.1
+Hash: 802520ea60fe1afffc89e2eb63963f2c
+
 Package: reprex
 Source: CRAN
 Version: 2.0.2
 Hash: fbf134a1555cb2ba4ef538d503c82544
 Requires: callr, cli, clipr, fs, glue, knitr, lifecycle, rlang,
     rmarkdown, rstudioapi, withr
+
+Package: rex
+Source: CRAN
+Version: 1.2.1
+Hash: 931b33c8f97496a25fe317d258b256a3
+Requires: lazyeval
 
 Package: rio
 Source: CRAN
@@ -693,6 +762,13 @@ Version: 2.20
 Hash: e64243c3c94b8ed06468bd5feb83bf0f
 Requires: bslib, evaluate, htmltools, jquerylib, jsonlite, knitr,
     stringr, xfun, yaml, tinytex
+
+Package: roxygen2
+Source: CRAN
+Version: 7.2.3
+Hash: b0db309e0b144cd9653901e02f306c3e
+Requires: R6, brew, cli, commonmark, cpp11, desc, knitr, purrr, rlang,
+    stringi, stringr, withr, xml2, pkgload
 
 Package: rprojroot
 Source: CRAN
@@ -797,6 +873,12 @@ Version: 1.5.0
 Hash: c88aa5331cbdf85895169bfb0c6bd15d
 Requires: cli, glue, lifecycle, magrittr, rlang, vctrs, stringi
 
+Package: styler
+Source: CRAN
+Version: 1.10.2
+Hash: eb05eb543d16e6fc2b6d6ab726194ba7
+Requires: cli, magrittr, purrr, rlang, rprojroot, vctrs, withr, R.cache
+
 Package: sys
 Source: CRAN
 Version: 3.4.1
@@ -805,7 +887,7 @@ Hash: 21b50a2d1de81aef7cff670d63572dc7
 Package: terra
 Source: CRAN
 Version: 1.7-29
-Hash: 9ba1f2292da317c72543b7c237e9bded
+Hash: e0c30190db9630366880110fd0afd354
 Requires: Rcpp
 
 Package: testthat
@@ -813,7 +895,7 @@ Source: CRAN
 Version: 3.1.7
 Hash: 87c81d6462934eb473b71d140ba08f6c
 Requires: R6, brio, callr, cli, desc, digest, ellipsis, evaluate,
-    jsonlite, lifecycle, magrittr, processx, ps, rlang, withr, pkgload,
+    jsonlite, lifecycle, magrittr, pkgload, processx, ps, rlang, withr,
     praise, waldo
 
 Package: tibble
@@ -911,7 +993,7 @@ Requires: cli, diffobj, fansi, glue, rematch2, rlang, tibble
 Package: websocket
 Source: CRAN
 Version: 1.4.1
-Hash: cf378b296165cd6fdf5b02768aa06458
+Hash: 11028ccaa32594e8fe565cea5959a01a
 Requires: AsioHeaders, R6, cpp11, later
 
 Package: withr
@@ -928,6 +1010,11 @@ Package: xml2
 Source: CRAN
 Version: 1.3.3
 Hash: cef8db3a417c45d9fa118412f7b10e92
+
+Package: xmlparsedata
+Source: CRAN
+Version: 1.0.5
+Hash: 8bdeb0f2660bd54ebaaee58188b1f31e
 
 Package: xtable
 Source: CRAN
