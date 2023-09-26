@@ -85,6 +85,16 @@ get_components <- function(pw) {
   components <- levels(components)
 }
 
+get_components_no_reference <- function(pw) {
+  # Get all components
+  components <- get_components(pw)
+  # Get the reference component
+  reference <- get_most_freq_component(pw)
+  # Remove the reference component
+  components <- components[! components == reference]
+  return(components)
+}
+
 get_combination_components <- function(pw) {
   components <- pw %>% select(contains("treat"))
   tmp_comp <- NULL
@@ -216,6 +226,57 @@ render_net_graph <- function(nm, components) {
       scale = 0.7,
       cex = 0.8
 
+    )
+  )
+}
+
+render_correlation_plot <- function(data, components) {
+  components <- levels(as.factor(data$components))
+  components <- paste(components, collapse = "+")
+  components <- strsplit(components, "\\+")[[1]]
+  # Convert to factor (for speed)
+  components <- as.factor(components)
+  # Use levels to get unique components
+  components <- levels(components)
+  components <- components[! components == "Control"]
+
+  tmp_df <- dplyr::select(data, study, components)
+
+  study_components <- setNames(
+    data.frame(
+      matrix(ncol = length(components), nrow = nrow(tmp_df))
+    ),
+    as.character(components)
+  )
+
+  for (i in seq_len(nrow(tmp_df))) {
+    for (component in components) {
+      current_components <- tmp_df[i, ]$components
+      current_components <- paste(current_components, collapse = "+")
+      current_components <- strsplit(current_components, "\\+")[[1]]
+      tmp_components[component] <- ifelse(
+        component %in% current_components, 1, 0
+      )
+    }
+    study_components[i, ] <- rbind(tmp_components)
+  }
+
+  y <- cor(study_components)
+
+  shiny::renderPlot(
+    # create correlation plot:
+    corrplot::corrplot(
+      y,
+      method = "color",
+      type = "upper",
+      diag = FALSE,
+      tl.cex = 1,
+      tl.col = "black",
+      number.cex = 1,
+      number.font = 2,
+      number.digits = 2,
+      col = corrplot::COL2("PRGn"),
+      addCoef.col = "black"
     )
   )
 }
