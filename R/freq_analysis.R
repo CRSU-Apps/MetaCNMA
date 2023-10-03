@@ -287,6 +287,65 @@ render_correlation_plot <- function(data, components) {
   )
 }
 
+render_heatmap <- function(data, components) {
+  study_components <- get_study_components(data, components)
+  x <- study_components %>% dplyr::rowwise() %>%
+    dplyr::mutate(n_comps = sum(dplyr::c_across(where(is.numeric))))
+  n_comps <- length(components)
+
+  # Set up empty matrix for matrix with
+  # number of pairs of component combinations
+  a <- matrix(nrow = n_comps, ncol = n_comps,
+    dimnames = list(as.character(components),as.character(components))
+  )
+
+  comp <- as.character(components)
+
+  #   Fill in the matrix:
+  for (i in 1: n_comps){
+    r <- x[,comp[i]]
+    for (j in 1:n_comps){
+      c <- x[,comp[j]]
+      a[i,j] <- with(x, sum(r == 1 & c == 1))
+      rm(j,c)
+    }
+    rm(i,r)
+  }
+
+  # Choose colour scale for heatmap
+  col_fun <- circlize::colorRamp2(c(0, 30), c("white", "red"))
+
+  # Render the heatmap
+  shiny::renderPlot(
+    ComplexHeatmap::Heatmap(
+      a,
+      name = "N arms with\ncombination\n",
+      col = col_fun,
+      cluster_rows = FALSE, 
+      cluster_columns = FALSE, 
+      row_names_side = "left", 
+      row_names_max_width = grid::unit(10, "cm"),
+      row_names_gp = grid::gpar(fontsize = 15),
+      column_names_side = "bottom",
+      column_names_max_height = grid::unit(10, "cm"),
+      column_names_gp = grid::gpar(fontsize = 15),
+      column_title_gp = grid::gpar(fontsize = 16, fontface = "bold"),
+      rect_gp = grid::gpar(type = "none"),
+      cell_fun = function(j, i, x, y, w, h, fill) {
+        if (i >= j) {
+          grid::grid.rect(x, y, w, h,
+            gp = grid::gpar(fill = fill, col = fill)
+          )
+          grid::grid.text(sprintf("%.0f", a[i, j]),
+            x, y,
+            gp = grid::gpar(fontsize = 15)
+          )
+        }
+      }
+    )
+  )
+}
+
 render_upset_plot <- function(data, components) {
   study_components <- get_study_components(data, components)
   n_components <- ncol(study_components)

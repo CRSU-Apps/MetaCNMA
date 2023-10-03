@@ -46,6 +46,11 @@ render_sidebar <- function() {
         "Upset Plot",
         tabName = "upset_plot_1",
         icon = icon("chart-bar")
+      ),
+      menuSubItem(
+        "Heatmap",
+        tabName = "heatmap_1",
+        icon = icon("fire-flame-curved")
       )
     ),
     menuItem(
