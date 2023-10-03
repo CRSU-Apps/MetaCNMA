@@ -41,6 +41,11 @@ render_sidebar <- function() {
         "Correlation Plot",
         tabName = "correlation_plot_1",
         icon = icon("chart-simple")
+      ),
+      menuSubItem(
+        "Upset Plot",
+        tabName = "upset_plot_1",
+        icon = icon("chart-bar")
       )
     ),
     menuItem(

@@ -230,7 +230,7 @@ render_net_graph <- function(nm, components) {
   )
 }
 
-render_correlation_plot <- function(data, components) {
+get_study_components <- function(data, components) {
   print(components)
   components <- levels(as.factor(components))
   components <- paste(components, collapse = "+")
@@ -261,6 +261,11 @@ render_correlation_plot <- function(data, components) {
     }
     study_components[i, ] <- rbind(tmp_components)
   }
+  return(study_components)
+}
+
+render_correlation_plot <- function(data, components) {
+  study_components <- get_study_components(data, components)
 
   y <- cor(study_components)
 
@@ -281,6 +286,32 @@ render_correlation_plot <- function(data, components) {
     )
   )
 }
+
+render_upset_plot <- function(data, components) {
+  study_components <- get_study_components(data, components)
+  n_components <- ncol(study_components)
+
+  shiny::renderPlot(
+    UpSetR::upset(
+      study_components,
+      nsets = n_components,
+      nintersects = NA,
+      number.angles = 0,
+      point.size = 2,
+      line.size = 0.7,
+      order.by = "freq",
+      matrix.color = "#1a5276",
+      main.bar.color = "#6c3483",
+      sets.bar.color = "#138d75",
+      set_size.show = TRUE,
+      mainbar.y.label = "No. of Trial Arms featuring combination",
+      sets.x.label = "No. of Trial Arms featuring component",
+      mainbar.y.max = 40,
+      text.scale = 1.5
+    )
+  )
+}
+
 
 render_net_forest <- function(
   nc,
