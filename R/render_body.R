@@ -27,9 +27,6 @@ render_body <- function() {
     shinydashboard::tabItem(tabName = "upset_plot_1",
       reactive_page("upset_plot_1", "Upset Plot") # nolint object_usage
     ),
-    shinydashboard::tabItem(tabName = "heatmap_1",
-      reactive_page("heatmap_1", "Heatmap") # nolint object_usage
-    ),
     shinydashboard::tabItem(tabName = "freq_outcome_1",
       reactive_page("freq_outcome_1",
       "Outcome Measure and Model Settings") # nolint object_usage

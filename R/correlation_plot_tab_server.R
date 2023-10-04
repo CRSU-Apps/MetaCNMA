@@ -38,9 +38,22 @@ correlation_plot_tab_server <- function(id, reactive_data, reactive_freq, tab) {
                     message = "Formatting Data")
                   }
                   output$outputs <- shiny::renderUI(
-                    render_correlation_plot( # nolint: object_usage
-                      reactive_freq()$formatted_data(),
-                      get_components_no_reference(reactive_freq()$pairwise()) # nolint: object_usage
+                    shiny::tabsetPanel(
+                      type = "tabs",
+                      shiny::tabPanel(
+                        "Component Correlation Plot",
+                        render_correlation_plot( # nolint: object_usage
+                          reactive_freq()$formatted_data(),
+                          get_components_no_reference(reactive_freq()$pairwise()) # nolint: object_usage
+                        )
+                      ),
+                      shiny::tabPanel(
+                        "Component Heatmap",
+                        render_heatmap( # nolint: object_usage
+                          reactive_freq()$formatted_data(),
+                          get_components_no_reference(reactive_freq()$pairwise()) # nolint: object_usage
+                        )
+                      )
                     )
                   )
                 }

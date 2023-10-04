@@ -25,8 +25,9 @@ render_sidebar <- function() {
       )
     ),
     shinydashboard::menuItem(
-      "Network Infomation",
-      icon = shiny::icon("diagram-project"),
+      "Component Summary",
+      icon = shiny::icon("puzzle-piece"),
+      startExpanded = TRUE,
       menuSubItem(
         "Data Summary",
         tabName = "data_summary_1",
@@ -38,7 +39,7 @@ render_sidebar <- function() {
         icon = icon("circle-nodes")
       ),
       menuSubItem(
-        "Correlation Plot",
+        "Correlation Plot and Heatmap",
         tabName = "correlation_plot_1",
         icon = icon("chart-simple")
       ),
@@ -46,11 +47,6 @@ render_sidebar <- function() {
         "Upset Plot",
         tabName = "upset_plot_1",
         icon = icon("chart-bar")
-      ),
-      menuSubItem(
-        "Heatmap",
-        tabName = "heatmap_1",
-        icon = icon("fire-flame-curved")
       )
     ),
     menuItem(
