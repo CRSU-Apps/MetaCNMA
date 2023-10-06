@@ -1,49 +1,83 @@
-renderSideBar <- function() {
-  sidebarMenu(
+render_sidebar <- function() {
+  shinydashboard::sidebarMenu(
     id = "tabs",
-    menuItem("Home", tabName = "home_1", icon = icon("home")),
-    menuItem(
+    shinydashboard::menuItem("Home",
+      tabName = "home_1",
+      icon = shiny::icon("home")
+    ),
+    shinydashboard::menuItem(
       "Data",
       icon = icon("database"),
-      startExpanded = T,
-      menuSubItem("Upload Data", tabName = "dataUpload_1", icon = icon("file")),
-      menuSubItem("View Data", tabName = "viewData_1", icon = icon("table")),
-      menuSubItem(
+      startExpanded = TRUE,
+      shinydashboard::menuSubItem("Upload Data",
+        tabName = "data_upload_1",
+        icon = shiny::icon("file")
+      ),
+      shinydashboard::menuSubItem(
+        "View Data",
+        tabName = "view_data_1",
+        icon = shiny::icon("table")
+      ),
+      shinydashboard::menuSubItem(
         "Help",
-        tabName = "dataHelp_1",
-        icon = icon("question")
+        tabName = "data_help_1",
+        icon = shiny::icon("question")
+      )
+    ),
+    shinydashboard::menuItem(
+      "Component Summary",
+      icon = shiny::icon("puzzle-piece"),
+      startExpanded = TRUE,
+      menuSubItem(
+        "Data Summary",
+        tabName = "data_summary_1",
+        icon = icon("clipboard-list")
+      ),
+      menuSubItem(
+        "Network Diagram",
+        tabName = "net_graph_1",
+        icon = icon("circle-nodes")
+      ),
+      menuSubItem(
+        "Correlation Plot and Heatmap",
+        tabName = "correlation_plot_1",
+        icon = icon("chart-simple")
+      ),
+      menuSubItem(
+        "Upset Plot",
+        tabName = "upset_plot_1",
+        icon = icon("chart-bar")
       )
     ),
     menuItem(
       "Frequentist Analysis",
       icon = icon("microscope"),
-      startExpanded = T,
+      startExpanded = TRUE,
       menuSubItem(
-        "Outcome",
-        tabName = "freqOutcome_1",
+        "Outcome & Model Settings",
+        tabName = "freq_outcome_1",
         icon = icon("equals")
       ),
       menuSubItem(
         "Exclude Studies",
-        tabName = "freqExclude_1",
+        tabName = "freq_exclude_1",
         icon = icon("text-slash")
       ),
       menuSubItem(
-        "Data Summary",
-        tabName = "dataSummary_1",
-        icon = icon("clipboard-list")
-      ),
-      menuSubItem(
         "Forest Plot",
-        tabName = "forestPlot_1",
-        icon = icon("chart-bar")
+        tabName = "forest_plot_1",
+        icon = icon("chart-gantt")
       )
     ),
-    menuItem(
+    shinydashboard::menuItem(
       "Privacy Policy",
-      tabName = "privacyPolicy",
+      tabName = "privacy_policy",
       icon = icon("lock")
     ),
-    menuItem("Readme", tabName = "readme", icon = icon("readme"))
+    shinydashboard::menuItem(
+      "Readme",
+      tabName = "readme",
+      icon = shiny::icon("readme")
+    )
   )
 }

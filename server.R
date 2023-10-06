@@ -5,51 +5,73 @@
 ##################################################################
 shinyServer(function(input, output, session){
   # Reactive Values
-  data <- reactiveValues()
-  freq <- reactiveValues()
+  reactive_data <- Data$new()$reactive()
+  reactive_freq <- Freq$new()$reactive()
+  # Tabs as a reactive
   tabs <- reactive(input$tabs)
   log <- reactiveValues()
   # Load the cookie module from R/cookies.R
   cookieServer(
-    id = "cookies_1", 
+    id = "cookies_1",
     cookies = reactive(input$cookies),
-    openPrivacyPolicy = reactive(input$openPrivacyPolicy),
-    parentSession = reactive(session))
-  renderDataUploadTabServer(
-    "dataUpload_1",
-    data,
-    freq
+    open_privacy_policy = reactive(input$open_privacy_policy),
+    parent_session = reactive(session)
   )
-  renderHomeTabServer(
+  home_tab_server(
     "home_1",
-    data,
-    freq
+    reactive_data,
+    reactive_freq
   )
-  renderViewDataTabServer(
-    "viewData_1",
-    data,
-    freq
+  data_upload_tab_server(
+    "data_upload_1",
+    reactive_data,
+    reactive_freq
   )
-  renderFreqOutcomeTabServer(
-    "freqOutcome_1",
-    data,
-    freq
+  view_data_tab_server(
+    "view_data_1",
+    reactive_data,
+    reactive_freq
   )
-  renderFreqExcludeTabServer(
-    "freqExclude_1",
-    data,
-    freq
-  )
-  renderDataSummaryTabServer(
-    "dataSummary_1",
-    data,
-    freq,
+  freq_outcome_tab_server(
+    "freq_outcome_1",
+    reactive_data,
+    reactive_freq,
     tabs
   )
-  renderForestPlotTabServer(
-    "forestPlot_1",
-    data,
-    freq,
+  freq_exclude_tab_server(
+    "freq_exclude_1",
+    reactive_data,
+    reactive_freq,
+    tabs
+  )
+  data_summary_tab_server(
+    "data_summary_1",
+    reactive_data,
+    reactive_freq,
+    tabs
+  )
+  network_plot_tab_server(
+    "net_graph_1",
+    reactive_data,
+    reactive_freq,
+    tabs
+  )
+  correlation_plot_tab_server(
+    "correlation_plot_1",
+    reactive_data,
+    reactive_freq,
+    tabs
+  )
+  upset_plot_tab_server(
+    "upset_plot_1",
+    reactive_data,
+    reactive_freq,
+    tabs
+  )
+  forest_plot_tab_server(
+    "forest_plot_1",
+    reactive_data,
+    reactive_freq,
     tabs
   )
 })

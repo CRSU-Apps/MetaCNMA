@@ -1,6 +1,6 @@
 # Unit Tests
 
-local_dfWide <- data.frame(
+local_df_wide <- data.frame(
   "Study" = "Field 2023",
   "Components.1" = "Control",
   "Events.1" = 16,
@@ -13,50 +13,19 @@ local_dfWide <- data.frame(
   "Total.3" = 6
 )
 
-#print(getwd())
-local_dfContinousLong <- import("../../data/continous.Rds")
-local_dfBinaryLong <- import("../../data/binary.Rds")
+local_df_continuous_long <- import("../../data/continuous.Rds")
+local_df_binary_long <- import("../../data/binary.Rds")
 
 context("Testing Utils")
 
-test_that("isDataValid() works as should", {
-  local_globalData <- list(type = "continous")
-  expect_false(isDataValid(local_globalData))
-  local_globalData$format <- "long"
-  expect_false(isDataValid(local_globalData))
-  local_globalData$data <- local_dfWide
-  expect_false(isDataValid(local_globalData))
-  local_globalData$valid <- TRUE
-  expect_true(isDataValid(local_globalData))
-})
-
-test_that("isDataValid() works with reactive", {
+test_that("invalidate_data() works as should", {
   server <- function(input, output, session){
-    globalData <- reactiveValues()
-    globalFreq <- reactiveValues()
+    reactive_data <- Data$new()$reactive()
+    reactive_freq <- Freq$new()$reactive()
   }
   testServer(server, {
-    globalData$type = "continous"
-    expect_false(isDataValid(globalData))
-    globalData$format <- "long"
-    expect_false(isDataValid(globalData))
-    globalData$data <- local_dfWide
-    expect_false(isDataValid(globalData))
-    globalData$valid <- TRUE
-    expect_true(isDataValid(globalData))
+    invalidate_reactive(reactive_data, reactive_freq)
+    expect_false(reactive_data()$valid())
+    expect_false(reactive_freq()$valid())
   })
 })
-
-test_that("invalidateData() works as should", {
-  server <- function(input, output, session){
-    globalData <- reactiveValues()
-    globalFreq <- reactiveValues()
-  }
-  testServer(server, {
-    invalidateData(globalData, globalFreq)
-    expect_false(globalData$valid)
-    expect_false(globalFreq$valid)
-  })
-  
-})
-

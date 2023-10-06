@@ -1,6 +1,6 @@
 # Unit Tests
 
-local_dfWide <- data.frame(
+local_df_wide <- data.frame(
   "Study" = "Field 2023",
   "Components.1" = "Control",
   "Events.1" = 16,
@@ -13,44 +13,47 @@ local_dfWide <- data.frame(
   "Total.3" = 6
 )
 
-#print(getwd())
-local_dfContinousLong <- import("../../data/continous.Rds")
-local_dfBinaryLong <- import("../../data/binary.Rds")
+local_df_continuous_long <- import("../../data/continuous.Rds")
+local_df_binary_long <- import("../../data/binary.Rds")
 
 context("Testing data_processing")
 
-test_that("formatData() works with reactive", {
-  server <- function(input, output, session){
-    globalData <- reactiveValues()
-    globalFreq <- reactiveValues()
-    globalData$type = "continous"
-    globalData$format <- "long"
-    globalData$data <- local_dfContinousLong
-    globalData$valid <- TRUE
+test_that("format_data() works with reactive", {
+  server <- function(input, output, session) {
+    reactive_data <- Data$new()$reactive()
+    reactive_freq <- Freq$new()$reactive()
+    reactive_data()$data_type("continuous")
+    reactive_data()$format("long")
+    reactive_data()$data(local_df_continuous_long)
+    reactive_data()$valid(TRUE)
   }
   testServer(server, {
-    formatData(globalData, globalFreq)
-    expect_false(is.null(globalFreq$data))
-    tmpDf <- local_dfContinousLong
-    names(tmpDf) <- tolower(names(tmpDf))
-    expect_equal(globalFreq$data, tmpDf)
+    format_data(reactive_data, reactive_freq)
+    expect_false(is.null(reactive_data()$data()))
+    tmp_df <- local_df_continuous_long
+    names(tmp_df) <- tolower(names(tmp_df))
+    expect_equal(reactive_freq()$formatted_data(), tmp_df)
   })
-  
-  server <- function(input, output, session){
-    globalData <- reactiveValues()
-    globalFreq <- reactiveValues()
-    globalData$type = "binary"
-    globalData$format <- "wide"
-    globalData$data <- local_dfWide
-    globalData$valid <- TRUE
+
+  server <- function(input, output, session) {
+    reactive_data <- Data$new()$reactive()
+    reactive_freq <- Freq$new()$reactive()
+    reactive_data()$data_type("binary")
+    reactive_data()$format("wide")
+    reactive_data()$data(local_df_wide)
+    reactive_data()$valid(TRUE)
   }
   testServer(server, {
-    formatData(globalData, globalFreq)
-    expect_false(is.null(globalFreq$data))
-    tmpDf <- local_dfWide
-    names(tmpDf) <- tolower(names(tmpDf))
-    tmpDf <- tmpDf %>% select(order(colnames(tmpDf)))
-    expect_equal(select(globalFreq$data, order(colnames(globalFreq$data))), tmpDf)
+    format_data(reactive_data, reactive_freq)
+    expect_false(is.null(reactive_data()$data()))
+    tmp_df <- local_df_wide
+    names(tmp_df) <- tolower(names(tmp_df))
+    tmp_df <- tmp_df %>% dplyr::select(order(colnames(tmp_df)))
+    expect_equal(
+      dplyr::select(
+        reactive_freq()$formatted_data(),
+        order(colnames(reactive_freq()$formatted_data()))
+      ), tmp_df
+    )
   })
-  
 })

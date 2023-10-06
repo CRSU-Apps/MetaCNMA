@@ -1,66 +1,71 @@
-tabLink <- function(tabName = "tab name", linkText = "tab link"){
+tab_link <- function(tab_name = "tab name", link_text = "tab link") {
   return(
-    actionLink("updateSidebar",
-               linkText,
-               `data-toggle`= "tab",
-               `data-value` = tabName,
-               onclick = paste0("Shiny.onInputChange('targetTab', '", tabName, "')"))
+    shiny::actionLink("updateSidebar",
+                      link_text,
+                      `data-toggle` = "tab",
+                      `data-value` = tab_name,
+                      onclick = paste0("Shiny.onInputChange('targetTab', '",
+                                       tab_name, "')"))
   )
 }
 
-defaultFileInput <- function(ns){
-  renderUI({
-    fileInput(
+default_file_input <- function(ns) {
+  shiny::renderUI({
+    shiny::fileInput(
       inputId = ns("data"),
       label = "",
-      buttonLabel = list(icon("file"), "Select File"),
+      buttonLabel = list(shiny::icon("file"), "Select File"),
       placeholder = "No file selected",
       accept = c(".csv", ".xlsx")
     )
   })
 }
 
-defaultNoData <- function(ns){
-  renderUI(tagList(p("No data loaded"),
-                   div(
-                     actionButton(
-                       ns("defaultData"),
-                       "Reload Default Data",
-                       icon("arrows-rotate"),
-                       style =
-                         "color: #fff; background-color: #dc3545; border-color: #dc3545"
-                     )
-                   )))
+default_no_data <- function(ns) {
+  shiny::renderUI(shiny::tagList(shiny::p("No data loaded"),
+                                 shiny::div(
+                                   shiny::actionButton(
+                                     ns("default_data"),
+                                     "Reload Default Data",
+                                     shiny::icon("arrows-rotate"),
+                                     style =
+                                       "color: #fff; background-color: #dc3545; border-color: #dc3545" # nolint line_length
+                                   )
+                                 )))
 }
-  
 
-defaultDataContinous<- function(){
+default_data_continuous <- function() {
   return(list(
-    dataFrame = import("data/continous.Rds"),
-    type = "continous",
+    data_frame = rio::import("data/continuous.Rds"),
+    type = "continuous",
     format = "long",
     measure = "md",
-    desirable = T
+    desirable = 1,
+    outcome_name = "Total Cholesterol Level (mmol/L)"
   ))
 }
 
-defaultDataBinary<- function(){
+default_data_binary <- function() {
   return(list(
-    dataFrame = import("data/binary.Rds"),
+    data_frame = rio::import("data/binary.Rds"),
     type = "binary",
     format = "long",
     measure = "or",
-    desirable = F
+    desirable = 0,
+    outcome_name = "Incidence of Delirium"
   ))
 }
 
 
-defaultReloadButton <- function(ns, buttonText = "Delete Data"){
-  renderUI({
-    div(
-      actionButton(ns("reloadButton"), buttonText, icon("trash"),
-                   style =
-                     "color: #fff; background-color: #dc3545; border-color: #dc3545")
+default_reload_button <- function(ns, button_text = "Delete Data") {
+  shiny::renderUI({
+    shiny::div(
+      shiny::actionButton(
+                          ns("reload_button"),
+                          button_text,
+                          shiny::icon("trash"),
+                          style =
+                          "color: #fff; background-color: #dc3545; border-color: #dc3545") # nolint line_length
     )
   })
 }
