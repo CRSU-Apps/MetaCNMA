@@ -1,3 +1,3 @@
 **Data derived from (with permission):**
 
-Nicky J. Welton, D. M. Caldwell, E. Adamopoulos, K. Vedhara, Mixed Treatment Comparison Meta-Analysis of Complex Interventions: Psychological Interventions in Coronary Heart Disease, American Journal of Epidemiology, Volume 169, Issue 9, 1 May 2009, Pages 1158--1165, <https://doi.org/10.1093/aje/kwp014>
+Powell, R., Scott, N. W., Freeman, S. C., Sutton, A. J., Cooper, N. J., Manyande, A., Bruce, J., Vögele, C., Byrne-Davis, L. M., Unsworth, M., Osmer, C., & Johnston, M. (2023). Dataset: Psychological preparation and postoperative outcomes for adults undergoing surgery under general anaesthesia [Data set]. Zenodo. https://doi.org/10.5281/zenodo.8006703

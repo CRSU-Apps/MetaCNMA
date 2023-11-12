@@ -1,0 +1,81 @@
+Study,Components,Mean,SD,Total
+Ashton 1997,Usual Care,7.3,1.39,12
+Ashton 1997,R,9.1,5.81,20
+Shuldham 2002,Usual Care,9.15,4.38,152
+Shuldham 2002,P+B,10.07,5.04,162
+Beaupre 2004,Usual Care,7.3,2.5,60
+Beaupre 2004,B,6.7,2.2,55
+Chaudhri 2005,Usual Care,10.11,2.39,18
+Chaudhri 2005,B,8.29,2.39,18
+Crowe 2003,Usual Care,10.5,14.2,64
+Crowe 2003,P+B,6.55,4.2,68
+Cunado Barrio 1999,Usual Care,18,10,35
+Cunado Barrio 1999,P,12,7,41
+Daltroy 1998,Usual Care,12.575,2.97,54
+Daltroy 1998,P+S,12.5,2.97,58
+Fortin 1976,Usual Care,6.44,1.61,32
+Fortin 1976,P+B,6.35,2.31,37
+Furze 2009,Usual Care,8.28,4.96,104
+Furze 2009,P+C+R,7.61,2.69,100
+Giraudet-Le Quintrec 2003,Usual Care,7.9,2.4,52
+Giraudet-Le Quintrec 2003,P+S+B+E,8.1,2.5,48
+Lam 2001,Usual Care,8,2,30
+Lam 2001,S+B,7,1,30
+Leserman 1989,Usual Care,9.6,2.97,14
+Leserman 1989,R,8.8,2.97,13
+Levin 1987,Usual Care,8.371,3.148,17
+Levin 1987,R,7.563,2.331,16
+Lin 2005,Usual Care,14.1,6.12,30
+Lin 2005,S+B+E,14.09,6.77,32
+Mahler 1998,Usual Care,7.14,0.6,67
+Mahler 1998,P+S+B,6.52,0.43,65
+Mahler 1998,P+S+C,6.008,0.226,125
+McGregor 2004,Usual Care,18,2.97,20
+McGregor 2004,P+B,15,2.97,15
+Oosting 2012,Usual Care,5.4,2.1,15
+Oosting 2012,B,5.1,1,14
+Ridgeway 1982,Usual Care,8.82,2.97,20
+Ridgeway 1982,C,9.95,2.97,20
+Ridgeway 1982,P+S,10.7,2.97,20
+Watt-Watson 2000,Usual Care,5.13,0.99,16
+Watt-Watson 2000,B+C,5.585,1.292,29
+Watt-Watson 2004,Usual Care,6.6,3.1,204
+Watt-Watson 2004,B+C,6.8,5.9,202
+Wilson 1981,Usual Care,7.947,1.434,18
+Wilson 1981,R,7.113,1.422,18
+Wilson 1981,P+S,6.881,1.065,17
+Wilson 1981,P+S+R,6.893,1.595,19
+Ziemer 1982,Usual Care,9.08,3.563,40
+Ziemer 1982,S,8.13,3.563,34
+Ziemer 1982,S+B+C+R,8.11,3.563,37
+Zieren 2007,Usual Care,3,2,50
+Zieren 2007,P+B,3,2,50
+Felton 1976,Usual Care,14,2.97,25
+Felton 1976,C,14,2.97,12
+Felton 1976,P+S+B,11,2.97,25
+Langer 1975,Usual Care,7.6,2.97,15
+Langer 1975,C,5.64,2.97,14
+Langer 1975,P+S,7.2,2.97,15
+Langer 1975,P+S+C,6.2,2.97,15
+Lindeman 1973,Usual Care,6.65,2.97,86
+Lindeman 1973,P+S+B,6.7,2.97,90
+Schmitt 1973,Usual Care,11.8,2.97,25
+Schmitt 1973,P+B+E,11.8,2.97,25
+D'Lima 1996,Usual Care,6.08,1,10
+D'Lima 1996,B,6.195,1.03,20
+Mahler 1995,Usual Care,6.04,1.7,10
+Mahler 1995,P+S+C,5.035,1.048,19
+Doering 2000,Usual Care,11.2,2.97,54
+Doering 2000,P+S,11.5,2.97,46
+Bergin 2014,Usual Care,2.7,0.6,56
+Bergin 2014,B,2.5,0.6,50
+Hulzebos 2006a,Usual Care,9.92,5.78,12
+Hulzebos 2006a,B,7.93,1.94,14
+Rajendran 1998,Usual Care,18.6,6.6,20
+Rajendran 1998,B+R,12.4,3.6,25
+Barbalho-Moulim 2011,Usual Care,2.11,0.33,17
+Barbalho-Moulim 2011,B,2,0,15
+Bitterli 2001,Usual Care,14.6,2.6,36
+Bitterli 2001,B,14.6,2.5,35
+Zhang 2012,Usual Care,9.6,1.7,20
+Zhang 2012,P+S+B,7.5,0.8,20
