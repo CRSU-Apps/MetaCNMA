@@ -11,6 +11,12 @@ authors:
     given-names: Suzanne
     affiliation: University of Leicester
     orcid: 'https://orcid.org/0000-0001-8045-4405'
+  - family-names: Smith
+    given-names: Ellesha
+    affiliation: University of Leicester
+  - family-names: Morris
+    given-names: Tom
+    affiliation: University of Leicester
 repository-code: 'https://github.com/CRSU-Apps/MetaCNMA'
 abstract: >-
   MetaCNMA allows you to conduct a Component Network Meta Analysis (CNMA) within a web application.
@@ -20,4 +26,4 @@ keywords:
   - RShiny
 license: GPL-3.0-or-later
 version: 0.1.0
-date-released: '2023-08-14'
+date-released: '2023-11-13'
