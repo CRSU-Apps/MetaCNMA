@@ -230,6 +230,41 @@ render_net_graph <- function(nm, components) {
   )
 }
 
+render_vis_graph <- function(nm, components) {
+  print("rendering visNetwork")
+  ng <- netmeta::netgraph(
+    nm,
+    seq = components
+  )
+  
+  nds <- data.frame(
+    id = seq_len(length(ng$nodes$labels)),
+    label = ng$nodes$labels
+  )
+  
+  label_to_id <- function(label){
+    return(nds[nds$label == label,]$id)
+  }
+  
+  vlab <- Vectorize(label_to_id)
+  
+  egs <- data.frame(
+    t = ng$edges$treat1,
+    f = ng$edges$treat2
+  ) %>%
+    mutate(
+      to = vlab(t),
+      from = vlab(f)
+    ) %>%
+    select(to, from)
+  
+  visNetwork::renderVisNetwork(
+    visNetwork(nds, egs) %>% 
+      visOptions(collapse = TRUE, nodesIdSelection = TRUE) %>% 
+      visLayout(improvedLayout = TRUE)
+  )
+}
+
 get_study_components <- function(data, components) {
   print(components)
   components <- levels(as.factor(components))

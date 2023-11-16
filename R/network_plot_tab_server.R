@@ -52,7 +52,7 @@ network_plot_tab_server <- function(id, reactive_data, reactive_freq, tab) {
                     message = "Running Network Meta Analysis")
                   }
                   output$outputs <- shiny::renderUI(
-                    render_net_graph( # nolint: object_usage
+                    render_vis_graph( # nolint: object_usage
                       reactive_freq()$netmeta(),
                       names(get_combination_components(reactive_freq()$pairwise())) # nolint: object_usage
                     )
