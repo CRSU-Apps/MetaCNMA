@@ -1,3 +1,23 @@
+vis_network_ui <- function(id) {
+  ns <- shiny::NS(id)
+  shiny::tagList(
+    shiny::div(
+      shiny::actionButton(
+        ns("reload_button"),
+        "",
+        shiny::icon("rotate-right"),
+        style =
+          "color: #fff;
+          background-color:
+          #dc3545;
+          border-color: #dc3545;
+          float: right;"
+      )
+    ),
+    visNetwork::visNetworkOutput(ns("network"), height = "75vh")
+  )
+}
+
 vis_network_server <- function(id, nm, components) {
   shiny::moduleServer(
     id,
@@ -5,6 +25,7 @@ vis_network_server <- function(id, nm, components) {
              output,
              session) {
       `%>%` <- magrittr::`%>%`
+      ns <- session$ns
       print("renderinet_graph_obj visNetwork")
       # Use netgraph to get node and edges
       net_graph_obj <- netmeta::netgraph(
@@ -36,10 +57,23 @@ vis_network_server <- function(id, nm, components) {
         ) %>%
         dplyr::select(to, from)
 
-      vis_network_obj <- visNetwork::visNetwork(nodes, edges) %>%
+      vn <- visNetwork::visNetwork(nodes, edges) %>%
         visNetwork::visIgraphLayout(layout = "layout_in_circle") %>%
-        visNetwork::visOptions(collapse = TRUE, nodesIdSelection = TRUE)
-      return(vis_network_obj)
+        visNetwork::visInteraction(navigationButtons = TRUE) %>%
+        visNetwork::visExport()
+
+      shiny::observeEvent(input$reload_button, {
+        print("Reloading")
+        print(ns("network"))
+        output$network <- NULL
+        output$network <- visNetwork::renderVisNetwork(
+          vn
+        )
+      })
+
+      output$network <- visNetwork::renderVisNetwork(
+        vn
+      )
 
     }
   )
