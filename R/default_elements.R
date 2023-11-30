@@ -41,7 +41,7 @@ default_data_continuous <- function() {
     format = "long",
     measure = "md",
     desirable = 1,
-    outcome_name = "Total Cholesterol Level (mmol/L)"
+    outcome_name = "Length of Stay"
   ))
 }
 

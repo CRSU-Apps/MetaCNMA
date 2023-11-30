@@ -1226,6 +1226,12 @@ Source: CRAN
 Version: 0.4.1
 Hash: a8ef7767189c332f83760934937709ab
 
+Package: visNetwork
+Source: CRAN
+Version: 2.1.2
+Hash: 6ae587aca3b637f54f2f1512e89d1b52
+Requires: htmltools, htmlwidgets, jsonlite, magrittr
+
 Package: vroom
 Source: CRAN
 Version: 1.6.0
