@@ -4,9 +4,12 @@ forest_plot_tab_server <- function(id, reactive_data, reactive_freq, tab) {
     function(input,
              output,
              session) {
-      require(dplyr)
+
+      ns <- session$ns
+
+      `%>%` <- magrittr::`%>%`
+
       output$outputs <- NULL
-      ns <- shiny::NS(id)
 
       shiny::observe({
         if (tab() == id) {

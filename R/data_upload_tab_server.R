@@ -1,11 +1,13 @@
-require(dplyr)
-data_upload_tab_server <- function(id, reactive_data, reactive_freq) {
+data_upload_tab_server <- function(id, reactive_data, reactive_freq, parent_session) {
   shiny::moduleServer(
     id,
     function(input,
              output,
              session) {
-      ns <- shiny::NS(id)
+
+      ns <- session$ns
+
+      `%>%` <- magrittr::`%>%`
 
       output$outputs <- NULL
 
@@ -13,7 +15,7 @@ data_upload_tab_server <- function(id, reactive_data, reactive_freq) {
         shiny::p("Data should be uploaded as either a .csv or .xlsx file"),
         shiny::p(
           "For help on uploading data see the ",
-          tab_link("dataHelp", "data help page") # nolint: object_usage
+          shiny::actionLink(ns("data_help_link"), "data help tab.")
         )
       ))
       output$inputs <- shiny::renderUI(shiny::fluidRow(
@@ -72,13 +74,19 @@ data_upload_tab_server <- function(id, reactive_data, reactive_freq) {
       }) %>% shiny::bindEvent(input$data)
 
       shiny::observe({
-        if (reactive_data()$valid() == FALSE) {
+        if (!reactive_data()$valid()) {
           print("Resetting File Input")
           output$file_input <- default_file_input(ns) # nolint: object_usage
           output$reload_button <- NULL
         }
       }) %>% shiny::bindEvent(reactive_data()$valid(),
         ignoreInit = TRUE, ignoreNULL = TRUE
+      )
+      
+      shiny::observe({
+        updateTabItems(parent_session(), "tabs", "data_help_1")
+      }) %>% bindEvent(input$data_help_link,
+        ignoreInit = TRUE, ignoreNULL = TRUE                 
       )
 
       shiny::observe({

@@ -25,7 +25,8 @@ shinyServer(function(input, output, session){
   data_upload_tab_server(
     "data_upload_1",
     reactive_data,
-    reactive_freq
+    reactive_freq,
+    parent_session = reactive(session)
   )
   view_data_tab_server(
     "view_data_1",

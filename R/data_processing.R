@@ -1,4 +1,4 @@
-require(dplyr)
+`%>%` <- magrittr::`%>%`
 #' Format the data \code{data$data} if it exists and is valid,
 #' removing unnecessary columns and converting column names to lower case
 #' storing the new data in \code{freq$data}

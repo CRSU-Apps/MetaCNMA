@@ -1,4 +1,4 @@
-require(dplyr)
+`%>%` <- magrittr::`%>%`
 freq_pairwise <- function(reactive_data, reactive_freq) {
   tryCatch({
     # Reset pairwise

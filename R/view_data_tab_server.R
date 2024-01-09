@@ -1,11 +1,13 @@
 view_data_tab_server <- function(id, reactive_data, reactive_freq) {
-  require(dplyr)
   shiny::moduleServer(
     id,
     function(input,
              output,
              session) {
-      ns <- shiny::NS(id)
+
+      ns <- session$ns
+
+      `%>%` <- magrittr::`%>%`
 
       output$outputs <- NULL
 

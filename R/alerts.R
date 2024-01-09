@@ -2,6 +2,20 @@ error_alert <- function(msg, title = "") {
   custom_alert(title, msg, "error")
 }
 
+
+#' Custom Alert
+#' 
+#' Internal function to display an alert
+#' uses if the alert is called outside of an RShiny Session the alert
+#' is printed to the console.
+#'
+#' @param title Title for alert window
+#' @param msg Message for alert window
+#' @param type type of alert see shiny::alert type
+#'
+#' @return a shinyalert::shinyalert
+#'
+#' @examples
 custom_alert <- function(title, msg, type) {
   tryCatch({
     shinyalert::shinyalert(

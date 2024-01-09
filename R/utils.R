@@ -1,11 +1,11 @@
 site_info <- read_yaml("site_info.yaml")
 
 get_site_info_property <- function(property) {
-  rtn <- tryCatch({
+  tryCatch({
     if (is.null(site_info[property])) {
       return("")
     }
-    site_info[property]
+    return(site_info[property])
   },
   error = function(e) {
     return("")
@@ -13,7 +13,6 @@ get_site_info_property <- function(property) {
   warning = function(w) {
     return("")
   })
-  return(rtn)
 }
 
 get_title <- function(){

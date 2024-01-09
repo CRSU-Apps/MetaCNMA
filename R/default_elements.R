@@ -1,14 +1,3 @@
-tab_link <- function(tab_name = "tab name", link_text = "tab link") {
-  return(
-    shiny::actionLink("updateSidebar",
-                      link_text,
-                      `data-toggle` = "tab",
-                      `data-value` = tab_name,
-                      onclick = paste0("Shiny.onInputChange('targetTab', '",
-                                       tab_name, "')"))
-  )
-}
-
 default_file_input <- function(ns) {
   shiny::renderUI({
     shiny::fileInput(

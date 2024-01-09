@@ -1,8 +1,5 @@
 is_valid_file_format <- function(file_ext) {
-  if(file_ext %in% get_accepted_file_formats()) { # nolint: object_usage
-    return(TRUE)
-  }
-  return(FALSE)
+  return(file_ext %in% get_accepted_file_formats()) # nolint: object_usage
 }
 
 is_file_exists <- function(file_path) {
@@ -25,17 +22,12 @@ validate_column_names <- function(df, required_names) {
         return(TRUE)
       }
     })
-    if (all(as.logical(columns_exist))) {
-      return(TRUE)
-    } else {
-      return(FALSE)
-    }
+    return (all(as.logical(columns_exist)))
   },
   error = function(e) {
     error_alert(e$message) # nolint: object_usage
     return(FALSE)
   })
-  return(FALSE)
 }
 
 split_wide_columns <- function(columns) {
@@ -51,7 +43,7 @@ split_wide_columns <- function(columns) {
     col_numbers <- append(col_numbers, as.numeric(col_number))
   }
   n_arms <- max(as.numeric(col_numbers))
-  return(list("cols" = cols, "col_numbers" = col_numbers, "n_arms" = n_arms))
+  return(list(cols = cols, col_numbers = col_numbers, n_arms = n_arms))
 }
 
 get_wide_columns <- function(column_names, required_columns) {
@@ -136,19 +128,19 @@ validate_input <- function(input_file, type) { # nolint: cyclocomp
     }
     if (is.null(type)) {
       print("Null Type")
-      error_alert("An error occured, please try again, if this problem consiste please contact the developers", "Error #TP001") # nolint: object_usage
+      error_alert("An internal error occured, please try again, if this problem persist please contact the developers", "Error #TP001") # nolint: object_usage
       return(FALSE)
     }
 
     if (is.null(input_file$datapath)) {
       print("Null datapath")
-      error_alert("An error occured, please try again, if this problem consiste please contact the developers", "Error #FU001") # nolint: object_usage
+      error_alert("An error occured, please try again, if this problem persist please contact the developers", "Error #FU001") # nolint: object_usage
       return(FALSE)
     }
 
     if (!is_file_exists(input_file$datapath)) {
       print("file doesn't exist")
-      error_alert("An error occured, please try again, if this problem consiste please contact the developers", "Error #FU002") # nolint: object_usage
+      error_alert("An internal rror occured, please try again, if this problem persist please contact the developers", "Error #FU002") # nolint: object_usage
       return(FALSE)
     }
 
@@ -160,8 +152,8 @@ validate_input <- function(input_file, type) { # nolint: cyclocomp
     df <- rio::import(input_file$datapath)
 
     if (is.null(df)) {
-      print("Null Data Fram")
-      error_alert("An error occured, the data appears to be empty, please try again, if this problem consiste please contact the developers", "Error #FU003") # nolint: object_usage
+      print("Null Data Frame")
+      error_alert("An internal error occured, the data appears to be empty, please try again, if this problem consiste please contact the developers", "Error #FU003") # nolint: object_usage
       return(FALSE)
     }
 
@@ -180,11 +172,9 @@ validate_input <- function(input_file, type) { # nolint: cyclocomp
         return(validate_continuous_long(df))
       }
     }
-    return(FALSE)
   },
   error = function(e) {
     error_alert(e$message) # nolint: object_usage
     return(FALSE)
   })
-  return(FALSE)
 }

@@ -4,8 +4,10 @@ freq_outcome_tab_server <- function(id, reactive_data, reactive_freq, tab) {
     function(input,
              output,
              session) {
-      require(dplyr)
-      ns <- shiny::NS(id)
+
+      ns <- session$ns
+
+      `%>%` <- magrittr::`%>%`
 
       output$inputs <- NULL
       output$outputs <- NULL
