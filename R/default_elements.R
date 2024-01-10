@@ -1,5 +1,16 @@
+message_tag_list <- function(id, title = "") {
+
+  ns <- shiny::NS(id)
+  shiny::tagList(
+    shiny::uiOutput(ns("warning")),
+    shiny::uiOutput(ns("info"))
+  )
+
+}
+
+
 default_file_input <- function(ns) {
-  shiny::renderUI({
+  return(
     shiny::fileInput(
       inputId = ns("data"),
       label = "",
@@ -7,7 +18,7 @@ default_file_input <- function(ns) {
       placeholder = "No file selected",
       accept = c(".csv", ".xlsx")
     )
-  })
+  )
 }
 
 default_no_data <- function(ns) {

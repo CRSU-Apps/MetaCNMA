@@ -1,4 +1,8 @@
-network_plot_tab_server <- function(id, reactive_data, reactive_freq, tab) {
+upset_plot_tab_ui <- function(id) {
+  ns <- shiny::NS(id)
+}
+
+upset_plot_tab_server <- function(id, reactive_data, reactive_freq, tab) {
   shiny::moduleServer(id,
     function(input,
              output,
@@ -38,29 +42,10 @@ network_plot_tab_server <- function(id, reactive_data, reactive_freq, tab) {
                     },
                     message = "Formatting Data")
                   }
-                  if (is.null(reactive_freq()$netmeta())) {
-                    shiny::withProgress({
-                      reactive_freq()$netmeta(
-                        run_netmeta(
-                          reactive_freq()$pairwise(),
-                          ref = get_most_freq_component(
-                            reactive_freq()$pairwise()
-                          ),
-                          random_eff = reactive_freq()$random_effects_logical()
-                        )
-                      )
-                    },
-                    message = "Running Network Meta Analysis")
-                  }
-
                   output$outputs <- shiny::renderUI(
-                    vis_network_ui(ns("vis_network_1"))
-                  )
-                  vis_network_server(
-                    "vis_network_1",
-                    reactive_freq()$netmeta(),
-                    names(
-                      get_combination_components(reactive_freq()$pairwise())
+                    render_upset_plot( # nolint: object_usage
+                      reactive_freq()$formatted_data(),
+                      get_components_no_reference(reactive_freq()$pairwise()) # nolint: object_usage
                     )
                   )
                 }

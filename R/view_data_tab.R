@@ -1,3 +1,7 @@
+view_data_tab <- function(id) {
+  ns <- shiny::NS(id)
+}
+
 view_data_tab_server <- function(id, reactive_data, reactive_freq) {
   shiny::moduleServer(
     id,

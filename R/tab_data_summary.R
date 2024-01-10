@@ -1,3 +1,7 @@
+data_summary_tab_ui <- function(id) {
+  ns <- shiny::NS(id)
+}
+
 data_summary_tab_server <- function(id, reactive_data, reactive_freq, tab) {
   shiny::moduleServer(id,
     function(input,
