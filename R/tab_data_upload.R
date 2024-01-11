@@ -49,7 +49,9 @@ data_upload_tab_server <- function(
 
       # Logical to show reset button only when data uploaded
       data_uploaded <- shiny::reactiveVal(FALSE)
-      output$data_uploaded <- shiny::reactive({data_uploaded()})
+      output$data_uploaded <- shiny::reactive({
+        data_uploaded()
+      })
       shiny::outputOptions(output, "data_uploaded", suspendWhenHidden = FALSE)
 
       # Render the file input intially
