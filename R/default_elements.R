@@ -1,11 +1,10 @@
-message_tag_list <- function(id, title = "") {
-
-  ns <- shiny::NS(id)
-  shiny::tagList(
-    shiny::uiOutput(ns("warning")),
-    shiny::uiOutput(ns("info"))
+message_tag_list <- function(ns) {
+  return(
+    shiny::tagList(
+      shiny::uiOutput(ns("warning")),
+      shiny::uiOutput(ns("info"))
+    )
   )
-
 }
 
 

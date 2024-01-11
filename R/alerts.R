@@ -1,4 +1,4 @@
-error_alert <- function(msg, title = "") {
+error_alert <- function(msg, title = "An Error Occurred") {
   custom_alert(title, msg, "error")
 }
 

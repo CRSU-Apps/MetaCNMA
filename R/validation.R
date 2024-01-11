@@ -14,15 +14,23 @@ is_wide <- function(df) {
 validate_column_names <- function(df, required_names) {
   column_names <- names(df)
   tryCatch({
-    columns_exist <- lapply(required_names, function(name) {
+    missing_columns <- lapply(required_names, function(name) {
       if (!tolower(name) %in% tolower(column_names)) {
-        error_alert(paste0("Error column ", name, " is missing from the data")) # nolint: object_usage
-        return(FALSE)
-      } else {
-        return(TRUE)
+        return(name)
       }
     })
-    return (all(as.logical(columns_exist)))
+    missing_columns <- purrr::compact(missing_columns)
+    if (purrr::is_empty(missing_columns)) {
+      return(TRUE)
+    } else {
+      error_alert( # nolint: object_usage
+        paste0("Error column(s): '",
+          paste0(missing_columns, collapse = ", "),
+          "' are missing from the data"
+        )
+      )
+      return(FALSE)
+    }
   },
   error = function(e) {
     error_alert(e$message) # nolint: object_usage

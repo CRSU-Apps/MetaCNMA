@@ -2,6 +2,7 @@ data_upload_tab_ui <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
     shiny::h1("Upload Data"),
+    message_tag_list(ns), # nolint: object_usage
     shiny::p("Data should be uploaded as either a .csv or .xlsx file"),
     shiny::p(
       "For help on uploading data see the ",
