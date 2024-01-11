@@ -22,16 +22,18 @@ default_file_input <- function(ns) {
 }
 
 default_no_data <- function(ns) {
-  shiny::renderUI(shiny::tagList(shiny::p("No data loaded"),
-                                 shiny::div(
-                                   shiny::actionButton(
-                                     ns("default_data"),
-                                     "Reload Default Data",
-                                     shiny::icon("arrows-rotate"),
-                                     style =
-                                       "color: #fff; background-color: #dc3545; border-color: #dc3545" # nolint line_length
-                                   )
-                                 )))
+  shiny::tagList(
+    shiny::p("No data loaded"),
+    shiny::div(
+      shiny::actionButton(
+        ns("default_data"),
+        "Reload Default Data",
+        shiny::icon("arrows-rotate"),
+        style =
+          "color: #fff; background-color: #dc3545; border-color: #dc3545" # nolint line_length
+      )
+    )
+  )
 }
 
 default_data_continuous <- function() {
@@ -58,14 +60,13 @@ default_data_binary <- function() {
 
 
 default_reload_button <- function(ns, button_text = "Delete Data") {
-  shiny::renderUI({
-    shiny::div(
-      shiny::actionButton(
-                          ns("reload_button"),
-                          button_text,
-                          shiny::icon("trash"),
-                          style =
-                          "color: #fff; background-color: #dc3545; border-color: #dc3545") # nolint line_length
-    )
-  })
+  shiny::div(
+    shiny::actionButton(
+      ns("reload_button"),
+      button_text,
+      shiny::icon("trash"),
+      style =
+        "color: #fff; background-color: #dc3545; border-color: #dc3545"
+    ) # nolint line_length
+  )
 }

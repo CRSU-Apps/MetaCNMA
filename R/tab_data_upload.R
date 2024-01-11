@@ -7,12 +7,23 @@ data_upload_tab_ui <- function(id) {
       "For help on uploading data see the ",
       shiny::actionLink(ns("data_help_link"), "data help tab.")
     ),
-    shiny::column(
-      width = 6,
-      file_input_ui("data_upload_file_input"), # nolint: object_usage
-      offset = 2
-    ),
-
+    shiny::fluidRow(
+      shiny::column(
+        width = 6,
+        shiny::uiOutput(ns("file_input")),
+        offset = 2
+      ),
+      shiny::column(
+        width = 6,
+        shiny::conditionalPanel(
+          condition = "output.data_uploaded == true",
+          ns = ns,
+          p("test"),
+          default_reload_button(ns) # nolint: object_usage
+        )
+      ),
+      class = "vertical-align"
+    )
   )
 }
 
@@ -31,8 +42,35 @@ data_upload_tab_server <- function(
 
       `%>%` <- magrittr::`%>%`
 
-      uploaded_data <- file_input_server( # nolint: object_usage
-        "data_upload_file_input"
+      # Create a definable reactive value to allow reloading of data
+      reload <- shiny::reactiveVal(FALSE)
+
+      file_input <- shiny::renderUI(default_file_input(ns)) # nolint: object_usage
+
+      # Logical to show reset button only when data uploaded
+      data_uploaded <- shiny::reactiveVal(FALSE)
+      output$data_uploaded <- shiny::reactive({data_uploaded()})
+      shiny::outputOptions(output, "data_uploaded", suspendWhenHidden = FALSE)
+
+      # Render the file input intially
+      output$file_input <- file_input
+
+      shiny::observe({
+        reload(TRUE)
+        output$file_input <- file_input
+        data_uploaded(FALSE)
+      }) %>% shiny::bindEvent(
+        data_type(),
+        input$reload_button,
+        ignoreInit = TRUE
+      )
+
+      shiny::observe({
+        reload(FALSE)
+        data_uploaded(TRUE)
+      }) %>% shiny::bindEvent(
+        input$data,
+        ignoreInit = TRUE
       )
 
     }
