@@ -8,17 +8,30 @@ shinyServer(function(input, output, session){
   # reactive_data <- Data$new()$reactive()
   # reactive_freq <- Freq$new()$reactive()
   # Tabs as a reactive
-  tabs <- reactive(input$tabs)
+  tab <- reactive(input$tabs)
   log <- reactiveValues()
 
-  parent_session = reactive(session)
+  parent_session <- reactive(session)
 
   data_type <- home_tab_server("home_tab")
 
-  raw_data <- data_upload_tab_server(
+  data_reactives <- data_upload_tab_server(
     "data_upload_tab",
     data_type,
     parent_session
+  )
+
+  data <- data_reactives$data
+  is_default_data <- data_reactives$is_default_data
+  invalidate_count <- data_reactives$invalidate_count
+
+  view_data_tab_server("view_data_tab", data, data_type, invalidate_count)
+
+  freq_outcome_tab_server(
+    "freq_outcome_tab",
+    data, data_type,
+    is_default_data,
+    tab
   )
 
   # Load the cookie module from R/cookies.R

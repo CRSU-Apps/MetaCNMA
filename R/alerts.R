@@ -31,17 +31,13 @@ custom_alert <- function(title, msg, type) {
 }
 
 warning_alert <- function(msg) {
-  shiny::renderUI(
-    shiny::tags$div(
-      class = "alert alert-warning", role = "alert", paste0("Warning: ", msg)
-    )
+  shiny::tags$div(
+    class = "alert alert-warning", role = "alert", paste0("Warning: ", msg)
   )
 }
 
 message_alert <- function(msg) {
-  shiny::renderUI(
-    shiny::tags$div(
-      class = "alert alert-info", role = "alert", paste0("Message: ", msg)
-    )
+  shiny::tags$div(
+    class = "alert alert-info", role = "alert", paste0("Message: ", msg)
   )
 }

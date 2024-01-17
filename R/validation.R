@@ -79,6 +79,7 @@ validate_wide <- function(df, required_columns) {
     n_arms <- split_cols$n_arms
 
     n_expected_cols <- n_arms * length(wide_columns)
+    missing_columns <- c()
 
     # Iterate through the wide columns (column names without the .n)
     for (col in wide_columns) {
@@ -86,12 +87,22 @@ validate_wide <- function(df, required_columns) {
       for (i in 1:n_arms) {
         # Check that for each arm there is a corresponding wide column
         if (!paste(col, i, sep = ".") %in% wide_column_names) {
-          error_alert(paste0("Expected column: ", paste(col, i, sep = "."), " but missing")) # nolint: object_usage
+          missing_columns <- c(missing_columns, paste(col, i, sep = "."))
+          #error_alert(paste0("Expected column: ", paste(col, i, sep = "."), " but missing")) # nolint: object_usage
           return(FALSE)
         }
       }
     }
     # Check the number of columns are as expected
+
+    if (! is.null(missing_columns)) {
+      error_alert( # nolint: object_usage
+        paste0("Error column(s): '",
+          paste0(missing_columns, collapse = ", "),
+          "' are missing from the data"
+        )
+      )
+    }
 
     if (length(cols) != n_expected_cols) {
       error_alert("There is a problem with the number of columns, did you miss a column?") # nolint: object_usage

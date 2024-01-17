@@ -12,18 +12,18 @@ render_sidebar <- function() {
       shinydashboard::menuSubItem("Upload Data",
         tabName = "data_upload_tab",
         icon = shiny::icon("file")
+      ),
+      shinydashboard::menuSubItem(
+        "View Data",
+        tabName = "view_data_tab",
+        icon = shiny::icon("table")
       )#,
-    #   shinydashboard::menuSubItem(
-    #     "View Data",
-    #     tabName = "view_data_1",
-    #     icon = shiny::icon("table")
-    #   ),
     #   shinydashboard::menuSubItem(
     #     "Help",
     #     tabName = "data_help_1",
     #     icon = shiny::icon("question")
     #   )
-    )#,
+    ),
     # shinydashboard::menuItem(
     #   "Component Summary",
     #   icon = shiny::icon("puzzle-piece"),
@@ -49,15 +49,15 @@ render_sidebar <- function() {
     #     icon = icon("chart-bar")
     #   )
     # ),
-    # menuItem(
-    #   "Frequentist Analysis",
-    #   icon = icon("microscope"),
-    #   startExpanded = TRUE,
-    #   menuSubItem(
-    #     "Outcome & Model Settings",
-    #     tabName = "freq_outcome_1",
-    #     icon = icon("equals")
-    #   ),
+    menuItem(
+      "Frequentist Analysis",
+      icon = icon("microscope"),
+      startExpanded = TRUE,
+      menuSubItem(
+        "Outcome & Model Settings",
+        tabName = "freq_outcome_tab",
+        icon = icon("equals")
+      )#,
     #   menuSubItem(
     #     "Exclude Studies",
     #     tabName = "freq_exclude_1",
@@ -78,6 +78,6 @@ render_sidebar <- function() {
     #   "Readme",
     #   tabName = "readme",
     #   icon = shiny::icon("readme")
-    # )
+    )
   )
 }

@@ -19,7 +19,6 @@ data_upload_tab_ui <- function(id) {
         shiny::conditionalPanel(
           condition = "output.data_uploaded == true",
           ns = ns,
-          p("test"),
           default_reload_button(ns) # nolint: object_usage
         )
       ),
@@ -46,6 +45,13 @@ data_upload_tab_server <- function(
       # Create a definable reactive value to allow reloading of data
       reload <- shiny::reactiveVal(FALSE)
 
+      # Use a counter in a reactiveVal to allow data to be invalidated
+      invalidate_count <- shiny::reactiveVal(0)
+
+      data <- shiny::reactiveVal(NULL)
+      is_default_data <- shiny::reactiveVal(NULL)
+
+      # Wrap the file_input from default_elements.R into a render function
       file_input <- shiny::renderUI(default_file_input(ns)) # nolint: object_usage
 
       # Logical to show reset button only when data uploaded
@@ -59,21 +65,50 @@ data_upload_tab_server <- function(
       output$file_input <- file_input
 
       shiny::observe({
+        data(NULL)
+      }) %>% shiny::bindEvent(
+        invalidate_count(),
+        ignoreInit = TRUE,
+        ignoreNULL = TRUE
+      )
+
+      # Trigger a data reload on reload button or data_type change
+      shiny::observe({
+        print("Reloading Data")
         reload(TRUE)
         output$file_input <- file_input
         data_uploaded(FALSE)
+        data(NULL)
       }) %>% shiny::bindEvent(
         data_type(),
         input$reload_button,
+        invalidate_count(),
         ignoreInit = TRUE
       )
 
+      # Set data_uploaded when file_input changes
       shiny::observe({
-        reload(FALSE)
-        data_uploaded(TRUE)
+        print("Setting Data Upload")
+        if (validate_input(input$data, data_type())) {
+          print("Data Validated Loading Data")
+          reload(FALSE)
+          data_uploaded(TRUE)
+          is_default_data(FALSE)
+          data(rio::import(input$data$datapath))
+        } else {
+          
+        }
       }) %>% shiny::bindEvent(
         input$data,
         ignoreInit = TRUE
+      )
+
+      return(
+        list(
+          data = data,
+          is_default_data = is_default_data,
+          invalidate_count = invalidate_count
+        )
       )
 
     }

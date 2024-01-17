@@ -6,10 +6,10 @@ render_body <- function() {
     ),
     shinydashboard::tabItem(tabName = "data_upload_tab",
       data_upload_tab_ui("data_upload_tab") # nolint object_usage
-    )#,
-    # shinydashboard::tabItem(tabName = "view_data_1",
-    #   reactive_page("view_data_1", "View Data") # nolint object_usage
-    # ),
+    ),
+    shinydashboard::tabItem(tabName = "view_data_tab",
+      view_data_tab_ui("view_data_tab") # nolint object_usage
+    ),
     # shinydashboard::tabItem(tabName = "data_help_1",
     #   data_help_tab() # nolint object_usage
     # ),
@@ -25,10 +25,9 @@ render_body <- function() {
     # shinydashboard::tabItem(tabName = "upset_plot_1",
     #   reactive_page("upset_plot_1", "Upset Plot") # nolint object_usage
     # ),
-    # shinydashboard::tabItem(tabName = "freq_outcome_1",
-    #   reactive_page("freq_outcome_1",
-    #   "Outcome Measure and Model Settings") # nolint object_usage
-    # ),
+    shinydashboard::tabItem(tabName = "freq_outcome_tab",
+      freq_outcome_tab_ui("freq_outcome_tab") # nolint object_usage
+    )#,
     # shinydashboard::tabItem(tabName = "freq_exclude_1",
     #   reactive_page("freq_exclude_1",
     #   "Exclude Studies") # nolint object_usage

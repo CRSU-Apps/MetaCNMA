@@ -55,52 +55,10 @@ get_required_continuous_wide_columns <- function() { # nolint
   return(get_site_info_property("required_continuous_wide_columns")[[1]])
 }
 
-invalidate_reactive <- function(reactive_data, reactive_freq) {
-  reactive_data()$invalidate()
-  reactive_freq()$invalidate()
-}
-
-#' Function to load the default data depending on selected outcome
-#' data is loaded to \code{data$data} and sets appropriate values
-#'
-#' @param reactive_data reactive values variable for data (see global.R)
-#' @param reactive_freq freq reactive values variable
-#' for frequentest analysis (see global.R)
-#'
-#' @return True if default data was loaded
-#' @export
-#'
-#' @examples
-load_default_data <- function(reactive_data, reactive_freq) {
-  print("Attempting to Load Default Data")
-  # Try catch to display an error if one occures
-  tryCatch({
-    # Invalidate any currently loaded data
-    invalidate_reactive(reactive_data, reactive_freq)
-    # Determine whether to load binary or continous data
-    if (reactive_data()$data_type() == "binary") {
-      tmp_data <- default_data_binary() # nolint: object_name
-    } else {
-      tmp_data <- default_data_continuous() # nolint: object_name
-    }
-    # Load the data
-    reactive_data()$load_data(
-      tmp_data$format,
-      tmp_data$data_frame,
-      TRUE,
-      tmp_data$measure,
-      tmp_data$desirable,
-      tmp_data$outcome_name
-    )
-    reactive_freq()$measure(tmp_data$measure)
-    return(TRUE)
-  },
-  error = function(e) {
-    error_alert(e$message) # nolint: object_name
-    invalidate_reactive(reactive_data, reactive_freq)
-    return(FALSE)
-  })
-}
+# invalidate_reactive <- function(reactive_data, reactive_freq) {
+#   reactive_data()$invalidate()
+#   reactive_freq()$invalidate()
+# }
 
 get_outcome_measure <- function(outcome_measure) {
   if (is.null(outcome_measure)) {
