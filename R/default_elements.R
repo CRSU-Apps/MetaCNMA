@@ -132,3 +132,23 @@ default_outcome_desirable <- function(data_type, is_default_data) {
     return(NULL)
   }
 }
+
+default_desirable_text <- function(data_type) {
+  if (data_type == "continuous") {
+    return("For treatment rankings a smaller 
+                outcome value (MD / SMD) is:")
+  } else if (data_type == "binary") {
+    return("For treatment rankings an outcome value (OR / RR / RR) 
+                less than 1 is:")
+  } else {
+    return(NULL)
+  }
+}
+
+default_outcome_name <- function(data_type, is_default_data) {
+  if (is_default_data) {
+    return(default_data(data_type)$outcome_name)
+  } else {
+    return("")
+  }
+}

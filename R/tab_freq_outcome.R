@@ -32,7 +32,10 @@ freq_outcome_tab_server <- function(id, data, data_type, is_default_data, tab) {
       shiny::observe({
         print("Waiting on data_type and is_default_data")
 
-        output$outcome_measure <- NULL
+        output$outcome_measure <- shiny::renderText("No Data Loaded")
+        output$desirable <- NULL
+        output$random_effects <- NULL
+        output$outcome_name <- NULL
 
         shiny::req(
           !is.null(data()),
@@ -43,37 +46,52 @@ freq_outcome_tab_server <- function(id, data, data_type, is_default_data, tab) {
 
         print("Rendering outcome measure radio")
 
-        selected_outcome_measure <-
-          default_outcome_measure(data_type(), is_default_data())
-
         print(data_type())
 
-        output$outcome_measure <- shiny::renderUI(shiny::radioButtons(
-          ns("outcome_measure"),
-          "Select an outcome measure:",
-          # {
-          #   if (data_type == "binary") {
-          #     return(
-          #       c("Odds Ratio (OR)" = "or",
-          #         "Risk Ratio (RR)" = "rr",
-          #         "Risk Difference (RD)" = "rd")
-          #     )
-          #   } else {
-          #     return(
-          #       c("Mean Difference (MD)" = "md",
-          #         "Standardised Mean Difference (SMD)" = "smd")
-          #     )
-          #   }
-          # }
-          ifelse(data_type() == "binary",
-            (c("Odds Ratio (OR)" = "or",
-               "Risk Ratio (RR)" = "rr",
-               "Risk Difference (RD)" = "rd")),
-            (c("Mean Difference (MD)" = "md",
-               "Standardised Mean Difference (SMD)" = "smd")),
-          ),
-          selected = selected_outcome_measure
-        ))
+        output$outcome_measure <- shiny::renderUI(
+          shiny::radioButtons(
+            ns("outcome_measure"),
+            "Select an outcome measure:",
+            choices = if (data_type() == "binary") {
+              c("Odds Ratio (OR)" = "or",
+                "Risk Ratio (RR)" = "rr",
+                "Risk Difference (RD)" = "rd")
+            } else {
+              c("Mean Difference (MD)" = "md",
+                "Standardised Mean Difference (SMD)" = "smd")
+            } ,
+            selected = default_outcome_measure(data_type(), is_default_data())
+          )
+        )
+
+        output$desirable <- shiny::renderUI(
+          shiny::radioButtons(
+            ns("desirable"),
+            default_desirable_text(data_type()),
+            c("Desirable" = 1,
+              "Undesirable" = 0),
+            selected = default_outcome_desirable(data_type(), is_default_data())
+          )
+        )
+
+        output$random_effects <- shiny::renderUI(
+          shiny::radioButtons(
+            ns("random_effects"),
+            "The model should use:",
+            c("Fixed Effects" = 0,
+              "Random Effects" = 1),
+            selected = 0
+          )
+        )
+
+        output$outcome_name <- shiny::renderUI(
+          shiny::textInput(
+            ns("outcome_name"),
+            "Outcome Name",
+            value = default_outcome_name(data_type(), is_default_data())
+          )
+        )
+
       }) %>% shiny::bindEvent(
         update_reactive()
       )
