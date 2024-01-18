@@ -23,7 +23,7 @@ freq_outcome_tab_server <- function(id, data, data_type, is_default_data, tab) {
 
       freq_options <- shiny::reactiveValues()
 
-      update_reactive <- shiny::reactive({
+      freq_options$update_reactive <- shiny::reactive({
         data()
         data_type()
         is_default_data()
@@ -64,6 +64,12 @@ freq_outcome_tab_server <- function(id, data, data_type, is_default_data, tab) {
           )
         )
 
+        shiny::outputOptions(
+          output,
+          "outcome_measure",
+          suspendWhenHidden = FALSE
+        )
+
         output$desirable <- shiny::renderUI(
           shiny::radioButtons(
             ns("desirable"),
@@ -72,6 +78,12 @@ freq_outcome_tab_server <- function(id, data, data_type, is_default_data, tab) {
               "Undesirable" = 0),
             selected = default_outcome_desirable(data_type(), is_default_data())
           )
+        )
+
+        shiny::outputOptions(
+          output,
+          "desirable",
+          suspendWhenHidden = FALSE
         )
 
         output$random_effects <- shiny::renderUI(
@@ -84,6 +96,12 @@ freq_outcome_tab_server <- function(id, data, data_type, is_default_data, tab) {
           )
         )
 
+        shiny::outputOptions(
+          output,
+          "random_effects",
+          suspendWhenHidden = FALSE
+        )
+
         output$outcome_name <- shiny::renderUI(
           shiny::textInput(
             ns("outcome_name"),
@@ -92,9 +110,48 @@ freq_outcome_tab_server <- function(id, data, data_type, is_default_data, tab) {
           )
         )
 
+        shiny::outputOptions(output, "outcome_name", suspendWhenHidden = FALSE)
+
       }) %>% shiny::bindEvent(
-        update_reactive()
+        freq_options$update_reactive()
       )
+
+
+      freq_options$outcome_measure <- shiny::reactive({
+        return(input$data_measure)
+      })
+
+      freq_options$desirable <- shiny::reactive({
+        return(input$desirable)
+      })
+
+      freq_options$outcome_measure <- shiny::reactive({
+        return(input$outcome_measure)
+      })
+
+      shiny::observe({
+        if (tab() == id) {
+          shiny::invalidateLater(3000, session)
+          freq_options$outcome_name <- shiny::isolate(input$outcome_name)
+        } else {
+          freq_options$outcome_name <- shiny::isolate(input$outcome_name)
+        }
+      }) %>% shiny::bindEvent(input$outcome_name, ignoreInit = TRUE)
+
+      freq_options$options_loaded <- shiny::reactive({
+        if(
+          any(
+            is.null(input$outcome_measure),
+            is.null(input$desirable),
+            is.null(input$random_effects),
+            is.null(input$outcome_name)
+          )
+        ) {
+          return(FALSE)
+        } else {
+          return(TRUE)
+        }
+      })
 
 
     }

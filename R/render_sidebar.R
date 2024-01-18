@@ -17,12 +17,12 @@ render_sidebar <- function() {
         "View Data",
         tabName = "view_data_tab",
         icon = shiny::icon("table")
-      )#,
-    #   shinydashboard::menuSubItem(
-    #     "Help",
-    #     tabName = "data_help_1",
-    #     icon = shiny::icon("question")
-    #   )
+      ),
+      shinydashboard::menuSubItem(
+        "Help",
+        tabName = "data_help",
+        icon = shiny::icon("question")
+      )
     ),
     # shinydashboard::menuItem(
     #   "Component Summary",

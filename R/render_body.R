@@ -10,9 +10,9 @@ render_body <- function() {
     shinydashboard::tabItem(tabName = "view_data_tab",
       view_data_tab_ui("view_data_tab") # nolint object_usage
     ),
-    # shinydashboard::tabItem(tabName = "data_help_1",
-    #   data_help_tab() # nolint object_usage
-    # ),
+    shinydashboard::tabItem(tabName = "data_help",
+      data_help_tab() # nolint object_usage
+    ),
     # shinydashboard::tabItem(tabName = "data_summary_1",
     #   reactive_page("data_summary_1", "Data Summary") # nolint object_usage
     # ),

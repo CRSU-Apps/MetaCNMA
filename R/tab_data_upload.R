@@ -61,6 +61,12 @@ data_upload_tab_server <- function(
       })
       shiny::outputOptions(output, "data_uploaded", suspendWhenHidden = FALSE)
 
+      shiny::observe({
+        shinydashboard::updateTabItems(parent_session(), "tabs", "data_help")
+      }) %>% shiny::bindEvent(input$data_help_link,
+        ignoreInit = TRUE, ignoreNULL = TRUE
+      )
+
       # Render the file input intially
       output$file_input <- file_input
 

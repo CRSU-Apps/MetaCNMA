@@ -1,5 +1,9 @@
 data_summary_tab_ui <- function(id) {
   ns <- shiny::NS(id)
+  shiny::tagList(
+    shiny::h1("UploDataad "),
+    message_tag_list(ns), # nolint: object_usage
+  )
 }
 
 data_summary_tab_server <- function(id, reactive_data, reactive_freq, tab) {
@@ -11,53 +15,7 @@ data_summary_tab_server <- function(id, reactive_data, reactive_freq, tab) {
       ns <- session$ns
 
       `%>%` <- magrittr::`%>%`
-
-      shiny::observe({
-        output$warning <- NULL
-        output$info <- NULL
-        output$inputs <- NULL
-        output$static_content <- NULL
-        output$outputs <- NULL
-        if (tab() == id) {
-          tryCatch({
-            withCallingHandlers(
-              warning = function(cond) {
-                output$warning <- warning_alert(conditionMessage(cond)) #nolint: object_usage
-              },
-              message = function(cond) {
-                output$message <- message_alert(conditionMessage(cond)) #nolint: object_usage
-              },
-              {
-                if (!reactive_data()$valid()) {
-                  output$outputs <- default_no_data(ns) # nolint: object_usage
-                } else {
-                  if (is.null(reactive_freq()$pairwise())) {
-                    shiny::withProgress({
-                      reactive_freq()$pairwise(
-                        freq_pairwise(reactive_data, reactive_freq) # nolint: object_usage
-                      )
-                      reactive_freq()$n_connection(
-                        run_net_connection(reactive_freq()$pairwise()) # nolint: object_usage
-                      )
-                    },
-                    message = "Formatting Data")
-                  }
-                  output$outputs <- render_freq_summary( # nolint: object_usage
-                    reactive_freq()$pairwise(), reactive_freq()$n_connection()
-                  )
-                }
-              }
-            )
-          })
-        }
-      }) %>% shiny::bindEvent(
-        tab(),
-        reactive_freq()$valid()
-      )
-
-      shiny::observe({
-        load_default_data(reactive_data, reactive_freq) # nolint: object_usage
-      }) %>% shiny::bindEvent(input$default_data)
+      
     }
   )
 }
