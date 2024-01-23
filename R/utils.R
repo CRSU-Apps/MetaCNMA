@@ -73,3 +73,15 @@ get_outcome_measure <- function(outcome_measure) {
     TRUE ~ "Outcome Measure"
   )
 }
+
+as_logical <- function(x) {
+  print(x)
+  if (!is.numeric(x)) {
+    stop("Input must be numerical")
+  } else if (x == 1) {
+    return(TRUE)
+  } else if (x == 0) {
+    return(FALSE)
+  }
+  stop("Input must be 1 or 0")
+}

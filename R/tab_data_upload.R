@@ -42,22 +42,28 @@ data_upload_tab_server <- function(
 
       `%>%` <- magrittr::`%>%`
 
+      data_reactives <- shiny::reactiveValues()
+
+      data_reactives$data_type <- shiny::reactive({
+        data_type()
+      })
+
       # Create a definable reactive value to allow reloading of data
-      reload <- shiny::reactiveVal(FALSE)
+      data_reactives$reload <- shiny::reactiveVal(FALSE)
 
       # Use a counter in a reactiveVal to allow data to be invalidated
-      invalidate_count <- shiny::reactiveVal(0)
+      data_reactives$invalidate_count <- shiny::reactiveVal(0)
 
-      data <- shiny::reactiveVal(NULL)
-      is_default_data <- shiny::reactiveVal(NULL)
+      data_reactives$data <- shiny::reactiveVal(NULL)
+      data_reactives$is_default_data <- shiny::reactiveVal(NULL)
 
       # Wrap the file_input from default_elements.R into a render function
       file_input <- shiny::renderUI(default_file_input(ns)) # nolint: object_usage
 
       # Logical to show reset button only when data uploaded
-      data_uploaded <- shiny::reactiveVal(FALSE)
+      data_reactives$data_uploaded <- shiny::reactiveVal(FALSE)
       output$data_uploaded <- shiny::reactive({
-        data_uploaded()
+        data_reactives$data_uploaded()
       })
       shiny::outputOptions(output, "data_uploaded", suspendWhenHidden = FALSE)
 
@@ -71,9 +77,9 @@ data_upload_tab_server <- function(
       output$file_input <- file_input
 
       shiny::observe({
-        data(NULL)
+        data_reactives$data(NULL)
       }) %>% shiny::bindEvent(
-        invalidate_count(),
+        data_reactives$invalidate_count(),
         ignoreInit = TRUE,
         ignoreNULL = TRUE
       )
@@ -81,40 +87,40 @@ data_upload_tab_server <- function(
       # Trigger a data reload on reload button or data_type change
       shiny::observe({
         print("Reloading Data")
-        reload(TRUE)
+        data_reactives$reload(TRUE)
         output$file_input <- file_input
-        data_uploaded(FALSE)
-        data(NULL)
+        data_reactives$data_uploaded(FALSE)
+        data_reactives$data(NULL)
       }) %>% shiny::bindEvent(
-        data_type(),
+        data_reactives$data_type(),
         input$reload_button,
-        invalidate_count(),
+        data_reactives$invalidate_count(),
         ignoreInit = TRUE
       )
 
       # Set data_uploaded when file_input changes
       shiny::observe({
         print("Setting Data Upload")
-        if (validate_input(input$data, data_type())) {
+        if (validate_input(input$data, data_reactives$data_type())) {
           print("Data Validated Loading Data")
-          reload(FALSE)
-          data_uploaded(TRUE)
-          is_default_data(FALSE)
-          data(rio::import(input$data$datapath))
+          data_reactives$reload(FALSE)
+          data_reactives$data_uploaded(TRUE)
+          data_reactives$is_default_data(FALSE)
+          data_reactives$data(rio::import(input$data$datapath))
         } else {
-          
+
         }
       }) %>% shiny::bindEvent(
         input$data,
         ignoreInit = TRUE
       )
 
+      data_reactives$is_data_loaded <- shiny::reactive({
+        return(!is.null(data_reactives$data()))
+      })
+
       return(
-        list(
-          data = data,
-          is_default_data = is_default_data,
-          invalidate_count = invalidate_count
-        )
+        data_reactives
       )
 
     }

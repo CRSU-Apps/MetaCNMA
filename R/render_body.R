@@ -13,18 +13,18 @@ render_body <- function() {
     shinydashboard::tabItem(tabName = "data_help",
       data_help_tab() # nolint object_usage
     ),
-    # shinydashboard::tabItem(tabName = "data_summary_1",
-    #   reactive_page("data_summary_1", "Data Summary") # nolint object_usage
-    # ),
-    # shinydashboard::tabItem(tabName = "net_graph_1",
-    #   reactive_page("net_graph_1", "Network Diagram") # nolint object_usage
-    # ),
-    # shinydashboard::tabItem(tabName = "correlation_plot_1",
-    #   reactive_page("correlation_plot_1", "Correlation Plot") # nolint object_usage
-    # ),
-    # shinydashboard::tabItem(tabName = "upset_plot_1",
-    #   reactive_page("upset_plot_1", "Upset Plot") # nolint object_usage
-    # ),
+    shinydashboard::tabItem(tabName = "data_summary",
+      data_summary_tab_ui("data_summary") # nolint object_usage
+    ),
+    shinydashboard::tabItem(tabName = "net_graph",
+      network_plot_tab_ui("net_graph") # nolint object_usage
+    ),
+    shinydashboard::tabItem(tabName = "correlation_plot",
+      correlation_plot_tab_ui("correlation_plot") # nolint object_usage
+    ),
+    shinydashboard::tabItem(tabName = "upset_plot",
+      upset_plot_tab_ui("upset_plot") # nolint object_usage
+    ),
     shinydashboard::tabItem(tabName = "freq_outcome_tab",
       freq_outcome_tab_ui("freq_outcome_tab") # nolint object_usage
     )#,

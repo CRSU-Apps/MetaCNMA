@@ -24,31 +24,31 @@ render_sidebar <- function() {
         icon = shiny::icon("question")
       )
     ),
-    # shinydashboard::menuItem(
-    #   "Component Summary",
-    #   icon = shiny::icon("puzzle-piece"),
-    #   startExpanded = TRUE,
-    #   menuSubItem(
-    #     "Data Summary",
-    #     tabName = "data_summary_1",
-    #     icon = icon("clipboard-list")
-    #   ),
-    #   menuSubItem(
-    #     "Network Diagram",
-    #     tabName = "net_graph_1",
-    #     icon = icon("circle-nodes")
-    #   ),
-    #   menuSubItem(
-    #     "Correlation Plot and Heatmap",
-    #     tabName = "correlation_plot_1",
-    #     icon = icon("chart-simple")
-    #   ),
-    #   menuSubItem(
-    #     "Upset Plot",
-    #     tabName = "upset_plot_1",
-    #     icon = icon("chart-bar")
-    #   )
-    # ),
+    shinydashboard::menuItem(
+      "Component Summary",
+      icon = shiny::icon("puzzle-piece"),
+      startExpanded = TRUE,
+      menuSubItem(
+        "Data Summary",
+        tabName = "data_summary",
+        icon = icon("clipboard-list")
+      ),
+      menuSubItem(
+        "Network Diagram",
+        tabName = "net_graph",
+        icon = icon("circle-nodes")
+      ),
+      menuSubItem(
+        "Correlation Plot and Heatmap",
+        tabName = "correlation_plot",
+        icon = icon("chart-simple")
+      ),
+      menuSubItem(
+        "Upset Plot",
+        tabName = "upset_plot",
+        icon = icon("chart-bar")
+      )
+    ),
     menuItem(
       "Frequentist Analysis",
       icon = icon("microscope"),

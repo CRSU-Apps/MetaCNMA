@@ -8,7 +8,7 @@ view_data_tab_ui <- function(id) {
   )
 }
 
-view_data_tab_server <- function(id, data, data_type, invalidate_count) {
+view_data_tab_server <- function(id, data_reactives) {
   shiny::moduleServer(
     id,
     function(input,
@@ -20,8 +20,8 @@ view_data_tab_server <- function(id, data, data_type, invalidate_count) {
       `%>%` <- magrittr::`%>%`
 
       shiny::observe({
-        shiny::req(data_type())
-        if (is.null(data())) {
+        shiny::req(data_reactives$data_type())
+        if (is.null(data_reactives$data())) {
           output$citation <- NULL
           output$data_table <- NULL
         } else {
@@ -36,7 +36,7 @@ view_data_tab_server <- function(id, data, data_type, invalidate_count) {
               {
                 output$data_table <-
                   DT::renderDataTable(
-                    data(),
+                    data_reactives$data(),
                     filter = "top",
                     options = list(
                       scrollX = TRUE,
@@ -50,11 +50,12 @@ view_data_tab_server <- function(id, data, data_type, invalidate_count) {
           }, error = function(e) {
             output$citation <- NULL
             output$data_table <- NULL
+            data_reactives$invalidat_count(data_reactives$invalidate_count + 1)
             error_alert(e$message) # nolint object_usage
           })
         }
       }) %>% shiny::bindEvent(
-        data(),
+        data_reactives$data(),
         ignoreInit = TRUE
       )
     }

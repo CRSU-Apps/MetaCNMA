@@ -4,38 +4,32 @@
 #' storing the new data in \code{freq$data}
 #' if the function fails it will invalidate the original data and return False
 #'
-#' @param reactive_data reactive values variable for data (see global.R)
-#' @param reactive_freq freq reactive values variable for
+#' @param data reactive values variable for data (see global.R)
+#' @param data_type freq reactive values variable for
 #' frequentest analysis (see global.R)
 #'
 #' @return \code{logical} True if the data was successfully stored F otherwise
 #' @export
 #'
 #' @examples
-format_data <- function(reactive_data, reactive_freq) {
+format_data <- function(data, data_type) {
   tryCatch({
-    # If the data is not valid do not format the data
-    if (! reactive_data()$valid()) {
-      print("This error occured trying to format the data")
-      stop("There is a problem with the data, 
-      please check data has been uploaded and is valid")
-    }
     print("formatting data")
     # Copy data from uploaded data to temporary data frame
-    tmp_df <- reactive_data()$data()
+    tmp_df <- data
     # Use lowercase column names
     names(tmp_df) <- tolower(names(tmp_df))
     # Initialize required columns
     req_columns <- NULL
     # If long format
-    if (reactive_data()$format() == "long") {
-      if (reactive_data()$data_type() == "continuous") {
+    if (!is_wide(data)) {
+      if (data_type == "continuous") {
         req_columns <- tolower(get_required_continuous_long_columns()) # nolint: object_name
       } else {
         req_columns <- tolower(get_required_binary_long_columns()) # nolint: object_name
       }
-    } else if (reactive_data()$format() == "wide") { # Else if wide
-      if (reactive_data()$data_type() == "continuous") {
+    } else if (is_wide(df)) { # Else if wide
+      if (data_type == "continuous") {
         req_columns <- tolower(get_required_continuous_wide_columns()) # nolint: object_name
       } else {
         req_columns <- tolower(get_required_binary_wide_columns()) # nolint: object_name
@@ -56,12 +50,10 @@ format_data <- function(reactive_data, reactive_freq) {
       the format of the data could not be determined.")
     }
     print("Saving formatted data")
-    reactive_freq()$formatted_data(dplyr::select(tmp_df, all_of(req_columns)))
-    return(TRUE)
+    return(dplyr::select(tmp_df, all_of(req_columns)))
   },
   error = function(e) {
     error_alert(e$message) # nolint: object_name
-    invalidate_reactive(reactive_data, reactive_freq) # nolint: object_name
     return(FALSE)
   })
 }

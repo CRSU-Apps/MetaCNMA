@@ -1,8 +1,17 @@
 forest_plot_tab_ui <- function(id) {
   ns <- shiny::NS(id)
+  shiny::tagList(
+    shiny::h1("Forest Plot"),
+    message_tag_list(ns), # nolint: object_usage
+    shiny::textOutput(ns("plot_title")),
+    shinycssloaders::withSpinner(
+      shiny::plotOutput(ns("forest_plot")),
+      type = 6
+    )
+  )
 }
 
-forest_plot_tab_server <- function(id, reactive_data, reactive_freq, tab) {
+forest_plot_tab_server <- function(id, freq_options, freq_reactives, tab) {
   shiny::moduleServer(
     id,
     function(input,
@@ -13,15 +22,12 @@ forest_plot_tab_server <- function(id, reactive_data, reactive_freq, tab) {
 
       `%>%` <- magrittr::`%>%`
 
-      output$outputs <- NULL
-
       shiny::observe({
         if (tab() == id) {
           output$warning <- NULL
           output$info <- NULL
-          output$inputs <- NULL
-          output$static_content <- NULL
-          output$outputs <- NULL
+          output$plot_title <- NULL
+          output$forest_plot <- NULL
           print("forest_plot")
           tryCatch({
             withCallingHandlers(
@@ -32,88 +38,37 @@ forest_plot_tab_server <- function(id, reactive_data, reactive_freq, tab) {
                 output$message <- message_alert(conditionMessage(cond)) # nolint: object_name
               },
               {
-                if (!reactive_data()$valid()) {
-                  output$inputs <- default_no_data(ns) # nolint: object_name
-                  output$outputs <- NULL
-                } else {
-                  if (is.null(reactive_freq()$pairwise())) {
-                    shiny::withProgress({
-                      reactive_freq()$pairwise(
-                        freq_pairwise(reactive_data, reactive_freq) # nolint: object_name
-                      )
-                      reactive_freq()$n_connection(
-                        run_net_connection(reactive_freq()$pairwise()) # nolint: object_name
-                      )
-                    },
-                    message = "Formatting Data")
-                  }
-                  if (is.null(reactive_freq()$netmeta())) {
-                    shiny::withProgress({
-                      reactive_freq()$netmeta(
-                        run_netmeta(
-                          reactive_freq()$pairwise(),
-                          ref = get_most_freq_component(
-                            reactive_freq()$pairwise()
-                          ),
-                          random_eff = reactive_freq()$random_effects_logical()
-                        )
-                      )
-                    },
-                    message = "Running Network Meta Analysis")
-                  }
-                  if (is.null(reactive_freq()$netcomb())) {
-                    shiny::withProgress({
-                      reactive_freq()$netcomb(
-                        run_netcomb( # nolint: object_name
-                          reactive_freq()$netmeta(),
-                          inactive = get_most_freq_component( # nolint: object_name
-                            reactive_freq()$pairwise()
-                          )
-                        )
-                      )
-                    },
-                    message = "Running Network Meta Analysis")
-                  }
-                  if (reactive_freq()$outcome_measure() == "Outcome Measure") {
-                    warning("No Outcome Measure Selected")
-                  }
-                  output$static_content <- shiny::renderUI(
-                    shiny::h4(
-                      paste0("Forest plot showing the ",
-                        reactive_freq()$outcome_measure(),
-                        " of ",
-                        reactive_data()$outcome_name(),
-                        " when compared against ",
-                        get_most_freq_component( # nolint: object_name
-                          reactive_freq()$pairwise()
-                        )
+                output$plot_title <- shiny::renderUI(
+                  shiny::h4(
+                    paste0("Forest plot showing the ",
+                      freq_options$outcome_measure(),
+                      " of ",
+                      freq_options$outcome_name(),
+                      " when compared against ",
+                      get_most_freq_component( # nolint: object_name
+                        freq_reactives$pairwise()
                       )
                     )
                   )
-                  output$outputs <- shiny::renderUI(
-                    render_net_forest( # nolint: object_name
-                      reactive_freq()$netcomb(),
-                      reactive_data()$data_type(),
-                      reactive_freq()$outcome_measure()
-                    )
+                )
+                output$forest_plot <- shiny::renderUI(
+                  get_net_forest( # nolint: object_name
+                    freq_reactives()$netcomb(),
+                    freq_options()$data_type(),
+                    freq_options()$outcome_measure()
                   )
-                }
+                )
               }
             )
           },
           error = function(e) {
             error_alert(e$message) # nolint: object_name
-            invalidate_reactive(reactive_data, reactive_freq) # nolint: object_name
           })
         }
       }) %>% shiny::bindEvent(
         tab(),
-        reactive_freq()$valid()
+        freq_options$update_reactive()
       )
-
-      shiny::observe({
-        load_default_data(reactive_data, reactive_freq) # nolint: object_name
-      }) %>% shiny::bindEvent(input$default_data)
     }
   )
 }

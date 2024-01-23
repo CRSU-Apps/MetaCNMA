@@ -11,9 +11,9 @@ shinyServer(function(input, output, session){
   tab <- reactive(input$tabs)
   log <- reactiveValues()
 
-  parent_session <- reactive(session)
+  data_type <- data_type_module_server("data_type", data_type)
 
-  data_type <- home_tab_server("home_tab")
+  home_tab_server("home_tab")
 
   data_reactives <- data_upload_tab_server(
     "data_upload_tab",
@@ -21,16 +21,45 @@ shinyServer(function(input, output, session){
     parent_session
   )
 
-  data <- data_reactives$data
-  is_default_data <- data_reactives$is_default_data
-  invalidate_count <- data_reactives$invalidate_count
+  view_data_tab_server("view_data_tab", data_reactives)
 
-  view_data_tab_server("view_data_tab", data, data_type, invalidate_count)
-
-  freq_outcome_tab_server(
+  freq_options <- freq_outcome_tab_server(
     "freq_outcome_tab",
-    data, data_type,
-    is_default_data,
+    data_reactives,
+    tab
+  )
+
+  freq_reactives <- freq_analysis_server(
+    "freq_analysis",
+    data_reactives,
+    freq_options
+  )
+
+  data_summary_tab_server(
+    "data_summary",
+    freq_options,
+    freq_reactives,
+    tab
+  )
+
+  network_plot_tab_server(
+    "net_graph",
+    freq_options,
+    freq_reactives,
+    tab
+  )
+
+  correlation_plot_tab_server(
+    "correlation_plot",
+    freq_options,
+    freq_reactives,
+    tab
+  )
+
+  upset_plot_tab_server(
+    "upset_plot",
+    freq_options,
+    freq_reactives,
     tab
   )
 

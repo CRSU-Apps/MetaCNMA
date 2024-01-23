@@ -10,27 +10,19 @@ home_tab_ui <- function(id) {
     ),
     shiny::fluidRow(shiny::column(
       width = 6,
-      shiny::radioButtons(
-        ns("dataType"),
-        "Select the Type of Data",
-        c(
-          "Continuous" = "continuous",
-          "Binary" = "binary"
-        )
-      ),
       offset = 3
     ))
   )
 }
 
-home_tab_server <- function(id) {
+home_tab_server <- function(
+  id
+) {
   shiny::moduleServer(
     id,
     function(input,
              output,
              session) {
-
-      return(shiny::reactive(input$dataType))
 
     }
   )
