@@ -32,10 +32,14 @@ network_plot_tab_server <- function(id, freq_options, freq_reactives, tab) {
           tryCatch({
             withCallingHandlers(
               warning = function(cond) {
-                output$warning <- warning_alert(conditionMessage(cond)) #nolint: object_usage
+                output$warning <- shiny::renderUI(
+                  warning_alert(conditionMessage(cond)) # nolint: object_name
+                )
               },
               message = function(cond) {
-                output$message <- message_alert(conditionMessage(cond)) #nolint: object_usage
+                output$info <- shiny::renderUI(
+                  message_alert(conditionMessage(cond)) # nolint: object_name
+                )
               },
               {
                 output$vis_network <- shiny::renderUI(

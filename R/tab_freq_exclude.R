@@ -24,10 +24,14 @@ freq_exclude_tab_server <- function(id, reactive_data, reactive_freq, tab) {
           tryCatch({
             withCallingHandlers(
               warning = function(cond) {
-                output$warning <- warning_alert(conditionMessage(cond)) # nolint: object_usage
+                output$warning <- shiny::renderUI(
+                  warning_alert(conditionMessage(cond)) # nolint: object_name
+                )
               },
               message = function(cond) {
-                output$message <- message_alert(conditionMessage(cond)) # nolint: object_usage
+                output$info <- shiny::renderUI(
+                  message_alert(conditionMessage(cond)) # nolint: object_name
+                )
               },
               {
                 if (! reactive_data()$valid()) {

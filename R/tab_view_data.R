@@ -28,10 +28,14 @@ view_data_tab_server <- function(id, data_reactives) {
           tryCatch({
             withCallingHandlers(
               warning = function(cond) {
-                output$warning <- shiny::renderUI(warning_alert(conditionMessage(cond))) # nolint object_usage
+                output$warning <- shiny::renderUI(
+                  warning_alert(conditionMessage(cond)) # nolint: object_name
+                )
               },
               message = function(cond) {
-                output$message <- shiny::renderUI(message_alert(conditionMessage(cond))) # nolint object_usage
+                output$info <- shiny::renderUI(
+                  message_alert(conditionMessage(cond)) # nolint: object_name
+                )
               },
               {
                 output$data_table <-
