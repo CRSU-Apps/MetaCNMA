@@ -81,6 +81,21 @@ freq_analysis_server <- function(id, data_reactives, freq_options) {
         }
       })
 
+      freq_reactives$netcomb <- shiny::reactive({
+        if (
+          is.null(freq_reactives$netmeta())
+        ) {
+          return(NULL)
+        } else {
+          return(
+            run_netcomb(
+              freq_reactives$netmeta(),
+              inactive = freq_reactives$reference_component()
+            )
+          )
+        }
+      })
+
       return(freq_reactives)
 
     }

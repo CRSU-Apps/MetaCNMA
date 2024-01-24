@@ -126,6 +126,9 @@ freq_outcome_tab_server <- function(id, data_reactives, tab) {
         freq_options$update_reactive()
       )
 
+      freq_options$data_type <- shiny::reactive({
+        return(data_reactives$data_type())
+      })
 
       freq_options$outcome_measure <- shiny::reactive({
         return(input$data_measure)
@@ -143,14 +146,20 @@ freq_outcome_tab_server <- function(id, data_reactives, tab) {
         return(input$random_effects)
       })
 
+      .outcome_name <- shiny::reactiveVal(NULL)
+
       shiny::observe({
         if (tab() == id) {
           shiny::invalidateLater(3000, session)
-          freq_options$outcome_name <- shiny::isolate(input$outcome_name)
+          .outcome_name(shiny::isolate(input$outcome_name))
         } else {
-          freq_options$outcome_name <- shiny::isolate(input$outcome_name)
+          .outcome_name(shiny::isolate(input$outcome_name))
         }
       }) %>% shiny::bindEvent(input$outcome_name, ignoreInit = TRUE)
+
+      freq_options$outcome_name <- shiny::reactive({
+        .outcome_name()
+      })
 
       freq_options$options_loaded <- shiny::reactive({
         if (
@@ -158,7 +167,7 @@ freq_outcome_tab_server <- function(id, data_reactives, tab) {
             is.null(input$outcome_measure),
             is.null(input$desirable),
             is.null(input$random_effects),
-            is.null(input$outcome_name)
+            is.null(freq_options$outcome_name())
           )
         ) {
           return(FALSE)

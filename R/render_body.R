@@ -27,15 +27,14 @@ render_body <- function() {
     ),
     shinydashboard::tabItem(tabName = "freq_outcome_tab",
       freq_outcome_tab_ui("freq_outcome_tab") # nolint object_usage
-    )#,
+    ),
     # shinydashboard::tabItem(tabName = "freq_exclude_1",
     #   reactive_page("freq_exclude_1",
     #   "Exclude Studies") # nolint object_usage
     # ),
-    # shinydashboard::tabItem(tabName = "forest_plot_1",
-    #   reactive_page("forest_plot_1",
-    #   "Forest Plot") # nolint object_usage
-    # ),
+    shinydashboard::tabItem(tabName = "freq_forest_plot",
+      forest_plot_tab_ui("freq_forest_plot") # nolint object_usage
+    )#,
     # tabItem(tabName = "privacy_policy",
     #   static_page_ui("privacy_policy", "md/privacy_policy.md") # nolint object_usage
     # ),

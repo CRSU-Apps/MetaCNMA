@@ -63,6 +63,13 @@ shinyServer(function(input, output, session){
     tab
   )
 
+  forest_plot_tab_server(
+    "freq_forest_plot",
+    freq_options,
+    freq_reactives,
+    tab
+  )
+
   # Load the cookie module from R/cookies.R
   # cookieServer(
   #   id = "cookies_1",

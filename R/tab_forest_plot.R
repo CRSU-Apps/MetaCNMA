@@ -3,7 +3,7 @@ forest_plot_tab_ui <- function(id) {
   shiny::tagList(
     shiny::h1("Forest Plot"),
     message_tag_list(ns), # nolint: object_usage
-    shiny::textOutput(ns("plot_title")),
+    shiny::uiOutput(ns("plot_title")),
     shinycssloaders::withSpinner(
       shiny::plotOutput(ns("forest_plot")),
       type = 6
@@ -28,16 +28,33 @@ forest_plot_tab_server <- function(id, freq_options, freq_reactives, tab) {
           output$info <- NULL
           output$plot_title <- NULL
           output$forest_plot <- NULL
+          print(tab())
+          shiny::req(
+            freq_options$options_loaded(),
+            !is.null(freq_reactives$pairwise()),
+            !is.null(freq_reactives$netmeta()),
+            !is.null(freq_reactives$netcomb()),
+            cancelOutput = TRUE
+          )
           print("forest_plot")
           tryCatch({
             withCallingHandlers(
               warning = function(cond) {
-                output$warning <- warning_alert(conditionMessage(cond)) # nolint: object_name
+                output$warning <- shiny::renderUI(
+                  warning_alert(conditionMessage(cond))
+                ) # nolint: object_name
               },
               message = function(cond) {
-                output$message <- message_alert(conditionMessage(cond)) # nolint: object_name
+                output$info <- shiny::renderUI(
+                  message_alert(conditionMessage(cond))
+                ) # nolint: object_name
               },
               {
+                print(freq_options$outcome_measure())
+                print(freq_options$outcome_name())
+                print(get_most_freq_component( # nolint: object_name
+                        freq_reactives$pairwise()
+                      ))
                 output$plot_title <- shiny::renderUI(
                   shiny::h4(
                     paste0("Forest plot showing the ",
@@ -51,11 +68,11 @@ forest_plot_tab_server <- function(id, freq_options, freq_reactives, tab) {
                     )
                   )
                 )
-                output$forest_plot <- shiny::renderUI(
+                output$forest_plot <- shiny::renderPlot(
                   get_net_forest( # nolint: object_name
-                    freq_reactives()$netcomb(),
-                    freq_options()$data_type(),
-                    freq_options()$outcome_measure()
+                    freq_reactives$netcomb(),
+                    freq_options$data_type(),
+                    freq_options$outcome_measure()
                   )
                 )
               }

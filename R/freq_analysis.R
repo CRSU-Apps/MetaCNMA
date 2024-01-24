@@ -312,7 +312,7 @@ get_upset_plot <- function(data, components) {
 }
 
 
-render_net_forest <- function(
+get_net_forest <- function(
   nc,
   data_type,
   outcome_measure = "Outcome Measure",
@@ -322,27 +322,26 @@ render_net_forest <- function(
   if (component) {
     print("rendering plot")
     return(
-      shiny::renderPlot(
-        metafor::forest(
-          ifelse(rep(nc$random, length(nc$comps)),
-            nc$Comp.random, nc$Comp.common
-          ),
-          se = ifelse(rep(nc$random, length(nc$comps)),
-            nc$seComp.random, nc$seComp.common
-          ),
-          slab = ifelse(rep(!is.null(component_labels), length(nc$comps)),
-            component_labels, nc$comps
-          ),
-          xlab = outcome_measure,
-          refline = ifelse(data_type == "binary", 1, 0),
-          transf = ifelse(data_type == "binary",
-            exp,
-            function(x){x} # nolint: brace_linter
-          ),
-          header = c("Component", paste0(outcome_measure, " (95% CI)"))
-        )
+      metafor::forest(
+        ifelse(rep(nc$random, length(nc$comps)),
+          nc$Comp.random, nc$Comp.common
+        ),
+        se = ifelse(rep(nc$random, length(nc$comps)),
+          nc$seComp.random, nc$seComp.common
+        ),
+        slab = ifelse(rep(!is.null(component_labels), length(nc$comps)),
+          component_labels, nc$comps
+        ),
+        xlab = outcome_measure,
+        refline = ifelse(data_type == "binary", 1, 0),
+        transf = ifelse(data_type == "binary",
+          exp,
+          function(x){x} # nolint: brace_linter
+        ),
+        header = c("Component", paste0(outcome_measure, " (95% CI)"))
       )
     )
+  } else {
+    return(metafor::forest(nc))
   }
-  shiny::renderPlot(metafor::forest(nc))
 }

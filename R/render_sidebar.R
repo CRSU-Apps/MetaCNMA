@@ -57,18 +57,18 @@ render_sidebar <- function() {
         "Outcome & Model Settings",
         tabName = "freq_outcome_tab",
         icon = icon("equals")
-      )#,
+      ),
     #   menuSubItem(
     #     "Exclude Studies",
     #     tabName = "freq_exclude_1",
     #     icon = icon("text-slash")
     #   ),
-    #   menuSubItem(
-    #     "Forest Plot",
-    #     tabName = "forest_plot_1",
-    #     icon = icon("chart-gantt")
-    #   )
-    # ),
+      menuSubItem(
+        "Forest Plot",
+        tabName = "freq_forest_plot",
+        icon = icon("chart-gantt")
+      )
+    #),
     # shinydashboard::menuItem(
     #   "Privacy Policy",
     #   tabName = "privacy_policy",
