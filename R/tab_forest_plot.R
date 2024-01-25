@@ -3,10 +3,15 @@ forest_plot_tab_ui <- function(id) {
   shiny::tagList(
     shiny::h1("Forest Plot"),
     message_tag_list(ns), # nolint: object_usage
-    shiny::uiOutput(ns("plot_title")),
-    shinycssloaders::withSpinner(
-      shiny::plotOutput(ns("forest_plot")),
-      type = 6
+    #shiny::uiOutput(ns("plot_title")),
+    #shinycssloaders::withSpinner(
+    #  shiny::plotOutput(ns("forest_plot")),
+    #  type = 6
+    #)
+    shinydashboardPlus::box(
+      title = shiny::textOutput(ns("plot_title")),
+      id = ns("forest_plot_box"),
+      shiny::plotOutput(ns("forest_plot"))
     )
   )
 }
@@ -50,15 +55,13 @@ forest_plot_tab_server <- function(id, freq_options, freq_reactives, tab) {
                 ) # nolint: object_name
               },
               {
-                print(freq_options$outcome_measure())
-                print(freq_options$outcome_name())
-                print(get_most_freq_component( # nolint: object_name
-                        freq_reactives$pairwise()
-                      ))
+                .outcome_measure <- get_outcome_measure(
+                  freq_options$outcome_measure()
+                )
                 output$plot_title <- shiny::renderUI(
                   shiny::h4(
                     paste0("Forest plot showing the ",
-                      freq_options$outcome_measure(),
+                      .outcome_measure,
                       " of ",
                       freq_options$outcome_name(),
                       " when compared against ",
@@ -72,7 +75,7 @@ forest_plot_tab_server <- function(id, freq_options, freq_reactives, tab) {
                   get_net_forest( # nolint: object_name
                     freq_reactives$netcomb(),
                     freq_options$data_type(),
-                    freq_options$outcome_measure()
+                    .outcome_measure
                   )
                 )
               }

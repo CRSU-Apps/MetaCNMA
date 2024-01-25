@@ -1,4 +1,3 @@
-`%>%` <- magrittr::`%>%`
 freq_pairwise <- function(data, data_type) {
   tryCatch({
     print("running pairwise")
@@ -11,7 +10,7 @@ freq_pairwise <- function(data, data_type) {
     }
   },
   error = function(e) {
-    error_alert(e$message)
+    error_alert(e$message) # nolint: object_usage
     return(NULL)
   })
 }
@@ -19,11 +18,11 @@ freq_pairwise <- function(data, data_type) {
 run_pairwise_continuous <- function(df) {
 
   netmeta::pairwise(
-    treat = components,
-    n = total,
+    treat = components, # nolint: object_usage
+    n = total, # nolint: object_usage
     mean = mean,
     sd = sd,
-    studlab = study,
+    studlab = study, # nolint: object_usage
     data = df
   )
 
@@ -32,18 +31,19 @@ run_pairwise_continuous <- function(df) {
 run_pairwise_binary <- function(df) {
 
   netmeta::pairwise(
-    treat = components,
-    n = total,
-    event = events,
-    studlab = study,
+    treat = components, # nolint: object_usage
+    n = total, # nolint: object_usage
+    event = events, # nolint: object_usage
+    studlab = study, # nolint: object_usage
     data = df
   )
 
 }
 
 get_components <- function(pw) {
+  `%>%` <- magrittr::`%>%`
   # Get all the components (treat columns)
-  components <- pw %>% select(contains("treat"))
+  components <- pw %>% dplyr::select(dplyr::contains("treat"))
   tmp_comp <- NULL
   for (i in seq_len(ncol(components))) {
     tmp_comp <- cbind(tmp_comp, components[[i]])
@@ -71,7 +71,8 @@ get_components_no_reference <- function(pw) {
 }
 
 get_combination_components <- function(pw) {
-  components <- pw %>% select(contains("treat"))
+  `%>%` <- magrittr::`%>%`
+  components <- pw %>% dplyr::select(dplyr::contains("treat"))
   tmp_comp <- NULL
   for (i in seq_len(ncol(components))) {
     tmp_comp <- cbind(tmp_comp, components[[i]])
@@ -96,15 +97,18 @@ get_summary <- function(pw) {
 }
 
 component_summary_as_df <- function(component_summary) {
+  `%>%` <- magrittr::`%>%`
   components <- tibble::as_tibble_col(
     as.numeric(component_summary), column_name = "Number of Studies"
   )
-  components <- as_tibble(components)
+  components <- dplyr::as_tibble(components)
   components <- cbind(
     `Combination of Components` = names(component_summary),
     components
   )
-  components <- components %>% arrange(desc(`Number of Studies`))
+  components <- components %>% dplyr::arrange(
+    dplyr::desc(`Number of Studies`) # nolint: object_usage
+  )
   return(components)
 }
 
@@ -127,7 +131,7 @@ run_netmeta <- function(pw, ref = "Control", random_eff = FALSE) {
 }
 
 render_netplot <- function(nm) {
-  netmeta::netgraph(nm)
+  return(netmeta::netgraph(nm))
 }
 
 run_netcomb <- function(nm, inactive = "Control") {
@@ -136,7 +140,6 @@ run_netcomb <- function(nm, inactive = "Control") {
 }
 
 netcomb_summary <- function(nc) {
-  nc.summary <- summary(nc)
   data.frame(
     "Characteristic" = c(
       "Number of Studies",
@@ -182,7 +185,9 @@ get_study_components <- function(data, components) {
   # Use levels to get unique components
   components <- levels(components)
 
-  tmp_df <- dplyr::select(data, study, components)
+  tmp_df <- dplyr::select(
+    data, study, components # nolint: object_usage
+  )
 
   study_components <- setNames(
     data.frame(
