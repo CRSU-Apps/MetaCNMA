@@ -1,4 +1,9 @@
-save_plot_ui <- function(id) {
+save_plot_ui <- function(
+  id,
+  output_name = "plot",
+  width = "1200",
+  height = "1200"
+) {
   ns <- shiny::NS(id)
   shiny::tagList(
     shiny::div(
@@ -6,26 +11,27 @@ save_plot_ui <- function(id) {
         shiny::textInput(
           ns("width"),
           label = "Width (px)",
-          value = "1200"
+          value = width
         ),
         shiny::textInput(
           ns("height"),
           label = "Height (px)",
-          value = "1200"
+          value = height
         ),
         shiny::textInput(
           ns("filename"),
           label = "File Name",
-          value = "plot"
+          value = output_name
         ),
         shinyWidgets::pickerInput(
           ns("output_type"),
           label = "File Type",
           choices = c(
-            "png" = "png",
-            "pdf" = "pdf"
+            "pdf" = "pdf",
+            "svg" = "svg",
+            "png" = "png"
           ),
-          selected = "png"
+          selected = "pdf"
         ),
         shiny::uiOutput(ns("download_button")),
         shiny::div(
@@ -38,7 +44,8 @@ save_plot_ui <- function(id) {
       ),
       style =
         "float: right;"
-    )
+    ),
+    shiny::div(class = "clearfix")
   )
 }
 
@@ -63,7 +70,6 @@ save_plot_server <- function(
           is_rendered()
         )
         print("loading download button")
-        print(input$output_type)
         output$download_button <- shiny::renderUI(
           shiny::downloadButton(
             ns("save_button"),
@@ -72,12 +78,20 @@ save_plot_server <- function(
           )
         )
         output$save_button <- shiny::downloadHandler(
-          filename = function(){paste(
-            input$filename, input$output_type, sep = ".")
+          filename = function() {
+            paste(
+              input$filename, input$output_type, sep = "."
+            )
           },
           content = function(file) {
             if (input$output_type == "pdf") {
               grDevices::pdf(
+                file = file,
+                width = as.numeric(input$width) / 96,
+                height = as.numeric(input$height) / 96,
+              )
+            } else if (input$output_type == "svg") {
+              grDevices::svg(
                 file = file,
                 width = as.numeric(input$width) / 96,
                 height = as.numeric(input$height) / 96,
@@ -87,7 +101,7 @@ save_plot_server <- function(
                 file = file,
                 width = as.numeric(input$width),
                 height = as.numeric(input$height),
-                res = 300
+                res = 92
               )
             }
             plot_output()

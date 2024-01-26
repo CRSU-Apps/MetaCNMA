@@ -151,7 +151,6 @@ netcomb_summary <- function(nc) {
 }
 
 get_study_components <- function(data, components) {
-  print(components)
   components <- levels(as.factor(components))
   components <- paste(components, collapse = "+")
   components <- strsplit(components, "\\+")[[1]]

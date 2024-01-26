@@ -38,7 +38,7 @@ data_summary_tab_server <- function(id, freq_options, freq_reactives, tab) {
               },
               {
                 if (!is.null(freq_reactives$netconnection())) {
-                  pw_summary <- get_summary(freq_reactives$pairwise())
+                  pw_summary <- get_summary(freq_reactives$pairwise()) # nolint: object_name
                   output$data_summary <- shiny::renderUI(
                     shiny::tagList(
                       shiny::tags$ul(

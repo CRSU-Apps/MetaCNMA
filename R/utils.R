@@ -55,11 +55,6 @@ get_required_continuous_wide_columns <- function() { # nolint
   return(get_site_info_property("required_continuous_wide_columns")[[1]])
 }
 
-# invalidate_reactive <- function(reactive_data, reactive_freq) {
-#   reactive_data()$invalidate()
-#   reactive_freq()$invalidate()
-# }
-
 get_outcome_measure <- function(outcome_measure) {
   if (is.null(outcome_measure)) {
     return("Outcome Measure")

@@ -3,7 +3,10 @@ forest_plot_tab_ui <- function(id) {
   shiny::tagList(
     shiny::h1("Forest Plot"),
     message_tag_list(ns), # nolint: object_usage
-    save_plot_ui(ns("save_forest_plot")), # nolint: object_usage
+    save_plot_ui( # nolint: object_usage
+      ns("save_forest_plot"),
+      output_name = "Freq_Forest_Plot"
+    ),
     shinydashboardPlus::box(
       title = shiny::textOutput(ns("plot_title")),
       id = ns("forest_plot_box"),
@@ -49,13 +52,13 @@ forest_plot_tab_server <- function(id, freq_options, freq_reactives, tab) {
             withCallingHandlers(
               warning = function(cond) {
                 output$warning <- shiny::renderUI(
-                  warning_alert(conditionMessage(cond))
-                ) # nolint: object_name
+                  warning_alert(conditionMessage(cond)) # nolint: object_name
+                )
               },
               message = function(cond) {
                 output$info <- shiny::renderUI(
-                  message_alert(conditionMessage(cond))
-                ) # nolint: object_name
+                  message_alert(conditionMessage(cond))  # nolint: object_name
+                )
               },
               {
                 output$plot_title <- shiny::renderText(

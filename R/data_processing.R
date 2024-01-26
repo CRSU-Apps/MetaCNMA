@@ -1,14 +1,13 @@
 `%>%` <- magrittr::`%>%`
 #' Format the data \code{data$data} if it exists and is valid,
 #' removing unnecessary columns and converting column names to lower case
-#' storing the new data in \code{freq$data}
-#' if the function fails it will invalidate the original data and return False
+#' if the function fails an error will be printed and return False
 #'
-#' @param data reactive values variable for data (see global.R)
-#' @param data_type freq reactive values variable for
-#' frequentest analysis (see global.R)
+#' @param data data_frame containing data
+#' @param data_type type of the data either "continuous" or "binary"
 #'
-#' @return \code{logical} True if the data was successfully stored F otherwise
+#' @return \code{logical} TRUE if the data was successfully stored
+#' FALSE otherwise
 #' @export
 #'
 #' @examples
@@ -22,7 +21,7 @@ format_data <- function(data, data_type) {
     # Initialize required columns
     req_columns <- NULL
     # If long format
-    if (!is_wide(data)) {
+    if (!is_wide(data)) { # nolint: object_name
       if (data_type == "continuous") {
         req_columns <- tolower(get_required_continuous_long_columns()) # nolint: object_name
       } else {
@@ -50,7 +49,7 @@ format_data <- function(data, data_type) {
       the format of the data could not be determined.")
     }
     print("Saving formatted data")
-    return(dplyr::select(tmp_df, all_of(req_columns)))
+    return(dplyr::select(tmp_df, dplyr::all_of(req_columns)))
   },
   error = function(e) {
     error_alert(e$message) # nolint: object_name

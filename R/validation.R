@@ -88,7 +88,6 @@ validate_wide <- function(df, required_columns) {
         # Check that for each arm there is a corresponding wide column
         if (!paste(col, i, sep = ".") %in% wide_column_names) {
           missing_columns <- c(missing_columns, paste(col, i, sep = "."))
-          #error_alert(paste0("Expected column: ", paste(col, i, sep = "."), " but missing")) # nolint: object_usage
           return(FALSE)
         }
       }
