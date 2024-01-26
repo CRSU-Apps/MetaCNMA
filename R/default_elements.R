@@ -112,14 +112,6 @@ default_outcome_measure <- function(data_type, is_default_data) {
   }
 }
 
-default_outcome_name <- function(data_type, is_default_data) {
-  if (is_default_data) {
-    return(default_data(data_type)$outcome_name)
-  } else {
-    return("")
-  }
-}
-
 default_outcome_desirable <- function(data_type, is_default_data) {
   if (is_default_data) {
     return(default_data(data_type)$desirable)
@@ -149,6 +141,6 @@ default_outcome_name <- function(data_type, is_default_data) {
   if (is_default_data) {
     return(default_data(data_type)$outcome_name)
   } else {
-    return("")
+    return("Outcome Name")
   }
 }

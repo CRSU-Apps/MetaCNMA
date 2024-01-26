@@ -130,10 +130,6 @@ run_netmeta <- function(pw, ref = "Control", random_eff = FALSE) {
   return(netmeta::netmeta(pw, ref = ref, comb.random = random_eff))
 }
 
-render_netplot <- function(nm) {
-  return(netmeta::netgraph(nm))
-}
-
 run_netcomb <- function(nm, inactive = "Control") {
   print("running netcomb")
   return(netmeta::netcomb(nm, inactive = inactive))
@@ -150,27 +146,6 @@ netcomb_summary <- function(nc) {
       nc$k,
       nc$c,
       nc$n
-    )
-  )
-}
-
-render_net_graph <- function(nm, components) {
-  print("Rendering netgraph")
-  shiny::renderPlot(
-    netmeta::netgraph(
-      nm,
-      plastic = FALSE,
-      col = "black",
-      points = TRUE,
-      col.points = "blue",
-      number.of.studies = FALSE,
-      seq = components,
-      thickness = "number.of.studies",
-      cex.points = 2,
-      offset = 0.05,
-      scale = 0.7,
-      cex = 0.8
-
     )
   )
 }
@@ -315,7 +290,6 @@ get_upset_plot <- function(data, components) {
     )
   )
 }
-
 
 get_net_forest <- function(
   nc,

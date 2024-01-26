@@ -139,7 +139,11 @@ freq_outcome_tab_server <- function(id, data_reactives, tab) {
       })
 
       freq_options$outcome_measure <- shiny::reactive({
-        return(input$outcome_measure)
+        return(
+          get_outcome_measure(
+            input$outcome_measure
+          )
+        )
       })
 
       freq_options$random_effects <- shiny::reactive({
