@@ -1,5 +1,13 @@
 freq_exclude_tab_ui <- function(id) {
   ns <- shiny::NS(id)
+  shiny::tagList(
+    shiny::h1("Data Summary"),
+    message_tag_list(ns), # nolint: object_usage
+    shinycssloaders::withSpinner(
+      shiny::uiOutput(ns("data_summary")),
+      type = 6
+    )
+  )
 }
 
 freq_exclude_tab_server <- function(id, reactive_data, reactive_freq, tab) {
@@ -12,14 +20,9 @@ freq_exclude_tab_server <- function(id, reactive_data, reactive_freq, tab) {
 
       `%>%` <- magrittr::`%>%`
 
-      output$outputs <- NULL
-
       shiny::observe({
         output$warning <- NULL
         output$info <- NULL
-        output$inputs <- NULL
-        output$static_content <- NULL
-        output$outputs <- NULL
         if (tab() == id) {
           tryCatch({
             withCallingHandlers(
