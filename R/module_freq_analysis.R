@@ -1,11 +1,13 @@
-freq_analysis_server <- function(id, data_reactives, freq_options) {
+freq_analysis_server <- function( # nolint: cyclocomp_linter.
+  id,
+  data_reactives,
+  freq_options
+) {
   shiny::moduleServer(
     id,
     function(input,
              output,
              session) {
-
-      `%>%` <- magrittr::`%>%`
 
       freq_reactives <- shiny::reactiveValues()
 
@@ -13,7 +15,12 @@ freq_analysis_server <- function(id, data_reactives, freq_options) {
         if (!data_reactives$is_data_loaded()) {
           return(NULL)
         } else {
-          return(format_data(data_reactives$data(), data_reactives$data_type()))
+          return(
+            format_data( # nolint: object_usage
+              data_reactives$data(),
+              data_reactives$data_type()
+            )
+          )
         }
       })
 
@@ -26,7 +33,7 @@ freq_analysis_server <- function(id, data_reactives, freq_options) {
           return(NULL)
         } else {
           return(
-            freq_pairwise(
+            freq_pairwise( # nolint: object_usage
               freq_reactives$formatted_data(),
               data_reactives$data_type()
             )
@@ -39,7 +46,7 @@ freq_analysis_server <- function(id, data_reactives, freq_options) {
           return(NULL)
         } else {
           return(
-            run_net_connection(
+            run_net_connection( # nolint: object_usage
               freq_reactives$pairwise()
             )
           )
@@ -51,7 +58,7 @@ freq_analysis_server <- function(id, data_reactives, freq_options) {
           return(NULL)
         } else {
           return(
-            get_most_freq_component(
+            get_most_freq_component( # nolint: object_usage
               freq_reactives$pairwise()
             )
           )
@@ -68,7 +75,7 @@ freq_analysis_server <- function(id, data_reactives, freq_options) {
           return(NULL)
         } else {
           return(
-            run_netmeta(
+            run_netmeta( # nolint: object_usage
               freq_reactives$pairwise(),
               ref = freq_reactives$reference_component(),
               random_eff = as.logical(
@@ -88,7 +95,7 @@ freq_analysis_server <- function(id, data_reactives, freq_options) {
           return(NULL)
         } else {
           return(
-            run_netcomb(
+            run_netcomb( # nolint: object_usage
               freq_reactives$netmeta(),
               inactive = freq_reactives$reference_component()
             )
