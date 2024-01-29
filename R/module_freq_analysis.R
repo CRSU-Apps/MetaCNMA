@@ -28,6 +28,16 @@ freq_analysis_server <- function( # nolint: cyclocomp_linter.
         return(!is.null(freq_reactives$formatted_data()))
       })
 
+      freq_reactives$studies <- shiny::reactive({
+        if (is.null(freq_reactives$is_data_formatted())) {
+          return(NULL)
+        } else {
+          return(
+            levels(as.factor(freq_reactives$formatted_data()$study))
+          )
+        }
+      })
+
       freq_reactives$pairwise <- shiny::reactive({
         if (!freq_reactives$is_data_formatted()) {
           return(NULL)
