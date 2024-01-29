@@ -28,10 +28,9 @@ render_body <- function() {
     shinydashboard::tabItem(tabName = "freq_outcome_tab",
       freq_outcome_tab_ui("freq_outcome_tab") # nolint object_usage
     ),
-    # shinydashboard::tabItem(tabName = "freq_exclude_1",
-    #   reactive_page("freq_exclude_1",
-    #   "Exclude Studies") # nolint object_usage
-    # ),
+    shinydashboard::tabItem(tabName = "freq_exclude",
+      freq_exclude_tab_ui("freq_exclude") # nolint object_usage
+    ),
     shinydashboard::tabItem(tabName = "freq_forest_plot",
       forest_plot_tab_ui("freq_forest_plot") # nolint object_usage
     )#,

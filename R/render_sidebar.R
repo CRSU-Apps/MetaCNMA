@@ -58,11 +58,11 @@ render_sidebar <- function() {
         tabName = "freq_outcome_tab",
         icon = icon("equals")
       ),
-    #   menuSubItem(
-    #     "Exclude Studies",
-    #     tabName = "freq_exclude_1",
-    #     icon = icon("text-slash")
-    #   ),
+      menuSubItem(
+        "Sensitivity Analysis: Exclude Studies",
+        tabName = "freq_exclude",
+        icon = icon("text-slash")
+      ),
       menuSubItem(
         "Forest Plot",
         tabName = "freq_forest_plot",

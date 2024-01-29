@@ -70,6 +70,13 @@ shinyServer(function(input, output, session){
     tab
   )
 
+  freq_sens_reactive <- freq_exclude_tab_server(
+    "freq_exclude",
+    freq_options,
+    freq_reactives,
+    tab
+  )
+
   # Load the cookie module from R/cookies.R
   # cookieServer(
   #   id = "cookies_1",
