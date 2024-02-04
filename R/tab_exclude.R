@@ -1,4 +1,4 @@
-freq_exclude_tab_ui <- function(id) {
+exclude_tab_ui <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
     shiny::h1("Exclude Studies (Sensitivity Analysis)"),
@@ -16,10 +16,11 @@ freq_exclude_tab_ui <- function(id) {
           collapsed = TRUE,
           data_table_module_ui(ns("original_table_output")) # nolint: object_usage
         ),
+        shiny::div(class = "clearfix"),
         shinycssloaders::withSpinner(
           shiny::uiOutput(ns("study_selection")),
           type = 6
-        ),
+        )
       ),
       shiny::tabPanel(
         "Excluded Studies: Data Summary",
@@ -32,10 +33,11 @@ freq_exclude_tab_ui <- function(id) {
   )
 }
 
-freq_exclude_tab_server <- function(
+exclude_tab_server <- function(
   id,
-  freq_options,
-  freq_reactives,
+  data_reactives,
+  model_options,
+  model_reactives,
   tab
 ) {
   shiny::moduleServer(id,
@@ -47,10 +49,10 @@ freq_exclude_tab_server <- function(
 
       `%>%` <- magrittr::`%>%`
 
-      freq_exclude <- shiny::reactiveValues()
+      model_exclude <- shiny::reactiveValues()
 
       .reactive_df <- shiny::reactiveVal(NULL)
-      freq_exclude$formatted_data <- shiny::reactiveVal(NULL)
+      model_exclude$formatted_data <- shiny::reactiveVal(NULL)
 
       data_table_module_server(
         "original_table_output",
@@ -58,8 +60,8 @@ freq_exclude_tab_server <- function(
       )
 
       data_table_module_server(
-        "original_table_output",
-        freq_exclude$formatted_data
+        "excluded_studies_table_output",
+        model_exclude$formatted_data
       )
 
       shiny::observe({
@@ -67,10 +69,10 @@ freq_exclude_tab_server <- function(
           output$warning <- NULL
           output$info <- NULL
           output$data_summary <- NULL
-          .reactive_df <- NULL
+          .reactive_df(NULL)
           print(tab())
           shiny::req(
-            !is.null(freq_reactives$studies()),
+            !is.null(data_reactives$studies()),
             cancelOutput = TRUE
           )
           tryCatch({
@@ -90,11 +92,10 @@ freq_exclude_tab_server <- function(
                 output$study_selection <- shiny::renderUI(
                   shiny::checkboxGroupInput("exclude",
                     label = "Choose any Studies you wish to exclude",
-                    choices = freq_reactives$studies(),
-                    inline = TRUE
+                    choices = data_reactives$studies()
                   )
                 )
-                .reactive_df(freq_reactives$formatted_data())
+                .reactive_df(data_reactives$formatted_data())
               }
             )
           },
@@ -105,14 +106,14 @@ freq_exclude_tab_server <- function(
         }
       }) %>% shiny::bindEvent(
         tab(),
-        freq_options$update_reactive()
+        model_options$update_reactive()
       )
 
       shiny::observe({
         # Do Something
       }) %>% shiny::bindEvent(input$exclude)
 
-      return(freq_exclude)
+      return(model_exclude)
 
     }
   )

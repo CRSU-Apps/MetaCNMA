@@ -1,11 +1,12 @@
-forest_plot_tab_ui <- function(id) {
+bayes_forest_plot_tab_ui <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
     shiny::h1("Forest Plot"),
     message_tag_list(ns), # nolint: object_usage
+    run_bayesian_analysis_ui(ns("run_bayesian_analysis")),
     save_plot_ui( # nolint: object_usage
-      ns("save_forest_plot"),
-      output_name = "Freq_Forest_Plot"
+      ns("save_bayesian_forest_plot"),
+      output_name = "Bayesian_Forest_Plot"
     ),
     shinydashboardPlus::box(
       title = shiny::textOutput(ns("plot_title")),
@@ -19,7 +20,13 @@ forest_plot_tab_ui <- function(id) {
   )
 }
 
-forest_plot_tab_server <- function(id, freq_options, freq_reactives, tab) {
+bayes_forest_plot_tab_server <- function(
+  id,
+  data_reactives,
+  bayesian_options,
+  bayesian_reactives,
+  tab
+) {
   shiny::moduleServer(
     id,
     function(input,
@@ -29,6 +36,13 @@ forest_plot_tab_server <- function(id, freq_options, freq_reactives, tab) {
       ns <- session$ns
 
       `%>%` <- magrittr::`%>%`
+
+      run_bayesian_analysis_server(
+        "run_bayesian_analysis",
+        data_reactives,
+        bayesian_options,
+        bayesian_reactives
+      )
 
       is_rendered <- shiny::reactiveVal(FALSE)
 
@@ -41,13 +55,11 @@ forest_plot_tab_server <- function(id, freq_options, freq_reactives, tab) {
           is_rendered(FALSE)
           print(tab())
           shiny::req(
-            freq_options$options_loaded(),
-            !is.null(freq_reactives$pairwise()),
-            !is.null(freq_reactives$netmeta()),
-            !is.null(freq_reactives$netcomb()),
+            bayesian_options$options_loaded(),
+            bayesian_reactives$is_model_run(),
             cancelOutput = TRUE
           )
-          print("forest_plot")
+          print("bayesian forest_plot")
           tryCatch({
             withCallingHandlers(
               warning = function(cond) {
@@ -63,27 +75,23 @@ forest_plot_tab_server <- function(id, freq_options, freq_reactives, tab) {
               {
                 output$plot_title <- shiny::renderText(
                   paste0("Forest plot showing the ",
-                    freq_options$outcome_measure(),
+                    bayesian_options$outcome_measure(),
                     " of ",
-                    freq_options$outcome_name(),
+                    bayesian_options$outcome_name(),
                     " when compared against ",
                     get_most_freq_component( # nolint: object_name
-                      freq_reactives$pairwise()
+                      data_reactives$pairwise()
                     )
                   )
                 )
                 forest_plot <- function() {
-                  get_net_forest( # nolint: object_name
-                    freq_reactives$netcomb(),
-                    freq_options$data_type(),
-                    freq_options$outcome_measure()
-                  )
+                  plot(bayesian_reactives$model())
                 }
                 output$forest_plot <- shiny::renderPlot(
                   forest_plot()
                 )
                 is_rendered(TRUE)
-                save_plot_server("save_forest_plot",
+                save_plot_server("save_bayesian_forest_plot",
                   forest_plot,
                   is_rendered
                 )
@@ -96,7 +104,8 @@ forest_plot_tab_server <- function(id, freq_options, freq_reactives, tab) {
         }
       }) %>% shiny::bindEvent(
         tab(),
-        freq_options$update_reactive()
+        bayesian_options$update_reactive(),
+        bayesian_reactives$is_model_run()
       )
 
     }

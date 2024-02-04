@@ -23,7 +23,7 @@ shinyServer(function(input, output, session){
 
   view_data_tab_server("view_data_tab", data_reactives)
 
-  freq_options <- freq_outcome_tab_server(
+  freq_options <- model_outcome_tab_server(
     "freq_outcome_tab",
     data_reactives,
     tab
@@ -37,6 +37,7 @@ shinyServer(function(input, output, session){
 
   data_summary_tab_server(
     "data_summary",
+    data_reactives,
     freq_options,
     freq_reactives,
     tab
@@ -44,6 +45,7 @@ shinyServer(function(input, output, session){
 
   network_plot_tab_server(
     "net_graph",
+    data_reactives,
     freq_options,
     freq_reactives,
     tab
@@ -51,6 +53,7 @@ shinyServer(function(input, output, session){
 
   correlation_plot_tab_server(
     "correlation_plot",
+    data_reactives,
     freq_options,
     freq_reactives,
     tab
@@ -58,6 +61,7 @@ shinyServer(function(input, output, session){
 
   upset_plot_tab_server(
     "upset_plot",
+    data_reactives,
     freq_options,
     freq_reactives,
     tab
@@ -65,81 +69,47 @@ shinyServer(function(input, output, session){
 
   forest_plot_tab_server(
     "freq_forest_plot",
+    data_reactives,
     freq_options,
     freq_reactives,
     tab
   )
 
-  freq_sens_reactive <- freq_exclude_tab_server(
+  freq_sens_reactive <- exclude_tab_server(
     "freq_exclude",
+    data_reactives,
     freq_options,
     freq_reactives,
     tab
   )
 
-  # Load the cookie module from R/cookies.R
-  # cookieServer(
-  #   id = "cookies_1",
-  #   cookies = reactive(input$cookies),
-  #   open_privacy_policy = reactive(input$open_privacy_policy),
-  #   parent_session = reactive(session)
-  # )
-  # home_tab_server(
-  #   "home_1",
-  #   reactive_data,
-  #   reactive_freq
-  # )
-  # data_upload_tab_server(
-  #   "data_upload_1",
-  #   reactive_data,
-  #   reactive_freq,
-  #   parent_session = reactive(session)
-  # )
-  # view_data_tab_server(
-  #   "view_data_1",
-  #   reactive_data,
-  #   reactive_freq
-  # )
-  # freq_outcome_tab_server(
-  #   "freq_outcome_1",
-  #   reactive_data,
-  #   reactive_freq,
-  #   tabs
-  # )
-  # freq_exclude_tab_server(
-  #   "freq_exclude_1",
-  #   reactive_data,
-  #   reactive_freq,
-  #   tabs
-  # )
-  # data_summary_tab_server(
-  #   "data_summary_1",
-  #   reactive_data,
-  #   reactive_freq,
-  #   tabs
-  # )
-  # network_plot_tab_server(
-  #   "net_graph_1",
-  #   reactive_data,
-  #   reactive_freq,
-  #   tabs
-  # )
-  # correlation_plot_tab_server(
-  #   "correlation_plot_1",
-  #   reactive_data,
-  #   reactive_freq,
-  #   tabs
-  # )
-  # upset_plot_tab_server(
-  #   "upset_plot_1",
-  #   reactive_data,
-  #   reactive_freq,
-  #   tabs
-  # )
-  # forest_plot_tab_server(
-  #   "forest_plot_1",
-  #   reactive_data,
-  #   reactive_freq,
-  #   tabs
-  # )
+  bayesian_options <- model_outcome_tab_server(
+    "bayesian_outcome_tab",
+    data_reactives,
+    tab,
+    freq = FALSE
+  )
+
+  bayesian_reactives <- bayesian_analysis_server(
+    "bayesian_analysis",
+    data_reactives,
+    bayesian_options
+  )
+
+  bayes_forest_plot_tab_server(
+    "bayesian_forest_plot",
+    data_reactives,
+    bayesian_options,
+    bayesian_reactives,
+    tab
+  )
+
+  bayes_sens_reactive <- exclude_tab_server(
+    "bayesian_exclude",
+    data_reactives,
+    bayesian_options,
+    bayesian_reactives,
+    tab
+  )
+
 })

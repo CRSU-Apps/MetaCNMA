@@ -10,7 +10,13 @@ data_summary_tab_ui <- function(id) {
   )
 }
 
-data_summary_tab_server <- function(id, freq_options, freq_reactives, tab) {
+data_summary_tab_server <- function(
+  id,
+  data_reactives,
+  freq_options,
+  freq_reactives,
+  tab
+) {
   shiny::moduleServer(id,
     function(input,
              output,
@@ -38,7 +44,7 @@ data_summary_tab_server <- function(id, freq_options, freq_reactives, tab) {
               },
               {
                 if (!is.null(freq_reactives$netconnection())) {
-                  pw_summary <- get_summary(freq_reactives$pairwise()) # nolint: object_name
+                  pw_summary <- get_summary(data_reactives$pairwise()) # nolint: object_name
                   output$data_summary <- shiny::renderUI(
                     shiny::tagList(
                       shiny::tags$ul(

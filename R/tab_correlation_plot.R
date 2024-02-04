@@ -31,7 +31,13 @@ correlation_plot_tab_ui <- function(id) {
   )
 }
 
-correlation_plot_tab_server <- function(id, freq_options, freq_reactives, tab) {
+correlation_plot_tab_server <- function(
+  id,
+  data_reactives,
+  freq_options,
+  freq_reactives,
+  tab
+) {
   shiny::moduleServer(id,
     function(input,
              output,
@@ -54,8 +60,8 @@ correlation_plot_tab_server <- function(id, freq_options, freq_reactives, tab) {
           is_rendered_heatmap(FALSE)
           print(tab())
           shiny::req(
-            !is.null(freq_reactives$pairwise()),
-            !is.null(freq_reactives$formatted_data()),
+            !is.null(data_reactives$pairwise()),
+            data_reactives$is_data_formatted(),
             cancelOutput = TRUE
           )
           tryCatch({
@@ -73,8 +79,8 @@ correlation_plot_tab_server <- function(id, freq_options, freq_reactives, tab) {
               {
                 correlation_plot <- function() {
                   get_correlation_plot( # nolint: object_usage
-                    freq_reactives$formatted_data(),
-                    get_components_no_reference(freq_reactives$pairwise()) # nolint: object_usage
+                    data_reactives$formatted_data(),
+                    get_components_no_reference(data_reactives$pairwise()) # nolint: object_usage
                   )
                 }
                 output$correlation_plot <- shiny::renderPlot(
@@ -88,8 +94,8 @@ correlation_plot_tab_server <- function(id, freq_options, freq_reactives, tab) {
                 .heatmap <- function() {
                   print(
                     get_heatmap( # nolint: object_usage
-                      freq_reactives$formatted_data(),
-                      get_components_no_reference(freq_reactives$pairwise()) # nolint: object_usage
+                      data_reactives$formatted_data(),
+                      get_components_no_reference(data_reactives$pairwise()) # nolint: object_usage
                     )
                   )
                 }

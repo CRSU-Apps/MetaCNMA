@@ -7,7 +7,13 @@ network_plot_tab_ui <- function(id) {
   )
 }
 
-network_plot_tab_server <- function(id, freq_options, freq_reactives, tab) {
+network_plot_tab_server <- function(
+  id,
+  data_reactives,
+  freq_options,
+  freq_reactives,
+  tab
+) {
   shiny::moduleServer(id,
     function(input,
              output,
@@ -25,7 +31,7 @@ network_plot_tab_server <- function(id, freq_options, freq_reactives, tab) {
           print(tab())
           shiny::req(
             freq_options$options_loaded(),
-            !is.null(freq_reactives$pairwise()),
+            !is.null(data_reactives$pairwise()),
             !is.null(freq_reactives$netmeta()),
             cancelOutput = TRUE
           )
@@ -49,7 +55,7 @@ network_plot_tab_server <- function(id, freq_options, freq_reactives, tab) {
                   "vis_network_1",
                   freq_reactives$netmeta(),
                   names(
-                    get_combination_components(freq_reactives$pairwise())
+                    get_combination_components(data_reactives$pairwise())
                   )
                 )
               }

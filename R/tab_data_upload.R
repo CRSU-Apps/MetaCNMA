@@ -108,7 +108,7 @@ data_upload_tab_server <- function(
           data_reactives$is_default_data(FALSE)
           data_reactives$data(rio::import(input$data$datapath))
         } else {
-
+          data_reactives$invalidate_count(data_reactives$invalidate_count() + 1)
         }
       }) %>% shiny::bindEvent(
         input$data,
@@ -117,6 +117,58 @@ data_upload_tab_server <- function(
 
       data_reactives$is_data_loaded <- shiny::reactive({
         return(!is.null(data_reactives$data()))
+      })
+
+      data_reactives$formatted_data <- shiny::reactive({
+        if (!data_reactives$is_data_loaded()) {
+          return(NULL)
+        } else {
+          return(
+            format_data( # nolint: object_usage
+              data_reactives$data(),
+              data_reactives$data_type()
+            )
+          )
+        }
+      })
+
+      data_reactives$is_data_formatted <- shiny::reactive({
+        return(!is.null(data_reactives$formatted_data()))
+      })
+
+      data_reactives$studies <- shiny::reactive({
+        if (is.null(data_reactives$is_data_formatted())) {
+          return(NULL)
+        } else {
+          return(
+            levels(as.factor(data_reactives$formatted_data()$study))
+          )
+        }
+      })
+
+      data_reactives$pairwise <- shiny::reactive({
+        if (!data_reactives$is_data_formatted()) {
+          return(NULL)
+        } else {
+          return(
+            freq_pairwise( # nolint: object_usage
+              data_reactives$formatted_data(),
+              data_reactives$data_type()
+            )
+          )
+        }
+      })
+
+      data_reactives$default_reference_component <- shiny::reactive({
+        if (is.null(data_reactives$pairwise())) {
+          return(NULL)
+        } else {
+          return(
+            get_most_freq_component( # nolint: object_usage
+              data_reactives$pairwise()
+            )
+          )
+        }
       })
 
       return(

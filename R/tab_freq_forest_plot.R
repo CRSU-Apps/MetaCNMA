@@ -1,32 +1,33 @@
-upset_plot_tab_ui <- function(id) {
+forest_plot_tab_ui <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
-    shiny::h1("Upset Plot"),
+    shiny::h1("Forest Plot"),
     message_tag_list(ns), # nolint: object_usage
     save_plot_ui( # nolint: object_usage
-      ns("save_upset_plot"),
-      output_name = "Upset_Plot",
-      height = "675"
+      ns("save_forest_plot"),
+      output_name = "Freq_Forest_Plot"
     ),
     shinydashboardPlus::box(
       title = shiny::textOutput(ns("plot_title")),
-      id = ns("upset_plot_box"),
+      id = ns("forest_plot_box"),
       width = 12,
       shinycssloaders::withSpinner(
-        shiny::plotOutput(ns("upset_plot")),
+        shiny::plotOutput(ns("forest_plot")),
         type = 6
       )
     )
   )
 }
-upset_plot_tab_server <- function(
+
+forest_plot_tab_server <- function(
   id,
   data_reactives,
   freq_options,
   freq_reactives,
   tab
 ) {
-  shiny::moduleServer(id,
+  shiny::moduleServer(
+    id,
     function(input,
              output,
              session) {
@@ -42,14 +43,17 @@ upset_plot_tab_server <- function(
           output$warning <- NULL
           output$info <- NULL
           output$plot_title <- NULL
-          output$upset_plot <- NULL
+          output$forest_plot <- NULL
           is_rendered(FALSE)
           print(tab())
           shiny::req(
+            freq_options$options_loaded(),
             !is.null(data_reactives$pairwise()),
-            data_reactives$is_data_formatted(),
+            !is.null(freq_reactives$netmeta()),
+            !is.null(freq_reactives$netcomb()),
             cancelOutput = TRUE
           )
+          print("forest_plot")
           tryCatch({
             withCallingHandlers(
               warning = function(cond) {
@@ -59,35 +63,34 @@ upset_plot_tab_server <- function(
               },
               message = function(cond) {
                 output$info <- shiny::renderUI(
-                  message_alert(conditionMessage(cond)) # nolint: object_name
+                  message_alert(conditionMessage(cond))  # nolint: object_name
                 )
               },
               {
-                upset_plot <- function() {
-                  print(
-                    get_upset_plot( # nolint: object_usage
-                      data_reactives$formatted_data(),
-                      get_components_no_reference(data_reactives$pairwise()) # nolint: object_usage
+                output$plot_title <- shiny::renderText(
+                  paste0("Forest plot showing the ",
+                    freq_options$outcome_measure(),
+                    " of ",
+                    freq_options$outcome_name(),
+                    " when compared against ",
+                    get_most_freq_component( # nolint: object_name
+                      data_reactives$pairwise()
                     )
+                  )
+                )
+                forest_plot <- function() {
+                  get_net_forest( # nolint: object_name
+                    freq_reactives$netcomb(),
+                    freq_options$data_type(),
+                    freq_options$outcome_measure()
                   )
                 }
-                output$plot_title <- shiny::renderText(
-                  paste0(
-                    "Upset Plot of Component: ",
-                    paste(
-                      get_components_no_reference( # nolint: object_name# nolint: object_name
-                        data_reactives$pairwise()
-                      ),
-                      collapse = ", "
-                    )
-                  )
-                )
-                output$upset_plot <- shiny::renderPlot(
-                  upset_plot()
+                output$forest_plot <- shiny::renderPlot(
+                  forest_plot()
                 )
                 is_rendered(TRUE)
-                save_plot_server("save_upset_plot", # nolint: object_usage
-                  upset_plot,
+                save_plot_server("save_forest_plot",
+                  forest_plot,
                   is_rendered
                 )
               }
@@ -99,8 +102,10 @@ upset_plot_tab_server <- function(
         }
       }) %>% shiny::bindEvent(
         tab(),
-        freq_options$update_reactive()
+        freq_options$update_reactive(),
+        freq_options$update_options()
       )
+
     }
   )
 }

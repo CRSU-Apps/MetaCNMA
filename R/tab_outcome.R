@@ -1,4 +1,4 @@
-freq_outcome_tab_ui <- function(id) {
+model_outcome_tab_ui <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
     shiny::h1("Model Settings"),
@@ -11,7 +11,12 @@ freq_outcome_tab_ui <- function(id) {
   )
 }
 
-freq_outcome_tab_server <- function(id, data_reactives, tab) {
+model_outcome_tab_server <- function(
+  id,
+  data_reactives,
+  tab,
+  freq = TRUE
+) {
   shiny::moduleServer(
     id,
     function(input,
@@ -22,9 +27,9 @@ freq_outcome_tab_server <- function(id, data_reactives, tab) {
 
       `%>%` <- magrittr::`%>%`
 
-      freq_options <- shiny::reactiveValues()
+      model_options <- shiny::reactiveValues()
 
-      freq_options$update_reactive <- shiny::reactive({
+      model_options$update_reactive <- shiny::reactive({
         data_reactives$data()
         data_reactives$data_type()
         data_reactives$is_default_data()
@@ -123,22 +128,22 @@ freq_outcome_tab_server <- function(id, data_reactives, tab) {
         shiny::outputOptions(output, "outcome_name", suspendWhenHidden = FALSE)
 
       }) %>% shiny::bindEvent(
-        freq_options$update_reactive()
+        model_options$update_reactive()
       )
 
-      freq_options$data_type <- shiny::reactive({
+      model_options$data_type <- shiny::reactive({
         return(data_reactives$data_type())
       })
 
-      freq_options$outcome_measure <- shiny::reactive({
-        return(input$data_measure)
+      model_options$original_outcome_measure <- shiny::reactive({
+        return(input$outcome_measure)
       })
 
-      freq_options$desirable <- shiny::reactive({
+      model_options$desirable <- shiny::reactive({
         return(input$desirable)
       })
 
-      freq_options$outcome_measure <- shiny::reactive({
+      model_options$outcome_measure <- shiny::reactive({
         return(
           get_outcome_measure(
             input$outcome_measure
@@ -146,8 +151,8 @@ freq_outcome_tab_server <- function(id, data_reactives, tab) {
         )
       })
 
-      freq_options$random_effects <- shiny::reactive({
-        return(input$random_effects)
+      model_options$random_effects <- shiny::reactive({
+        return(as.logical(as.numeric(input$random_effects)))
       })
 
       .outcome_name <- shiny::reactiveVal(NULL)
@@ -161,26 +166,53 @@ freq_outcome_tab_server <- function(id, data_reactives, tab) {
         }
       }) %>% shiny::bindEvent(input$outcome_name, ignoreInit = TRUE)
 
-      freq_options$outcome_name <- shiny::reactive({
+      model_options$outcome_name <- shiny::reactive({
         .outcome_name()
       })
 
-      freq_options$options_loaded <- shiny::reactive({
+      model_options$options_loaded <- shiny::reactive({
         if (
           any(
             is.null(input$outcome_measure),
             is.null(input$desirable),
             is.null(input$random_effects),
-            is.null(freq_options$outcome_name())
+            is.null(model_options$outcome_name())
           )
         ) {
+          print("Options Not Loaded")
           return(FALSE)
         } else {
+          print("Options Loaded")
           return(TRUE)
         }
       })
 
-      return(freq_options)
+      shiny::observe({
+        if (all(
+          tab() == id,
+          !freq
+        )) {
+          shinyjs::delay(
+            5,
+            shinyjs::disable(
+              selector =
+                paste0(
+                  "#",
+                  ns("outcome_measure"),
+                  " [type='radio'][value='smd']"
+                )
+            )
+          )
+        }
+      }) %>% shiny::bindEvent(tab(), model_options$update_reactive())
+
+      model_options$update_options <- shiny::reactive({
+        input$outcome_measure
+        input$desirable
+        input$random_effects
+      })
+
+      return(model_options)
 
 
     }

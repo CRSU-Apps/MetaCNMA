@@ -8,6 +8,13 @@ home_tab_ui <- function(id) {
       class = "img-responsive center-block",
       id = "home-logo"
     ),
+    shiny::p(
+      "Welcome to MetaCNMA, Currently this software is in BETA and is
+      offered AS IS without warranty of any kind."
+    ),
+    shiny::p(
+      "If you use this software for please cite it as:"
+    ),
     shiny::fluidRow(shiny::column(
       width = 6,
       offset = 3

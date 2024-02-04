@@ -68,16 +68,31 @@ render_sidebar <- function() {
         tabName = "freq_forest_plot",
         icon = icon("chart-gantt")
       )
-    #),
-    # shinydashboard::menuItem(
-    #   "Privacy Policy",
-    #   tabName = "privacy_policy",
-    #   icon = icon("lock")
-    # ),
-    # shinydashboard::menuItem(
-    #   "Readme",
-    #   tabName = "readme",
-    #   icon = shiny::icon("readme")
+    ),
+    shinydashboard::menuItem(
+      "Bayesian Analysis",
+      icon = shiny::icon("magnifying-glass-chart"),
+      startExpanded = TRUE,
+      menuSubItem(
+        "Outcome & Model Settings",
+        tabName = "bayesian_outcome_tab",
+        icon = icon("equals")
+      ),
+      menuSubItem(
+        "Sensitivity Analysis: Exclude Studies",
+        tabName = "bayesian_exclude",
+        icon = icon("text-slash")
+      ),
+      menuSubItem(
+        "Forest Plot",
+        tabName = "bayesian_forest_plot",
+        icon = icon("chart-gantt")
+      )
+    ),
+    shinydashboard::menuItem(
+      "Readme",
+      tabName = "readme",
+      icon = shiny::icon("readme")
     )
   )
 }
