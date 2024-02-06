@@ -30,7 +30,7 @@ fit_model <- function(
       )
     } else {
       return(
-        MetaCNMABayes::fit_binary_re(
+        MetaCNMABayes::fit_binary_fe(
           df,
           reference_component,
           outcome_measure,
@@ -62,7 +62,7 @@ fit_model <- function(
       )
     } else {
       return(
-        MetaCNMABayes::fit_continuous_re(
+        MetaCNMABayes::fit_continuous_fe(
           df,
           reference_component,
           outcome_measure,
