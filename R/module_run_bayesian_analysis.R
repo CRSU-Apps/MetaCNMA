@@ -95,26 +95,32 @@ run_bayesian_analysis_server <- function(
                 color = "#005398",
                 text = "Running Model"
               )
-              console_out(
-                capture.output(
-                  bayesian_reactives$model(
-                    fit_model(
-                      data_reactives$formatted_data(),
-                      data_reactives$data_type(),
-                      data_reactives$default_reference_component(),
-                      bayesian_options$random_effects(),
-                      toupper(
-                        bayesian_options$original_outcome_measure()
-                      )
-                    )
+              tmp_df_file <- tempfile("df", fileext = ".Rds")
+              rio::export(data_reactives$formatted_data(), tmp_df_file)
+              tmp_output_file <- tempfile("output", fileext = ".Rds")
+              console_out(system2(
+                command = file.path(R.home("bin"), "Rscript"),
+                args = c(
+                  "run_bayes.R",
+                  tmp_df_file,
+                  tmp_output_file,
+                  data_reactives$data_type(),
+                  paste0("'", data_reactives$default_reference_component(), "'"),
+                  bayesian_options$random_effects(),
+                  toupper(
+                    bayesian_options$original_outcome_measure()
                   )
-                )
-              )
+                ),
+                stdout = TRUE
+              ))
+              bayesian_reactives$model(rio::import(tmp_output_file))
+              unlink(tmp_df_file)
+              unlink(tmp_output_file)
             }
           )
         },
         error = function(e) {
-            error_alert(e$message) # nolint: object_name
+          error_alert(e$message) # nolint: object_name
         },
         finally = {
           shinybusy::remove_modal_spinner()
@@ -127,7 +133,12 @@ run_bayesian_analysis_server <- function(
         print("Outputting to console")
         output$stan_output <- shiny::renderUI(
           shiny::renderPrint(
-            console_out()
+            {
+              cat(
+                console_out(),
+                sep = "\n"
+              )
+            }
           )
         )
       }) %>% shiny::bindEvent(
