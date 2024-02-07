@@ -4,7 +4,7 @@ error_alert <- function(msg, title = "An Error Occurred") {
 
 
 #' Custom Alert
-#' 
+#'
 #' Internal function to display an alert
 #' uses if the alert is called outside of an RShiny Session the alert
 #' is printed to the console.

@@ -104,6 +104,14 @@ shinyServer(function(input, output, session){
     tab
   )
 
+  model_diagnostics_tab_server(
+    "model_diagnostics",
+    data_reactives,
+    bayesian_options,
+    bayesian_reactives,
+    tab
+  )
+
   bayes_sens_reactive <- exclude_tab_server(
     "bayesian_exclude",
     data_reactives,

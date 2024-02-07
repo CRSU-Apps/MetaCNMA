@@ -78,3 +78,84 @@ fit_model <- function(
     }
   }
 }
+
+get_sampler_diagnostics <- function(stan_fit) {
+  return(
+    data.frame(
+      Info = c(
+        "divergent transitions", 
+        "iterations which exceeded max treedepth"
+      ),
+      Number = c(
+        rstan::get_num_divergent(stan_fit),
+        rstan::get_num_max_treedepth(stan_fit)
+      )
+    )
+  )
+}
+
+get_pars <- function(random_effects) {
+  if (random_effects) {
+    return(
+      c(
+        "mu",
+        "d",
+        "delta",
+        "sdbt"
+      )
+    )
+  }
+  return (
+    c(
+      "mu",
+      "d"
+    )
+  )
+}
+
+get_rhat_diagnostics <- function(stan_fit, random_effects) {
+  pars <- get_pars(random_effects)
+  rhats <- round(
+    rstan::summary(
+      stan_fit, pars = pars
+    )$summary[, "Rhat"], 2
+  )
+  return(
+    tibble(
+      parameter = names(rhats),
+      r_hat = rhats,
+      catergory = dplyr::case_when(
+        r_hat < 1.05 ~ "good",
+        r_hat %in% c(1.05, 1.10) ~ "borderline",
+        r_hat > 1.10 ~ "bad"
+      )
+    )
+  )
+}
+
+get_denisty_plots <- function(
+  stan_fit,
+  random_effects,
+  ncol = 5
+) {
+  pars <- get_pars(random_effects)
+  return(
+    rstan::stan_dens(
+      stan_fit,
+      pars = pars
+    )
+  )
+}
+
+get_trace_plots <- function(
+  stan_fit,
+  random_effects
+) {
+  pars <- get_pars(random_effects)
+  return(
+    rstan::stan_trace(
+      stan_fit,
+      pars = pars
+    )
+  )
+}

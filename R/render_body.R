@@ -43,9 +43,9 @@ render_body <- function() {
     shinydashboard::tabItem(tabName = "bayesian_forest_plot",
       bayes_forest_plot_tab_ui("bayesian_forest_plot") # nolint object_usage
     ),
-    # tabItem(tabName = "privacy_policy",
-    #   static_page_ui("privacy_policy", "md/privacy_policy.md") # nolint object_usage
-    # ),
+    shinydashboard::tabItem(tabName = "model_diagnostics",
+      model_diagnostics_tab_ui("model_diagnostics") # nolint object_usage
+    ),
     tabItem(tabName = "readme",
       static_page_ui("readme", "readme.md") # nolint object_usage
     )

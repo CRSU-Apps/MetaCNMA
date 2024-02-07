@@ -87,6 +87,11 @@ render_sidebar <- function() {
         "Forest Plot",
         tabName = "bayesian_forest_plot",
         icon = icon("chart-gantt")
+      ),
+      menuSubItem(
+        "Model Diagnostics",
+        tabName = "model_diagnostics",
+        icon = icon("stethoscope")
       )
     ),
     shinydashboard::menuItem(

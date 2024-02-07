@@ -49,12 +49,22 @@ run_bayesian_analysis_server <- function(
           )
         ) {
           output$run_analysis <- shiny::renderUI(
-            shiny::actionButton(
-              ns("run_model_button"),
-              "Run Model",
-              shiny::icon("play"),
-              style =
-                "color: #fff; background-color: #dc3545; border-color: #dc3545"
+            shiny::tagList(
+              message_alert(
+                "Running the Bayesian analysis may 
+                take up to a couple of minutes"
+              ),
+              shiny::actionButton(
+                ns("run_model_button"),
+                "Run Model",
+                shiny::icon("play"),
+                style =
+                  "
+                    color: #fff;
+                    background-color:#dc3545;
+                    border-color:#dc3545
+                  "
+              )
             )
           )
           bayesian_ready(TRUE)
@@ -72,8 +82,6 @@ run_bayesian_analysis_server <- function(
         bayesian_options$update_reactive(),
         bayesian_options$update_options()
       )
-
-      console_out <- shiny::reactiveVal(NULL)
 
       shiny::observe({
         tryCatch({
@@ -98,14 +106,18 @@ run_bayesian_analysis_server <- function(
               tmp_df_file <- tempfile("df", fileext = ".Rds")
               rio::export(data_reactives$formatted_data(), tmp_df_file)
               tmp_output_file <- tempfile("output", fileext = ".Rds")
-              console_out(system2(
+              bayesian_reactives$console_out(system2(
                 command = file.path(R.home("bin"), "Rscript"),
                 args = c(
                   "run_bayes.R",
                   tmp_df_file,
                   tmp_output_file,
                   data_reactives$data_type(),
-                  paste0("'", data_reactives$default_reference_component(), "'"),
+                  paste0(
+                    "'",
+                    data_reactives$default_reference_component(),
+                    "'"
+                  ),
                   bayesian_options$random_effects(),
                   toupper(
                     bayesian_options$original_outcome_measure()
@@ -135,14 +147,14 @@ run_bayesian_analysis_server <- function(
           shiny::renderPrint(
             {
               cat(
-                console_out(),
+                bayesian_reactives$console_out(),
                 sep = "\n"
               )
             }
           )
         )
       }) %>% shiny::bindEvent(
-        console_out
+        bayesian_reactives$console_out()
       )
 
     }
