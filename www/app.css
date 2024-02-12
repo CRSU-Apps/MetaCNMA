@@ -32,10 +32,6 @@ body{
   padding-left: 0px;
 }
 
-.tab-pane{
-  #max-height: 70vh;
-}
-
 .content-50{
   max-height: 50vh;
 }
@@ -149,4 +145,14 @@ body{
     width: 300px;
 }
 
+.treeview-menu {
+  display: block !important;
+}
 
+.sidebar-menu li>a>.fa-angle-left {
+  display: none !important;
+}
+
+body:not(.sidebar-collapse) .treeview > a:first-child {
+  pointer-events: none;
+}

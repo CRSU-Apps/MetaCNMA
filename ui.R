@@ -27,12 +27,12 @@ shinyUI(
       tags$meta(property = "og:image",
         content =
           "https://raw.githubusercontent.com/CRSU-Apps/MetaDTA/main/www/images/MetaCNMALogo.png" # nolint
-      )
+      ),
     ),
 
     # Set up Shinyjs
     useShinyjs(),
-
+    
     # Use dashboardPage from shinydashboardPlus
     shinydashboardPlus::dashboardPage(
       header = shinydashboardPlus::dashboardHeader(

@@ -37,7 +37,7 @@ save_plot_ui <- function(
         shiny::div(
           class = "clearfix"
         ),
-        size = "sm",
+        size = "md",
         icon = shiny::icon("floppy-disk"),
         status = "primary",
         right = TRUE

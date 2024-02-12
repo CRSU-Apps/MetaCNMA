@@ -2,12 +2,11 @@ stan_settings_ui <- function(
   id
 ) {
   ns <- shiny::NS(id)
-  shiny::uiOutput("stan_settings")
+  shiny::uiOutput(ns("stan_settings"))
 }
 
 stan_settings_server <- function(
   id,
-  bayesian_analysis,
   bayesian_ready
 ) {
   shiny::moduleServer(
@@ -23,6 +22,10 @@ stan_settings_server <- function(
       stan_settings <- shiny::reactiveValues()
 
       shiny::observe({
+        shiny::req(
+          bayesian_ready(),
+          cancelOutput = TRUE
+        )
         output$stan_settings <- shiny::renderUI(
           shiny::tagList(
             shiny::div(
@@ -66,10 +69,11 @@ stan_settings_server <- function(
                 shiny::div(
                   class = "clearfix"
                 ),
-                size = "sm",
+                size = "md",
                 icon = shiny::icon("gear"),
                 status = "primary",
-                right = TRUE
+                right = TRUE,
+                label = "Stan Sampler Options"
               ),
               style =
                 "float: right;"

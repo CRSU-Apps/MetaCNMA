@@ -5,8 +5,10 @@ run_bayesian_analysis_ui <- function(
   shiny::tagList(
     shiny::uiOutput(ns("warning")),
     shiny::uiOutput(ns("info")),
-    shiny::uiOutput(ns("run_analysis")),
-    shiny::uiOutput(ns("stan_settings")),
+    shiny::div(
+      shiny::uiOutput(ns("run_analysis")),
+      stan_settings_ui(ns("bayesian_settings")), # nolint: object_usage
+    ),
     shiny::br(),
     shinydashboardPlus::box(
       title = "Stan Output",
@@ -37,6 +39,11 @@ run_bayesian_analysis_server <- function(
 
       bayesian_ready <- shiny::reactiveVal(FALSE)
 
+      stan_settings_server(
+       "bayesian_settings",
+       bayesian_ready
+      )
+
       shiny::observe({
         output$run_analysis <- NULL
         bayesian_ready(FALSE)
@@ -62,7 +69,8 @@ run_bayesian_analysis_server <- function(
                   "
                     color: #fff;
                     background-color:#dc3545;
-                    border-color:#dc3545
+                    border-color:#dc3545;
+                    float: left;
                   "
               )
             )

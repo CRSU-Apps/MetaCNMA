@@ -3,15 +3,14 @@
 ##                          CRSU CNMA                           ##
 ##                          Ryan Field                          ##
 ##################################################################
-shinyServer(function(input, output, session){
+shinyServer(function(input, output, session) {
+  
   # Reactive Values
-  # reactive_data <- Data$new()$reactive()
-  # reactive_freq <- Freq$new()$reactive()
-  # Tabs as a reactive
+  # Current tab as a reactive
   tab <- reactive(input$tabs)
   log <- reactiveValues()
 
-  data_type <- data_type_module_server("data_type", data_type)
+  data_type <- data_type_module_server("data_type")
 
   home_tab_server("home_tab")
 

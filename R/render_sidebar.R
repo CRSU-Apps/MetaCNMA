@@ -7,7 +7,7 @@ render_sidebar <- function() {
     ),
     shinydashboard::menuItem(
       "Data",
-      icon = icon("database"),
+      icon = shiny::icon("database"),
       startExpanded = TRUE,
       shinydashboard::menuSubItem("Upload Data",
         tabName = "data_upload_tab",
@@ -28,70 +28,70 @@ render_sidebar <- function() {
       "Component Summary",
       icon = shiny::icon("puzzle-piece"),
       startExpanded = TRUE,
-      menuSubItem(
+      shinydashboard::menuSubItem(
         "Data Summary",
         tabName = "data_summary",
-        icon = icon("clipboard-list")
+        icon = shiny::icon("clipboard-list")
       ),
-      menuSubItem(
+      shinydashboard::menuSubItem(
         "Network Diagram",
         tabName = "net_graph",
-        icon = icon("circle-nodes")
+        icon = shiny::icon("circle-nodes")
       ),
-      menuSubItem(
+      shinydashboard::menuSubItem(
         "Correlation Plot and Heatmap",
         tabName = "correlation_plot",
-        icon = icon("chart-simple")
+        icon = shiny::icon("chart-simple")
       ),
-      menuSubItem(
+      shinydashboard::menuSubItem(
         "Upset Plot",
         tabName = "upset_plot",
-        icon = icon("chart-bar")
+        icon = shiny::icon("chart-bar")
       )
     ),
-    menuItem(
+    shinydashboard::menuItem(
       "Frequentist Analysis",
       icon = icon("microscope"),
       startExpanded = TRUE,
-      menuSubItem(
+      shinydashboard::menuSubItem(
         "Outcome & Model Settings",
         tabName = "freq_outcome_tab",
-        icon = icon("equals")
+        icon = shiny::icon("equals")
       ),
-      menuSubItem(
+      shinydashboard::menuSubItem(
         "Sensitivity Analysis: Exclude Studies",
         tabName = "freq_exclude",
-        icon = icon("text-slash")
+        icon = shiny::icon("text-slash")
       ),
-      menuSubItem(
+      shinydashboard::menuSubItem(
         "Forest Plot",
         tabName = "freq_forest_plot",
-        icon = icon("chart-gantt")
+        icon = shiny::icon("chart-gantt")
       )
     ),
     shinydashboard::menuItem(
       "Bayesian Analysis",
       icon = shiny::icon("magnifying-glass-chart"),
       startExpanded = TRUE,
-      menuSubItem(
+      shinydashboard::menuSubItem(
         "Outcome & Model Settings",
         tabName = "bayesian_outcome_tab",
-        icon = icon("equals")
+        icon = shiny::icon("equals")
       ),
-      menuSubItem(
+      shinydashboard::menuSubItem(
         "Sensitivity Analysis: Exclude Studies",
         tabName = "bayesian_exclude",
-        icon = icon("text-slash")
+        icon = shiny::icon("text-slash")
       ),
-      menuSubItem(
+      shinydashboard::menuSubItem(
         "Forest Plot",
         tabName = "bayesian_forest_plot",
-        icon = icon("chart-gantt")
+        icon = shiny::icon("chart-gantt")
       ),
-      menuSubItem(
+      shinydashboard::menuSubItem(
         "Model Diagnostics",
         tabName = "model_diagnostics",
-        icon = icon("stethoscope")
+        icon = shiny::icon("stethoscope")
       )
     ),
     shinydashboard::menuItem(

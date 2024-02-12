@@ -10,8 +10,7 @@ data_type_module_ui <- function(id) {
 }
 
 data_type_module_server <- function(
-  id,
-  data_type
+  id
 ) {
   shiny::moduleServer(
     id,
@@ -22,7 +21,7 @@ data_type_module_server <- function(
       `%>%` <- magrittr::`%>%`
       ns <- session$ns
 
-      data_type <- reactiveVal("continuous")
+      data_type <- shiny::reactiveVal("continuous")
 
       shiny::observe({
         output$data_type <- shiny::renderUI(
