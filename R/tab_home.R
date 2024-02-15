@@ -12,6 +12,7 @@ home_tab_ui <- function(id) {
       "Welcome to MetaCNMA, Currently this software is in BETA and is
       offered AS IS without warranty of any kind."
     ),
+    shiny::includeMarkdown("md/freq_binary.md"),
     shiny::p(
       "If you use this software for please cite it as:"
     ),

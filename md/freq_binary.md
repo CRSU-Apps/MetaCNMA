@@ -1,0 +1,2 @@
+**Note:**
+This app uses the R package  [`netmeta`]() for Frequentist analysis and STAN models derived from [Welton, N.J et al.](https://doi.org/10.1093/aje/kwp014) for the Bayesian analysis from the [`MetaCNMABayes`](https://github.com/CRSU-Apps/MetaCNMABayes) R package. Both these packages implement component network meta analysis differently, so you should expect different results from the Frequentist and Bayesian analysis, more details can been found in the Wiggle, A. and Béliveau, A. [paper](https://doi.org/10.1002/sim.9520).
