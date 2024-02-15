@@ -30,7 +30,7 @@ data_upload_tab_ui <- function(id) {
 data_upload_tab_server <- function(
   id,
   data_type,
-  parent_session
+  load_default_data
 ) {
   shiny::moduleServer(
     id,
@@ -42,11 +42,21 @@ data_upload_tab_server <- function(
 
       `%>%` <- magrittr::`%>%`
 
+      parent_session <- shiny::getDefaultReactiveDomain()$rootScope()
+
       data_reactives <- shiny::reactiveValues()
 
-      data_reactives$data_type <- shiny::reactive({
-        data_type()
-      })
+      data_reactives$data_type <- data_type
+
+      data_reactives$load_default_data <- load_default_data
+
+      shiny::observe({
+        data_reactives$load_default_data(TRUE)
+      }) %>% shiny::bindEvent(
+        data_reactives$data_type(),
+        ignoreInit = TRUE,
+        ignoreNULL = TRUE
+      )
 
       # Create a definable reactive value to allow reloading of data
       data_reactives$reload <- shiny::reactiveVal(FALSE)
@@ -68,9 +78,23 @@ data_upload_tab_server <- function(
       shiny::outputOptions(output, "data_uploaded", suspendWhenHidden = FALSE)
 
       shiny::observe({
-        shinydashboard::updateTabItems(parent_session(), "tabs", "data_help")
+        shinydashboard::updateTabItems(parent_session, "tabs", "data_help")
       }) %>% shiny::bindEvent(input$data_help_link,
         ignoreInit = TRUE, ignoreNULL = TRUE
+      )
+
+      shiny::observe({
+        if (
+          shiny::req(data_reactives$load_default_data())
+        ) {
+          data_reactives$reload(FALSE)
+          data_reactives$data_uploaded(FALSE)
+          data_reactives$is_default_data(TRUE)
+          data_reactives$data(default_data(data_reactives$data_type()))
+          data_reactives$load_default_data(FALSE)
+        }
+      }) %>% shiny::bindEvent(
+        data_reactives$load_default_data()
       )
 
       # Render the file input intially

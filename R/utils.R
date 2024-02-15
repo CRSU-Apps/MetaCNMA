@@ -15,23 +15,23 @@ get_site_info_property <- function(property) {
   })
 }
 
-get_title <- function(){
+get_title <- function() {
   return(as.character(get_site_info_property("title")))
 }
 
-get_version <- function(){
+get_version <- function() {
   return(as.character(get_site_info_property("version")))
 }
 
-get_accepted_file_formats <- function(){
+get_accepted_file_formats <- function() {
   return(get_site_info_property("accepted_file_formats")[[1]])
 }
 
-get_cookie_message <- function(){
+get_cookie_message <- function() {
   shiny::includeHTML("html/cookie.html")
 }
 
-get_description <- function(){
+get_description <- function() {
   return(as.character(get_site_info_property("description")))
 }
 
@@ -67,4 +67,12 @@ get_outcome_measure <- function(outcome_measure) {
     outcome_measure == "rd" ~ "Risk Difference (RD)",
     TRUE ~ "Outcome Measure"
   )
+}
+
+get_citation <- function(data_type) {
+  if (data_type == "binary") {
+    "md/binary_citation.md"
+  } else if (data_type == "continuous") {
+    "md/continuous_citation.md"
+  }
 }

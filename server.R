@@ -4,11 +4,18 @@
 ##                          Ryan Field                          ##
 ##################################################################
 shinyServer(function(input, output, session) {
-  
+
+  cookie_server(
+    id = "cookies",
+    cookies = reactive(input$cookies),
+    open_privacy_policy = reactive(input$open_privacy_policy)
+  )
+
   # Reactive Values
   # Current tab as a reactive
   tab <- reactive(input$tabs)
   log <- reactiveValues()
+  load_default_data <- reactiveVal(TRUE)
 
   data_type <- data_type_module_server("data_type")
 
@@ -17,10 +24,14 @@ shinyServer(function(input, output, session) {
   data_reactives <- data_upload_tab_server(
     "data_upload_tab",
     data_type,
-    parent_session
+    load_default_data
   )
 
-  view_data_tab_server("view_data_tab", data_reactives)
+  view_data_tab_server(
+    "view_data_tab",
+    data_reactives,
+    tab
+  )
 
   freq_options <- model_outcome_tab_server(
     "freq_outcome_tab",

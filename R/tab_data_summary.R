@@ -2,6 +2,7 @@ data_summary_tab_ui <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
     shiny::h1("Data Summary"),
+    default_data_ui("summary_default_data"),
     message_tag_list(ns), # nolint: object_usage
     shinycssloaders::withSpinner(
       shiny::uiOutput(ns("data_summary")),
@@ -26,9 +27,16 @@ data_summary_tab_server <- function(
 
       `%>%` <- magrittr::`%>%`
 
+      default_data_server(
+        ns("summary_default_data"),
+        data_reactives
+      )
+
       shiny::observe({
         if (tab() == id) {
           print(tab())
+          output$warning <- NULL
+          output$info <- NULL
           output$data_summary <- shiny::renderText("Waiting for data")
           tryCatch({
             withCallingHandlers(

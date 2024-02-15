@@ -8,7 +8,11 @@ view_data_tab_ui <- function(id) {
   )
 }
 
-view_data_tab_server <- function(id, data_reactives) {
+view_data_tab_server <- function(
+  id,
+  data_reactives,
+  tab
+) {
   shiny::moduleServer(
     id,
     function(input,
@@ -20,11 +24,13 @@ view_data_tab_server <- function(id, data_reactives) {
       `%>%` <- magrittr::`%>%`
 
       shiny::observe({
-        shiny::req(data_reactives$data_type())
-        if (is.null(data_reactives$data())) {
+        if (tab() == id) {
+          print(tab())
+          output$warning <- NULL
+          output$info <- NULL
           output$citation <- NULL
           output$data_table <- NULL
-        } else {
+          shiny::req(data_reactives$data_type())
           tryCatch({
             withCallingHandlers(
               warning = function(cond) {
@@ -38,6 +44,13 @@ view_data_tab_server <- function(id, data_reactives) {
                 )
               },
               {
+                if (data_reactives$is_default_data()) {
+                  output$citation <- shiny::renderUI(
+                    shiny::includeMarkdown(
+                      get_citation(data_reactives$data_type())
+                    )
+                  )
+                }
                 output$data_table <-
                   DT::renderDataTable(
                     data_reactives$data(),
@@ -54,11 +67,14 @@ view_data_tab_server <- function(id, data_reactives) {
           }, error = function(e) {
             output$citation <- NULL
             output$data_table <- NULL
-            data_reactives$invalidat_count(data_reactives$invalidate_count + 1)
+            data_reactives$invalidat_count(
+              data_reactives$invalidate_count + 1
+            )
             error_alert(e$message) # nolint object_usage
           })
         }
       }) %>% shiny::bindEvent(
+        tab(),
         data_reactives$data(),
         ignoreInit = TRUE
       )

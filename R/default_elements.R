@@ -23,6 +23,7 @@ default_file_input <- function(ns) {
 default_no_data <- function(ns) {
   shiny::tagList(
     shiny::p("No data loaded"),
+    shiny::p("Please upload data or:"),
     shiny::div(
       shiny::actionButton(
         ns("default_data"),
@@ -37,7 +38,6 @@ default_no_data <- function(ns) {
 
 default_data_continuous <- function() {
   return(list(
-    data_frame = rio::import("data/continuous.Rds"),
     type = "continuous",
     format = "long",
     measure = "md",
@@ -48,13 +48,22 @@ default_data_continuous <- function() {
 
 default_data_binary <- function() {
   return(list(
-    data_frame = rio::import("data/binary.Rds"),
     type = "binary",
     format = "long",
     measure = "or",
     desirable = 0,
     outcome_name = "Incidence of Delirium"
   ))
+}
+
+default_data_properties <- function(data_type) {
+  if (data_type == "binary") {
+    return(default_data_binary())
+  } else if (data_type == "continuous") {
+    return(default_data_continuous())
+  } else {
+    return(NULL)
+  }
 }
 
 #' Function to load the default data depending on selected outcome
@@ -73,9 +82,9 @@ default_data <- function(data_type) {
   tryCatch({
     # Determine whether to load binary or continous data
     if (data_type == "binary") {
-      return(default_data_binary()$data_frame) # nolint: object_name
+      return(MetaCNMABayes::binary) # nolint: object_name
     } else if (data_type == "continuous") {
-      return(default_data_continuous()$data_frame) # nolint: object_name
+      return(MetaCNMABayes::continuous) # nolint: object_name
     } else {
       return(NULL)
     }
@@ -101,7 +110,7 @@ default_reload_button <- function(ns, button_text = "Delete Data") {
 
 default_outcome_measure <- function(data_type, is_default_data) {
   if (is_default_data) {
-    return(default_data(data_type)$measure)
+    return(default_data_properties(data_type)$measure)
   }
   if (data_type == "continuous") {
     return("md")
@@ -114,7 +123,7 @@ default_outcome_measure <- function(data_type, is_default_data) {
 
 default_outcome_desirable <- function(data_type, is_default_data) {
   if (is_default_data) {
-    return(default_data(data_type)$desirable)
+    return(default_data_properties(data_type)$desirable)
   }
   if (data_type == "continuous") {
     return(1)
@@ -139,7 +148,7 @@ default_desirable_text <- function(data_type) {
 
 default_outcome_name <- function(data_type, is_default_data) {
   if (is_default_data) {
-    return(default_data(data_type)$outcome_name)
+    return(default_data_properties(data_type)$outcome_name)
   } else {
     return("Outcome Name")
   }
