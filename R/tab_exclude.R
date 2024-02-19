@@ -37,7 +37,6 @@ exclude_tab_server <- function(
   id,
   data_reactives,
   model_options,
-  model_reactives,
   tab
 ) {
   shiny::moduleServer(id,
@@ -49,10 +48,13 @@ exclude_tab_server <- function(
 
       `%>%` <- magrittr::`%>%`
 
-      model_exclude <- shiny::reactiveValues()
+      exclude_reactives <- data_reactives_server(
+        ns("exclude_reactives"),
+        shiny::reactive(data_reactives$data_type())
+      )
 
       .reactive_df <- shiny::reactiveVal(NULL)
-      model_exclude$formatted_data <- shiny::reactiveVal(NULL)
+      .reactive_exclude_df <- shiny::reactiveVal(NULL)
 
       data_table_module_server(
         "original_table_output",
@@ -61,8 +63,10 @@ exclude_tab_server <- function(
 
       data_table_module_server(
         "excluded_studies_table_output",
-        model_exclude$formatted_data
+        .reactive_exclude_df
       )
+
+      .excluded <- shiny::reactiveVal(NULL)
 
       shiny::observe({
         if (tab() == id) {
@@ -90,9 +94,10 @@ exclude_tab_server <- function(
               {
                 # Setting Studies
                 output$study_selection <- shiny::renderUI(
-                  shiny::checkboxGroupInput("exclude",
+                  shiny::checkboxGroupInput(ns("excluded"),
                     label = "Choose any Studies you wish to exclude",
-                    choices = data_reactives$studies()
+                    choices = data_reactives$studies(),
+                    selected = .excluded()
                   )
                 )
                 .reactive_df(data_reactives$formatted_data())
@@ -110,10 +115,39 @@ exclude_tab_server <- function(
       )
 
       shiny::observe({
-        # Do Something
-      }) %>% shiny::bindEvent(input$exclude)
+        exclude_reactives$data(NULL)
+        .excluded(NULL)
+      }) %>% shiny::bindEvent(
+        model_options$update_reactive()
+      )
 
-      return(model_exclude)
+      shiny::observe({
+        if (tab() == id) {
+          shiny::invalidateLater(3000, session)
+          .excluded(shiny::isolate(input$excluded))
+        } else {
+          .excluded(shiny::isolate(input$excluded))
+        }
+      }) %>% shiny::bindEvent(input$excluded, ignoreInit = TRUE)
+
+      exclude_reactives$excluded <- shiny::reactive({
+        .excluded()
+      })
+
+      shiny::observe({
+        exclude_reactives$data(NULL)
+        print(exclude_reactives$excluded())
+        df <- shiny::isolate(data_reactives$data())
+        exclude_reactives$data(
+          df[!df$Study %in% exclude_reactives$excluded(), ]
+        )
+        .reactive_exclude_df(exclude_reactives$formatted_data())
+      }) %>% shiny::bindEvent(
+        exclude_reactives$excluded(),
+        ignoreInit = TRUE
+      )
+
+      return(exclude_reactives)
 
     }
   )

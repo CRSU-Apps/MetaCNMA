@@ -77,19 +77,25 @@ shinyServer(function(input, output, session) {
     tab
   )
 
+  freq_sens_data_reactives <- exclude_tab_server(
+    "freq_exclude",
+    data_reactives,
+    freq_options,
+    tab
+  )
+
+  freq_sens_reactives <- freq_analysis_server(
+    "freq_sens_analysis",
+    freq_sens_data_reactives,
+    freq_options
+  )
+
   forest_plot_tab_server(
     "freq_forest_plot",
     data_reactives,
     freq_options,
     freq_reactives,
-    tab
-  )
-
-  freq_sens_reactive <- exclude_tab_server(
-    "freq_exclude",
-    data_reactives,
-    freq_options,
-    freq_reactives,
+    freq_sens_reactives,
     tab
   )
 
@@ -106,11 +112,26 @@ shinyServer(function(input, output, session) {
     bayesian_options
   )
 
+  bayes_sens_data_reactives <- exclude_tab_server(
+    "bayesian_exclude",
+    data_reactives,
+    bayesian_options,
+    tab
+  )
+
+  bayesian_sens_reactive <- bayesian_analysis_server(
+    "bayesian_sens_analysis",
+    bayes_sens_data_reactives,
+    bayesian_options
+  )
+
   bayes_forest_plot_tab_server(
     "bayesian_forest_plot",
     data_reactives,
     bayesian_options,
     bayesian_reactives,
+    bayes_sens_data_reactives,
+    bayesian_sens_reactive,
     tab
   )
 
@@ -119,14 +140,8 @@ shinyServer(function(input, output, session) {
     data_reactives,
     bayesian_options,
     bayesian_reactives,
-    tab
-  )
-
-  bayes_sens_reactive <- exclude_tab_server(
-    "bayesian_exclude",
-    data_reactives,
-    bayesian_options,
-    bayesian_reactives,
+    bayes_sens_data_reactives,
+    bayesian_sens_reactive,
     tab
   )
 

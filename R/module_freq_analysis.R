@@ -11,6 +11,10 @@ freq_analysis_server <- function( # nolint: cyclocomp_linter.
 
       freq_reactives <- shiny::reactiveValues()
 
+      freq_reactives$pairwise <- shiny::reactive(
+        data_reactives$pairwise()
+      )
+
       freq_reactives$netconnection <- shiny::reactive({
         if (is.null(data_reactives$pairwise())) {
           return(NULL)

@@ -40,14 +40,18 @@ run_bayesian_analysis_server <- function(
       bayesian_ready <- shiny::reactiveVal(FALSE)
 
       stan_settings_server(
-       "bayesian_settings",
-       bayesian_ready
+        "bayesian_settings",
+        bayesian_ready
       )
 
       shiny::observe({
         output$run_analysis <- NULL
         bayesian_ready(FALSE)
-        print(bayesian_options$options_loaded())
+
+        shiny::req(
+          !is.null(data_reactives$data()),
+          cancelOutput = TRUE
+        )
         if (
           all(
             data_reactives$is_data_formatted(),
@@ -80,7 +84,8 @@ run_bayesian_analysis_server <- function(
       }) %>% shiny::bindEvent(
         bayesian_options$update_reactive(),
         bayesian_options$options_loaded(),
-        bayesian_reactives$is_model_run()
+        bayesian_reactives$is_model_run(),
+        data_reactives$data()
       )
 
       shiny::observe({
