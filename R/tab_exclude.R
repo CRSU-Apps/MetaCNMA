@@ -114,6 +114,17 @@ exclude_tab_server <- function(
         model_options$update_reactive()
       )
 
+      .excluded_studies <- shiny::reactiveVal(NULL)
+
+      shiny::observe({
+        if (tab() == id) {
+          shiny::invalidateLater(3000, session)
+          .excluded_studies(shiny::isolate(input$exclude))
+        } else {
+          .excluded_studies(shiny::isolate(input$exclude))
+        }
+      }) %>% shiny::bindEvent(input$exclude, ignoreInit = TRUE)
+
       shiny::observe({
         exclude_reactives$data(NULL)
         .excluded(NULL)

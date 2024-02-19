@@ -21,6 +21,8 @@ bayesian_analysis_server <- function( # nolint: cyclocomp_linter.
 
       bayesian_reactives$console_out <- shiny::reactiveVal(NULL)
 
+      bayesian_reactives$exclude_df <- shiny::reactiveVal(NULL)
+
       bayesian_reactives$is_model_run <- shiny::reactive({
         return(!is.null(bayesian_reactives$model()))
       })
