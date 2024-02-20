@@ -32,7 +32,7 @@ test_that("format_data() works with reactive", {
     expect_false(is.null(reactive_data()$data()))
     tmp_df <- local_df_continuous_long
     names(tmp_df) <- tolower(names(tmp_df))
-    expect_equal(reactive_freq()$formatted_data(), tmp_df)
+    expect_equal(data_reactives$formatted_data(), tmp_df)
   })
 
   server <- function(input, output, session) {
@@ -51,8 +51,8 @@ test_that("format_data() works with reactive", {
     tmp_df <- tmp_df %>% dplyr::select(order(colnames(tmp_df)))
     expect_equal(
       dplyr::select(
-        reactive_freq()$formatted_data(),
-        order(colnames(reactive_freq()$formatted_data()))
+        data_reactives$formatted_data(),
+        order(colnames(data_reactives$formatted_data()))
       ), tmp_df
     )
   })

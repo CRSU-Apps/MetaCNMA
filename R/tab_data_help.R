@@ -28,7 +28,7 @@ data_help_binary_tab <- function() {
 
 data_help_continuous_tab <- function() {
   shiny::tagList(
-    shiny::h1("Coninous Data"),
+    shiny::h1("Continuous Data"),
     shinydashboardPlus::box(
       title = "Long Format",
       closable = FALSE,

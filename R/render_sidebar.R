@@ -2,25 +2,25 @@ render_sidebar <- function() {
   shinydashboard::sidebarMenu(
     id = "tabs",
     shinydashboard::menuItem("Home",
-      tabName = "home_1",
+      tabName = "home_tab",
       icon = shiny::icon("home")
     ),
     shinydashboard::menuItem(
       "Data",
-      icon = icon("database"),
+      icon = shiny::icon("database"),
       startExpanded = TRUE,
       shinydashboard::menuSubItem("Upload Data",
-        tabName = "data_upload_1",
+        tabName = "data_upload_tab",
         icon = shiny::icon("file")
       ),
       shinydashboard::menuSubItem(
         "View Data",
-        tabName = "view_data_1",
+        tabName = "view_data_tab",
         icon = shiny::icon("table")
       ),
       shinydashboard::menuSubItem(
         "Help",
-        tabName = "data_help_1",
+        tabName = "data_help",
         icon = shiny::icon("question")
       )
     ),
@@ -28,51 +28,71 @@ render_sidebar <- function() {
       "Component Summary",
       icon = shiny::icon("puzzle-piece"),
       startExpanded = TRUE,
-      menuSubItem(
+      shinydashboard::menuSubItem(
         "Data Summary",
-        tabName = "data_summary_1",
-        icon = icon("clipboard-list")
+        tabName = "data_summary",
+        icon = shiny::icon("clipboard-list")
       ),
-      menuSubItem(
+      shinydashboard::menuSubItem(
         "Network Diagram",
-        tabName = "net_graph_1",
-        icon = icon("circle-nodes")
+        tabName = "net_graph",
+        icon = shiny::icon("circle-nodes")
       ),
-      menuSubItem(
+      shinydashboard::menuSubItem(
         "Correlation Plot and Heatmap",
-        tabName = "correlation_plot_1",
-        icon = icon("chart-simple")
+        tabName = "correlation_plot",
+        icon = shiny::icon("chart-simple")
       ),
-      menuSubItem(
+      shinydashboard::menuSubItem(
         "Upset Plot",
-        tabName = "upset_plot_1",
-        icon = icon("chart-bar")
-      )
-    ),
-    menuItem(
-      "Frequentist Analysis",
-      icon = icon("microscope"),
-      startExpanded = TRUE,
-      menuSubItem(
-        "Outcome & Model Settings",
-        tabName = "freq_outcome_1",
-        icon = icon("equals")
-      ),
-      menuSubItem(
-        "Exclude Studies",
-        tabName = "freq_exclude_1",
-        icon = icon("text-slash")
-      ),
-      menuSubItem(
-        "Forest Plot",
-        tabName = "forest_plot_1",
-        icon = icon("chart-gantt")
+        tabName = "upset_plot",
+        icon = shiny::icon("chart-bar")
       )
     ),
     shinydashboard::menuItem(
-      "Privacy Policy",
-      tabName = "privacy_policy",
-      icon = icon("lock")
+      "Frequentist Analysis",
+      icon = icon("microscope"),
+      startExpanded = TRUE,
+      shinydashboard::menuSubItem(
+        "Outcome & Model Settings",
+        tabName = "freq_outcome_tab",
+        icon = shiny::icon("equals")
+      ),
+      shinydashboard::menuSubItem(
+        "Sensitivity Analysis: Exclude Studies",
+        tabName = "freq_exclude",
+        icon = shiny::icon("text-slash")
+      ),
+      shinydashboard::menuSubItem(
+        "Forest Plot",
+        tabName = "freq_forest_plot",
+        icon = shiny::icon("chart-gantt")
+      )
+    ),
+    shinydashboard::menuItem(
+      "Bayesian Analysis",
+      icon = shiny::icon("magnifying-glass-chart"),
+      startExpanded = TRUE,
+      shinydashboard::menuSubItem(
+        "Outcome & Model Settings",
+        tabName = "bayesian_outcome_tab",
+        icon = shiny::icon("equals")
+      ),
+      shinydashboard::menuSubItem(
+        "Sensitivity Analysis: Exclude Studies",
+        tabName = "bayesian_exclude",
+        icon = shiny::icon("text-slash")
+      ),
+      shinydashboard::menuSubItem(
+        "Forest Plot",
+        tabName = "bayesian_forest_plot",
+        icon = shiny::icon("chart-gantt")
+      ),
+      shinydashboard::menuSubItem(
+        "Model Diagnostics",
+        tabName = "model_diagnostics",
+        icon = shiny::icon("stethoscope")
+      )
     ),
     shinydashboard::menuItem(
       "Readme",

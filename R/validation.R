@@ -1,8 +1,5 @@
 is_valid_file_format <- function(file_ext) {
-  if(file_ext %in% get_accepted_file_formats()) { # nolint: object_usage
-    return(TRUE)
-  }
-  return(FALSE)
+  return(file_ext %in% get_accepted_file_formats()) # nolint: object_usage
 }
 
 is_file_exists <- function(file_path) {
@@ -17,17 +14,21 @@ is_wide <- function(df) {
 validate_column_names <- function(df, required_names) {
   column_names <- names(df)
   tryCatch({
-    columns_exist <- lapply(required_names, function(name) {
+    missing_columns <- lapply(required_names, function(name) {
       if (!tolower(name) %in% tolower(column_names)) {
-        error_alert(paste0("Error column ", name, " is missing from the data")) # nolint: object_usage
-        return(FALSE)
-      } else {
-        return(TRUE)
+        return(name)
       }
     })
-    if (all(as.logical(columns_exist))) {
+    missing_columns <- purrr::compact(missing_columns)
+    if (purrr::is_empty(missing_columns)) {
       return(TRUE)
     } else {
+      error_alert( # nolint: object_usage
+        paste0("Error column(s): '",
+          paste0(missing_columns, collapse = ", "),
+          "' are missing from the data"
+        )
+      )
       return(FALSE)
     }
   },
@@ -35,7 +36,6 @@ validate_column_names <- function(df, required_names) {
     error_alert(e$message) # nolint: object_usage
     return(FALSE)
   })
-  return(FALSE)
 }
 
 split_wide_columns <- function(columns) {
@@ -51,7 +51,7 @@ split_wide_columns <- function(columns) {
     col_numbers <- append(col_numbers, as.numeric(col_number))
   }
   n_arms <- max(as.numeric(col_numbers))
-  return(list("cols" = cols, "col_numbers" = col_numbers, "n_arms" = n_arms))
+  return(list(cols = cols, col_numbers = col_numbers, n_arms = n_arms))
 }
 
 get_wide_columns <- function(column_names, required_columns) {
@@ -79,6 +79,7 @@ validate_wide <- function(df, required_columns) {
     n_arms <- split_cols$n_arms
 
     n_expected_cols <- n_arms * length(wide_columns)
+    missing_columns <- c()
 
     # Iterate through the wide columns (column names without the .n)
     for (col in wide_columns) {
@@ -86,12 +87,21 @@ validate_wide <- function(df, required_columns) {
       for (i in 1:n_arms) {
         # Check that for each arm there is a corresponding wide column
         if (!paste(col, i, sep = ".") %in% wide_column_names) {
-          error_alert(paste0("Expected column: ", paste(col, i, sep = "."), " but missing")) # nolint: object_usage
+          missing_columns <- c(missing_columns, paste(col, i, sep = "."))
           return(FALSE)
         }
       }
     }
     # Check the number of columns are as expected
+
+    if (! is.null(missing_columns)) {
+      error_alert( # nolint: object_usage
+        paste0("Error column(s): '",
+          paste0(missing_columns, collapse = ", "),
+          "' are missing from the data"
+        )
+      )
+    }
 
     if (length(cols) != n_expected_cols) {
       error_alert("There is a problem with the number of columns, did you miss a column?") # nolint: object_usage
@@ -136,19 +146,19 @@ validate_input <- function(input_file, type) { # nolint: cyclocomp
     }
     if (is.null(type)) {
       print("Null Type")
-      error_alert("An error occured, please try again, if this problem consiste please contact the developers", "Error #TP001") # nolint: object_usage
+      error_alert("An internal error occured, please try again, if this problem persist please contact the developers", "Error #TP001") # nolint: object_usage
       return(FALSE)
     }
 
     if (is.null(input_file$datapath)) {
       print("Null datapath")
-      error_alert("An error occured, please try again, if this problem consiste please contact the developers", "Error #FU001") # nolint: object_usage
+      error_alert("An error occured, please try again, if this problem persist please contact the developers", "Error #FU001") # nolint: object_usage
       return(FALSE)
     }
 
     if (!is_file_exists(input_file$datapath)) {
       print("file doesn't exist")
-      error_alert("An error occured, please try again, if this problem consiste please contact the developers", "Error #FU002") # nolint: object_usage
+      error_alert("An internal rror occured, please try again, if this problem persist please contact the developers", "Error #FU002") # nolint: object_usage
       return(FALSE)
     }
 
@@ -160,8 +170,8 @@ validate_input <- function(input_file, type) { # nolint: cyclocomp
     df <- rio::import(input_file$datapath)
 
     if (is.null(df)) {
-      print("Null Data Fram")
-      error_alert("An error occured, the data appears to be empty, please try again, if this problem consiste please contact the developers", "Error #FU003") # nolint: object_usage
+      print("Null Data Frame")
+      error_alert("An internal error occured, the data appears to be empty, please try again, if this problem consiste please contact the developers", "Error #FU003") # nolint: object_usage
       return(FALSE)
     }
 
@@ -180,11 +190,9 @@ validate_input <- function(input_file, type) { # nolint: cyclocomp
         return(validate_continuous_long(df))
       }
     }
-    return(FALSE)
   },
   error = function(e) {
     error_alert(e$message) # nolint: object_usage
     return(FALSE)
   })
-  return(FALSE)
 }

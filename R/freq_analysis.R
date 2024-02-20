@@ -1,54 +1,28 @@
-require(dplyr)
-freq_pairwise <- function(reactive_data, reactive_freq) {
+freq_pairwise <- function(data, data_type) {
   tryCatch({
-    # Reset pairwise
-    reactive_freq()$pairwise(NULL)
-    # If the data is not valid do not format the data
-    if (! reactive_data()$valid()) {
-      print("This error occured trying to format the data")
-      stop("There is a problem with the data, 
-      please check data has been uploaded and is valid")
-    }
-    # If the data has not been formatted yet, format it now.
-    if (is.null(reactive_freq()$formatted_data())) {
-      shiny::withProgress({
-        format_data(reactive_data, reactive_freq) # nolint: object_usage
-      },
-      message = "Formatting Data")
-    }
-    # Initialise temporary dataframe
-    tmp_data <- NULL
-    if (reactive_data()$format() == "wide") {
-      tmp_data <- data_wide_to_long(reactive_freq()$formatted_data())
-    } else if (reactive_data()$format() == "long") {
-      tmp_data <- reactive_freq()$formatted_data()
-    } else {
-      stop("Error: DF001 data format unknown")
-    }
     print("running pairwise")
-    if (reactive_data()$data_type() == "continuous") {
-      reactive_freq()$pairwise(run_pairwise_continuous(tmp_data))
-    } else if (reactive_data()$data_type() == "binary") {
-      reactive_freq()$pairwise(run_pairwise_binary(tmp_data))
+    if (data_type == "continuous") {
+      return(run_pairwise_continuous(data))
+    } else if (data_type == "binary") {
+      run_pairwise_binary(data)
     } else {
       stop("Error: DT001 data type unknown")
     }
   },
   error = function(e) {
-    error_alert(e$message)
-    invalidate_reactive(reactive_data, reactive_freq)
-    return(FALSE)
+    error_alert(e$message) # nolint: object_usage
+    return(NULL)
   })
 }
 
 run_pairwise_continuous <- function(df) {
 
   netmeta::pairwise(
-    treat = components,
-    n = total,
+    treat = components, # nolint: object_usage
+    n = total, # nolint: object_usage
     mean = mean,
     sd = sd,
-    studlab = study,
+    studlab = study, # nolint: object_usage
     data = df
   )
 
@@ -57,18 +31,19 @@ run_pairwise_continuous <- function(df) {
 run_pairwise_binary <- function(df) {
 
   netmeta::pairwise(
-    treat = components,
-    n = total,
-    event = events,
-    studlab = study,
+    treat = components, # nolint: object_usage
+    n = total, # nolint: object_usage
+    event = events, # nolint: object_usage
+    studlab = study, # nolint: object_usage
     data = df
   )
 
 }
 
 get_components <- function(pw) {
+  `%>%` <- magrittr::`%>%`
   # Get all the components (treat columns)
-  components <- pw %>% select(contains("treat"))
+  components <- pw %>% dplyr::select(dplyr::contains("treat"))
   tmp_comp <- NULL
   for (i in seq_len(ncol(components))) {
     tmp_comp <- cbind(tmp_comp, components[[i]])
@@ -96,7 +71,8 @@ get_components_no_reference <- function(pw) {
 }
 
 get_combination_components <- function(pw) {
-  components <- pw %>% select(contains("treat"))
+  `%>%` <- magrittr::`%>%`
+  components <- pw %>% dplyr::select(dplyr::contains("treat"))
   tmp_comp <- NULL
   for (i in seq_len(ncol(components))) {
     tmp_comp <- cbind(tmp_comp, components[[i]])
@@ -120,49 +96,20 @@ get_summary <- function(pw) {
   )
 }
 
-component_summary_as_df <- function(component_summary){
+component_summary_as_df <- function(component_summary) {
+  `%>%` <- magrittr::`%>%`
   components <- tibble::as_tibble_col(
     as.numeric(component_summary), column_name = "Number of Studies"
   )
-  components <- as_tibble(components)
+  components <- dplyr::as_tibble(components)
   components <- cbind(
     `Combination of Components` = names(component_summary),
     components
   )
-  components <- components %>% arrange(desc(`Number of Studies`))
-  return(components)
-}
-
-render_freq_summary <- function(pw, n_connection) {
-  pw_summary <- get_summary(pw)
-  print(pw_summary)
-  shiny::renderUI(
-    shiny::tagList(
-      shiny::tags$ul(
-        shiny::tags$li(paste0("Number of Studies: ",
-          pw_summary$n_studies
-        )),
-        shiny::tags$li(paste0("Number of Components: ",
-          length(pw_summary$components)
-        )),
-        shiny::tags$li(paste0("Components: ",
-          paste0(pw_summary$components, collapse = ", ")
-        )),
-        shiny::tags$li(paste0("Is the Network Connected: ",
-          !n_connection$details.disconnected
-        ))
-      ),
-      DT::renderDataTable(
-        component_summary_as_df(pw_summary$combination_components),
-        filter = "top",
-        options = list(scrollX = TRUE,
-          pageLength = 10,
-          info = FALSE,
-          lengthMenu = list(c(10, -1), c("10", "All"))
-        )
-      )
-    )
+  components <- components %>% dplyr::arrange(
+    dplyr::desc(`Number of Studies`) # nolint: object_usage
   )
+  return(components)
 }
 
 get_most_freq_component <- function(pw) {
@@ -179,13 +126,8 @@ run_net_connection <- function(pw) {
 
 run_netmeta <- function(pw, ref = "Control", random_eff = FALSE) {
   print("running netmeta")
+  random_eff <- any(as.logical(random_eff))
   return(netmeta::netmeta(pw, ref = ref, comb.random = random_eff))
-}
-
-render_netplot <- function(nm) {
-  shiny::renderPlot(
-    netmeta::netgraph(nm)
-  )
 }
 
 run_netcomb <- function(nm, inactive = "Control") {
@@ -194,7 +136,6 @@ run_netcomb <- function(nm, inactive = "Control") {
 }
 
 netcomb_summary <- function(nc) {
-  nc.summary <- summary(nc)
   data.frame(
     "Characteristic" = c(
       "Number of Studies",
@@ -209,29 +150,7 @@ netcomb_summary <- function(nc) {
   )
 }
 
-render_net_graph <- function(nm, components) {
-  print("Rendering netgraph")
-  shiny::renderPlot(
-    netmeta::netgraph(
-      nm,
-      plastic = FALSE,
-      col = "black",
-      points = TRUE,
-      col.points = "blue",
-      number.of.studies = FALSE,
-      seq = components,
-      thickness = "number.of.studies",
-      cex.points = 2,
-      offset = 0.05,
-      scale = 0.7,
-      cex = 0.8
-
-    )
-  )
-}
-
 get_study_components <- function(data, components) {
-  print(components)
   components <- levels(as.factor(components))
   components <- paste(components, collapse = "+")
   components <- strsplit(components, "\\+")[[1]]
@@ -240,7 +159,9 @@ get_study_components <- function(data, components) {
   # Use levels to get unique components
   components <- levels(components)
 
-  tmp_df <- dplyr::select(data, study, components)
+  tmp_df <- dplyr::select(
+    data, study, components # nolint: object_usage
+  )
 
   study_components <- setNames(
     data.frame(
@@ -264,13 +185,11 @@ get_study_components <- function(data, components) {
   return(study_components)
 }
 
-render_correlation_plot <- function(data, components) {
+get_correlation_plot <- function(data, components) {
   study_components <- get_study_components(data, components)
 
   y <- cor(study_components)
-
-  shiny::renderPlot(
-    # create correlation plot:
+  return(
     corrplot::corrplot(
       y,
       method = "color",
@@ -287,7 +206,7 @@ render_correlation_plot <- function(data, components) {
   )
 }
 
-render_heatmap <- function(data, components) {
+get_heatmap <- function(data, components) {
   study_components <- get_study_components(data, components)
   x <- study_components %>% dplyr::rowwise() %>%
     dplyr::mutate(n_comps = sum(dplyr::c_across(where(is.numeric))))
@@ -296,7 +215,7 @@ render_heatmap <- function(data, components) {
   # Set up empty matrix for matrix with
   # number of pairs of component combinations
   a <- matrix(nrow = n_comps, ncol = n_comps,
-    dimnames = list(as.character(components),as.character(components))
+    dimnames = list(as.character(components), as.character(components))
   )
 
   comp <- as.character(components)
@@ -316,7 +235,7 @@ render_heatmap <- function(data, components) {
   col_fun <- circlize::colorRamp2(c(0, 30), c("white", "red"))
 
   # Render the heatmap
-  shiny::renderPlot(
+  return(
     ComplexHeatmap::Heatmap(
       a,
       name = "N arms with\ncombination\n",
@@ -346,11 +265,11 @@ render_heatmap <- function(data, components) {
   )
 }
 
-render_upset_plot <- function(data, components) {
+get_upset_plot <- function(data, components) {
   study_components <- get_study_components(data, components)
   n_components <- ncol(study_components)
 
-  shiny::renderPlot(
+  return(
     UpSetR::upset(
       study_components,
       nsets = n_components,
@@ -371,8 +290,7 @@ render_upset_plot <- function(data, components) {
   )
 }
 
-
-render_net_forest <- function(
+get_net_forest <- function(
   nc,
   data_type,
   outcome_measure = "Outcome Measure",
@@ -382,27 +300,26 @@ render_net_forest <- function(
   if (component) {
     print("rendering plot")
     return(
-      shiny::renderPlot(
-        metafor::forest(
-          ifelse(rep(nc$random, length(nc$comps)),
-            nc$Comp.random, nc$Comp.common
-          ),
-          se = ifelse(rep(nc$random, length(nc$comps)),
-            nc$seComp.random, nc$seComp.common
-          ),
-          slab = ifelse(rep(!is.null(component_labels), length(nc$comps)),
-            component_labels, nc$comps
-          ),
-          xlab = outcome_measure,
-          refline = ifelse(data_type == "binary", 1, 0),
-          transf = ifelse(data_type == "binary",
-            exp,
-            function(x){x} # nolint: brace_linter
-          ),
-          header = c("Component", paste0(outcome_measure, " (95% CI)"))
-        )
+      metafor::forest(
+        ifelse(rep(nc$random, length(nc$comps)),
+          nc$Comp.random, nc$Comp.common
+        ),
+        se = ifelse(rep(nc$random, length(nc$comps)),
+          nc$seComp.random, nc$seComp.common
+        ),
+        slab = ifelse(rep(!is.null(component_labels), length(nc$comps)),
+          component_labels, nc$comps
+        ),
+        xlab = outcome_measure,
+        refline = ifelse(data_type == "binary", 1, 0),
+        transf = ifelse(data_type == "binary",
+          exp,
+          function(x){x} # nolint: brace_linter
+        ),
+        header = c("Component", paste0(outcome_measure, " (95% CI)"))
       )
     )
+  } else {
+    return(metafor::forest(nc))
   }
-  shiny::renderPlot(metafor::forest(nc))
 }

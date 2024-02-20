@@ -3,75 +3,146 @@
 ##                          CRSU CNMA                           ##
 ##                          Ryan Field                          ##
 ##################################################################
-shinyServer(function(input, output, session){
-  # Reactive Values
-  reactive_data <- Data$new()$reactive()
-  reactive_freq <- Freq$new()$reactive()
-  # Tabs as a reactive
-  tabs <- reactive(input$tabs)
-  log <- reactiveValues()
-  # Load the cookie module from R/cookies.R
-  cookieServer(
-    id = "cookies_1",
+shinyServer(function(input, output, session) {
+
+  cookie_server(
+    id = "cookies",
     cookies = reactive(input$cookies),
-    open_privacy_policy = reactive(input$open_privacy_policy),
-    parent_session = reactive(session)
+    open_privacy_policy = reactive(input$open_privacy_policy)
   )
-  home_tab_server(
-    "home_1",
-    reactive_data,
-    reactive_freq
+
+  # Reactive Values
+  # Current tab as a reactive
+  tab <- reactive(input$tabs)
+  log <- reactiveValues()
+  load_default_data <- reactiveVal(TRUE)
+
+  data_type <- data_type_module_server("data_type")
+
+  home_tab_server("home_tab")
+
+  data_reactives <- data_upload_tab_server(
+    "data_upload_tab",
+    data_type,
+    load_default_data
   )
-  data_upload_tab_server(
-    "data_upload_1",
-    reactive_data,
-    reactive_freq
-  )
+
   view_data_tab_server(
-    "view_data_1",
-    reactive_data,
-    reactive_freq
+    "view_data_tab",
+    data_reactives,
+    tab
   )
-  freq_outcome_tab_server(
-    "freq_outcome_1",
-    reactive_data,
-    reactive_freq,
-    tabs
+
+  freq_options <- model_outcome_tab_server(
+    "freq_outcome_tab",
+    data_reactives,
+    tab
   )
-  freq_exclude_tab_server(
-    "freq_exclude_1",
-    reactive_data,
-    reactive_freq,
-    tabs
+
+  freq_reactives <- freq_analysis_server(
+    "freq_analysis",
+    data_reactives,
+    freq_options
   )
+
   data_summary_tab_server(
-    "data_summary_1",
-    reactive_data,
-    reactive_freq,
-    tabs
+    "data_summary",
+    data_reactives,
+    freq_options,
+    freq_reactives,
+    tab
   )
+
   network_plot_tab_server(
-    "net_graph_1",
-    reactive_data,
-    reactive_freq,
-    tabs
+    "net_graph",
+    data_reactives,
+    freq_options,
+    freq_reactives,
+    tab
   )
+
   correlation_plot_tab_server(
-    "correlation_plot_1",
-    reactive_data,
-    reactive_freq,
-    tabs
+    "correlation_plot",
+    data_reactives,
+    freq_options,
+    freq_reactives,
+    tab
   )
+
   upset_plot_tab_server(
-    "upset_plot_1",
-    reactive_data,
-    reactive_freq,
-    tabs
+    "upset_plot",
+    data_reactives,
+    freq_options,
+    freq_reactives,
+    tab
   )
+
+  freq_sens_data_reactives <- exclude_tab_server(
+    "freq_exclude",
+    data_reactives,
+    freq_options,
+    tab
+  )
+
+  freq_sens_reactives <- freq_analysis_server(
+    "freq_sens_analysis",
+    freq_sens_data_reactives,
+    freq_options
+  )
+
   forest_plot_tab_server(
-    "forest_plot_1",
-    reactive_data,
-    reactive_freq,
-    tabs
+    "freq_forest_plot",
+    data_reactives,
+    freq_options,
+    freq_reactives,
+    freq_sens_reactives,
+    tab
   )
+
+  bayesian_options <- model_outcome_tab_server(
+    "bayesian_outcome_tab",
+    data_reactives,
+    tab,
+    freq = FALSE
+  )
+
+  bayesian_reactives <- bayesian_analysis_server(
+    "bayesian_analysis",
+    data_reactives,
+    bayesian_options
+  )
+
+  bayes_sens_data_reactives <- exclude_tab_server(
+    "bayesian_exclude",
+    data_reactives,
+    bayesian_options,
+    tab
+  )
+
+  bayesian_sens_reactive <- bayesian_analysis_server(
+    "bayesian_sens_analysis",
+    bayes_sens_data_reactives,
+    bayesian_options
+  )
+
+  bayes_forest_plot_tab_server(
+    "bayesian_forest_plot",
+    data_reactives,
+    bayesian_options,
+    bayesian_reactives,
+    bayes_sens_data_reactives,
+    bayesian_sens_reactive,
+    tab
+  )
+
+  model_diagnostics_tab_server(
+    "model_diagnostics",
+    data_reactives,
+    bayesian_options,
+    bayesian_reactives,
+    bayes_sens_data_reactives,
+    bayesian_sens_reactive,
+    tab
+  )
+
 })
