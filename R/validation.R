@@ -1,3 +1,18 @@
+# This file contains functions used for validation of the data
+
+#' @title Valid File Format
+#' @description Checks if the given file extention is valid
+#' @param file_ext The file extention to be validated
+#' @return TRUE if valid otherwise FALSE
+#' @details Checks to see if the given file extension is
+#' in the accepted file formats list (see site_info.yaml)
+#' @examples
+#' \dontrun{
+#' if(interactive()){
+#'  is_valid_file_format("csv")
+#'  }
+#' }
+#' @rdname is_valid_file_format
 is_valid_file_format <- function(file_ext) {
   return(file_ext %in% get_accepted_file_formats()) # nolint: object_usage
 }
