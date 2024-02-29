@@ -8,4 +8,4 @@ Where each arm of a study contains a `Components`, `Events` and `Total` column.
 
 **Notes:** Study names should be unique per study
 
-Components should be separated by a `+` if and arm contains more than one component.
+Components should be separated by a `+` if an arm contains more than one component.

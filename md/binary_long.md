@@ -6,4 +6,4 @@ Data in long format, should be in arm based format, with one arm per row and con
 
 **Notes:** Study names should be unique per study
 
-Components should be separated by a `+` if and arm contains more than one component.
+Components should be separated by a `+` if an arm contains more than one component.

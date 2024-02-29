@@ -14,7 +14,7 @@ home_tab_ui <- function(id) {
     ),
     shiny::includeMarkdown("md/freq_binary.md"),
     shiny::p(
-      "If you use this software for please cite it as:"
+      "If you use this software please cite it as:"
     ),
     shiny::fluidRow(shiny::column(
       width = 6,

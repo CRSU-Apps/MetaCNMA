@@ -32,7 +32,7 @@ shinyUI(
 
     # Set up Shinyjs
     useShinyjs(),
-    
+
     # Use dashboardPage from shinydashboardPlus
     shinydashboardPlus::dashboardPage(
       header = shinydashboardPlus::dashboardHeader(
