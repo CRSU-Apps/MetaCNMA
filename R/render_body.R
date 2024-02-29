@@ -47,7 +47,7 @@ render_body <- function() {
       model_diagnostics_tab_ui("model_diagnostics") # nolint object_usage
     ),
     tabItem(tabName = "readme",
-      static_page_ui("readme", "readme.md") # nolint object_usage
+      static_page_ui("readme", "README.md") # nolint object_usage
     )
   )
 }

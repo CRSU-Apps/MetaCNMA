@@ -28,9 +28,10 @@ error_alert <- function(msg, title = "An Error Occurred") {
 #'
 #' @param title Title for alert window
 #' @param msg Message for alert window
-#' @param type type of alert see shiny::alert type
+#' @param type type of alert see `shinyalert::shinyalert` type
 #'
-#' @return a shinyalert::shinyalert
+#' @return a `shinyalert::shinyalert` if called from
+#' a shiny session
 #'
 #' @examples
 #' \dontrun{
