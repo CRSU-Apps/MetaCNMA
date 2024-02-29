@@ -1,4 +1,3 @@
-`%>%` <- magrittr::`%>%`
 #' Format the data \code{data$data} if it exists and is valid,
 #' removing unnecessary columns and converting column names to lower case
 #' if the function fails an error will be printed and return False
@@ -12,6 +11,7 @@
 #'
 #' @examples
 format_data <- function(df, data_type) {
+  `%>%` <- magrittr::`%>%`
   tryCatch({
     print("formatting data")
     # Copy data from uploaded data to temporary data frame
@@ -60,6 +60,7 @@ format_data <- function(df, data_type) {
       }
     }))
     print("Saving Formatted Data")
+    tmp_df <- tmp_df %>% filter(! is.na(mean))
     return(tmp_df)
   },
   error = function(e) {
