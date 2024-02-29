@@ -1,10 +1,10 @@
-freq_pairwise <- function(data, data_type) {
+freq_pairwise <- function(df, data_type) {
   tryCatch({
     print("running pairwise")
     if (data_type == "continuous") {
-      return(run_pairwise_continuous(data))
+      return(run_pairwise_continuous(df))
     } else if (data_type == "binary") {
-      run_pairwise_binary(data)
+      run_pairwise_binary(df)
     } else {
       stop("Error: DT001 data type unknown")
     }

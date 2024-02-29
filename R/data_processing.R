@@ -11,23 +11,23 @@
 #' @export
 #'
 #' @examples
-format_data <- function(data, data_type) {
+format_data <- function(df, data_type) {
   tryCatch({
     print("formatting data")
     # Copy data from uploaded data to temporary data frame
-    tmp_df <- data
+    tmp_df <- df
     # Use lowercase column names
     names(tmp_df) <- tolower(names(tmp_df))
     # Initialize required columns
     req_columns <- NULL
     # If long format
-    if (!is_wide(data)) { # nolint: object_name
+    if (!is_wide(tmp_df)) { # nolint: object_name
       if (data_type == "continuous") {
         req_columns <- tolower(get_required_continuous_long_columns()) # nolint: object_name
       } else {
         req_columns <- tolower(get_required_binary_long_columns()) # nolint: object_name
       }
-    } else if (is_wide(data)) { # Else if wide
+    } else if (is_wide(tmp_df)) { # Else if wide
       if (data_type == "continuous") {
         req_columns <- tolower(get_required_continuous_wide_columns()) # nolint: object_name
       } else {
@@ -48,8 +48,19 @@ format_data <- function(data, data_type) {
       stop("An error occured with the data, 
       the format of the data could not be determined.")
     }
-    print("Saving formatted data")
-    return(dplyr::select(tmp_df, dplyr::all_of(req_columns)))
+    tmp_df <- dplyr::select(tmp_df, dplyr::all_of(req_columns))
+    if (is_wide(tmp_df)) {
+      tmp_df <- data_wide_to_long(tmp_df)
+    }
+    tmp_df <- as.data.frame(lapply(tmp_df, function(x) {
+      if (is.character(x)) {
+        iconv(x, from = "ISO-8859-1", to = "UTF-8")
+      } else {
+        x
+      }
+    }))
+    print("Saving Formatted Data")
+    return(tmp_df)
   },
   error = function(e) {
     error_alert(e$message) # nolint: object_name

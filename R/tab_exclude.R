@@ -148,9 +148,9 @@ exclude_tab_server <- function(
       shiny::observe({
         exclude_reactives$data(NULL)
         print(exclude_reactives$excluded())
-        df <- shiny::isolate(data_reactives$data())
+        df <- shiny::isolate(data_reactives$formatted_data())
         exclude_reactives$data(
-          df[!df$Study %in% exclude_reactives$excluded(), ]
+          df[!df$study %in% exclude_reactives$excluded(), ]
         )
         .reactive_exclude_df(exclude_reactives$formatted_data())
       }) %>% shiny::bindEvent(
