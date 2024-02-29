@@ -27,7 +27,7 @@ format_data <- function(data, data_type) {
       } else {
         req_columns <- tolower(get_required_binary_long_columns()) # nolint: object_name
       }
-    } else if (is_wide(df)) { # Else if wide
+    } else if (is_wide(data)) { # Else if wide
       if (data_type == "continuous") {
         req_columns <- tolower(get_required_continuous_wide_columns()) # nolint: object_name
       } else {

@@ -61,10 +61,6 @@ body{
   padding-right: 10px;
 }
 
-.nihr-img{
-  max-height: 10vh;
-}
-
 #home-logo{
   max-height: 20vh;
 }
@@ -88,6 +84,14 @@ body{
 
 .vis-network canvas {
     border: 1px solid #003865;
+}
+
+.nihr-img {
+  max-height: 10vh;
+}
+
+.crsu-img {
+  max-height: 10vh;
 }
 
 @media (max-width: 767px){
