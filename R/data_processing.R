@@ -1,3 +1,35 @@
+get_required_columns <- function(data_type, is_wide, tmp_df) {
+  # Continuous
+  if (!is_wide) { # nolint: object_name
+    if (data_type == "continuous") {
+      req_columns <- tolower(get_required_continuous_long_columns()) # nolint: object_name
+    } else {
+      req_columns <- tolower(get_required_binary_long_columns()) # nolint: object_name
+    }
+  } else if (is_wide) { # Else if wide
+    if (data_type == "continuous") {
+      req_columns <- tolower(get_required_continuous_wide_columns()) # nolint: object_name
+    } else {
+      req_columns <- tolower(get_required_binary_wide_columns()) # nolint: object_name
+    }
+    # Get the number of arms
+    wide_columns <- get_wide_columns(names(tmp_df), req_columns) # nolint: object_name
+    wide_column_names <- get_wide_column_names(names(tmp_df), wide_columns) # nolint: object_name
+    n_arms <- split_wide_columns(wide_column_names)$n_arms # nolint: object_name
+    # Add each arm to the required columns
+    for (col in wide_columns){
+      for (i in 2:n_arms){
+        req_columns <- append(req_columns, paste(col, i, sep = "."))
+      }
+    }
+  } else { # Else unknown format (sanity)
+    print("this error occured trying to format the data")
+    stop("An error occured with the data, 
+    the format of the data could not be determined.")
+  }
+  return(req_columns)
+}
+
 #' Format the data \code{data$data} if it exists and is valid,
 #' removing unnecessary columns and converting column names to lower case
 #' if the function fails an error will be printed and return False
@@ -19,39 +51,14 @@ format_data <- function(df, data_type) {
     # Use lowercase column names
     names(tmp_df) <- tolower(names(tmp_df))
     # Initialize required columns
-    req_columns <- NULL
-    # If long format
-    if (!is_wide(tmp_df)) { # nolint: object_name
-      if (data_type == "continuous") {
-        req_columns <- tolower(get_required_continuous_long_columns()) # nolint: object_name
-      } else {
-        req_columns <- tolower(get_required_binary_long_columns()) # nolint: object_name
-      }
-    } else if (is_wide(tmp_df)) { # Else if wide
-      if (data_type == "continuous") {
-        req_columns <- tolower(get_required_continuous_wide_columns()) # nolint: object_name
-      } else {
-        req_columns <- tolower(get_required_binary_wide_columns()) # nolint: object_name
-      }
-      # Get the number of arms
-      wide_columns <- get_wide_columns(names(tmp_df), req_columns) # nolint: object_name
-      wide_column_names <- get_wide_column_names(names(tmp_df), wide_columns) # nolint: object_name
-      n_arms <- split_wide_columns(wide_column_names)$n_arms # nolint: object_name
-      # Add each arm to the required columns
-      for (col in wide_columns){
-        for (i in 2:n_arms){
-          req_columns <- append(req_columns, paste(col, i, sep = "."))
-        }
-      }
-    } else { # Else unknown format (sanity)
-      print("this error occured trying to format the data")
-      stop("An error occured with the data, 
-      the format of the data could not be determined.")
-    }
+    req_columns <- get_required_columns(data_type, is_wide(df), tmp_df)
+    # Keep only required columns
     tmp_df <- dplyr::select(tmp_df, dplyr::all_of(req_columns))
+    # If wide convert to long
     if (is_wide(tmp_df)) {
       tmp_df <- data_wide_to_long(tmp_df)
     }
+    # Remove non UTF-Characters
     tmp_df <- as.data.frame(lapply(tmp_df, function(x) {
       if (is.character(x)) {
         iconv(x, from = "ISO-8859-1", to = "UTF-8")
@@ -59,8 +66,13 @@ format_data <- function(df, data_type) {
         x
       }
     }))
+    # Filter any rows which contain NAs
+    if (data_type == "continuous") {
+      tmp_df <- tmp_df %>% filter(! is.na(mean))
+    } else {
+      tmp_df <- tmp_df %>% filter(! is.na(events))
+    }
     print("Saving Formatted Data")
-    tmp_df <- tmp_df %>% filter(! is.na(mean))
     return(tmp_df)
   },
   error = function(e) {

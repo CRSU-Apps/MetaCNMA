@@ -2,12 +2,12 @@ correlation_plot_tab_ui <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
     shiny::h1("Correlation Plot / Heatmap"),
-    message_tag_list(ns), # nolint: object_usage
+    message_tag_list(ns), # nolint: object_name
     shiny::tabsetPanel(
       type = "tabs",
       shiny::tabPanel(
         "Component Correlation Plot",
-        save_plot_ui( # nolint: object_usage
+        save_plot_ui( # nolint: object_name
           ns("save_correlation_plot"),
           output_name = "Component_Correlation_Plot",
         ),
@@ -18,7 +18,7 @@ correlation_plot_tab_ui <- function(id) {
       ),
       shiny::tabPanel(
         "Component Heatmap",
-        save_plot_ui( # nolint: object_usage
+        save_plot_ui( # nolint: object_name
           ns("save_component_heatmap"),
           output_name = "Component_Heatmap",
         ),
@@ -78,24 +78,24 @@ correlation_plot_tab_server <- function(
               },
               {
                 correlation_plot <- function() {
-                  get_correlation_plot( # nolint: object_usage
+                  get_correlation_plot( # nolint: object_name
                     data_reactives$formatted_data(),
-                    get_components_no_reference(data_reactives$pairwise()) # nolint: object_usage
+                    get_components_no_reference(data_reactives$pairwise()) # nolint: object_name
                   )
                 }
                 output$correlation_plot <- shiny::renderPlot(
                   correlation_plot()
                 )
                 is_rendered_correlation_plot(TRUE)
-                save_plot_server("save_correlation_plot", # nolint: object_usage
+                save_plot_server("save_correlation_plot", # nolint: object_name
                   correlation_plot,
                   is_rendered_correlation_plot
                 )
                 .heatmap <- function() {
                   print(
-                    get_heatmap( # nolint: object_usage
+                    get_heatmap( # nolint: object_name
                       data_reactives$formatted_data(),
-                      get_components_no_reference(data_reactives$pairwise()) # nolint: object_usage
+                      get_components(data_reactives$pairwise()) # nolint: object_name
                     )
                   )
                 }
@@ -103,7 +103,7 @@ correlation_plot_tab_server <- function(
                   .heatmap()
                 )
                 is_rendered_heatmap(TRUE)
-                save_plot_server("save_component_heatmap", # nolint: object_usage
+                save_plot_server("save_component_heatmap", # nolint: object_name
                   .heatmap,
                   is_rendered_heatmap
                 )

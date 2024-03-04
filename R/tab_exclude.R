@@ -2,7 +2,7 @@ exclude_tab_ui <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
     shiny::h1("Exclude Studies (Sensitivity Analysis)"),
-    message_tag_list(ns), # nolint: object_usage
+    message_tag_list(ns), # nolint: object_name
     shiny::tabsetPanel(
       type = "tabs",
       shiny::tabPanel(
@@ -14,7 +14,7 @@ exclude_tab_ui <- function(id) {
           width = 12,
           collapsible = TRUE,
           collapsed = TRUE,
-          data_table_module_ui(ns("original_table_output")) # nolint: object_usage
+          data_table_module_ui(ns("original_table_output")) # nolint: object_name
         ),
         shiny::div(class = "clearfix"),
         shinycssloaders::withSpinner(
@@ -25,7 +25,7 @@ exclude_tab_ui <- function(id) {
       shiny::tabPanel(
         "Excluded Studies: Data Summary",
         shinycssloaders::withSpinner(
-          data_table_module_ui(ns("excluded_studies_table_output")), # nolint: object_usage
+          data_table_module_ui(ns("excluded_studies_table_output")), # nolint: object_name
           type = 6
         )
       )

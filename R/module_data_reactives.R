@@ -38,7 +38,7 @@ data_reactives_server <- function(
           return(NULL)
         } else {
           return(
-            format_data( # nolint: object_usage
+            format_data( # nolint: object_name
               data_reactives$data(),
               data_reactives$data_type()
             )
@@ -65,7 +65,7 @@ data_reactives_server <- function(
           return(NULL)
         } else {
           return(
-            freq_pairwise( # nolint: object_usage
+            freq_pairwise( # nolint: object_name
               data_reactives$formatted_data(),
               data_reactives$data_type()
             )
@@ -78,7 +78,7 @@ data_reactives_server <- function(
           return(NULL)
         } else {
           return(
-            get_most_freq_component( # nolint: object_usage
+            get_most_freq_component( # nolint: object_name
               data_reactives$pairwise()
             )
           )

@@ -44,7 +44,7 @@ render_sidebar <- function() {
         icon = shiny::icon("chart-simple")
       ),
       shinydashboard::menuSubItem(
-        "Upset Plot",
+        "UpSet Plot",
         tabName = "upset_plot",
         icon = shiny::icon("chart-bar")
       )

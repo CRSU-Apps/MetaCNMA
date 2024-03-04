@@ -9,7 +9,7 @@ bayes_forest_plot_tab_ui <- function(id) {
         shiny::uiOutput(ns("warning")),
         shiny::uiOutput(ns("info")),
         run_bayesian_analysis_ui(ns("run_bayesian_analysis")),
-        save_plot_ui( # nolint: object_usage
+        save_plot_ui( # nolint: object_name
           ns("save_bayesian_forest_plot"),
           output_name = "Bayesian_Forest_Plot"
         ),
@@ -28,7 +28,7 @@ bayes_forest_plot_tab_ui <- function(id) {
         shiny::uiOutput(ns("warning_sens")),
         shiny::uiOutput(ns("info_sens")),
         run_bayesian_analysis_ui(ns("run_bayesian_analysis_sens")),
-        save_plot_ui( # nolint: object_usage
+        save_plot_ui( # nolint: object_name
           ns("save_bayesian_forest_plot_sens"),
           output_name = "Bayesian_Forest_Plot_Sensitivity"
         ),

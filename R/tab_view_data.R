@@ -2,7 +2,7 @@ view_data_tab_ui <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
     shiny::h1("View Data"),
-    message_tag_list(ns), # nolint: object_usage
+    message_tag_list(ns), # nolint: object_name
     shiny::uiOutput(ns("citation")),
     DT::DTOutput(ns("data_table"))
   )
@@ -70,7 +70,7 @@ view_data_tab_server <- function(
             data_reactives$invalidat_count(
               data_reactives$invalidate_count + 1
             )
-            error_alert(e$message) # nolint object_usage
+            error_alert(e$message) # nolint object_name
           })
         }
       }) %>% shiny::bindEvent(

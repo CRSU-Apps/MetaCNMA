@@ -6,7 +6,7 @@ model_diagnostics_tab_ui <- function(id) {
       type = "tabs",
       shiny::tabPanel(
         "Main Stan Model Diagnostics",
-        message_tag_list(ns), # nolint: object_usage
+        message_tag_list(ns), # nolint: object_name
         run_bayesian_analysis_ui(ns("run_bayesian_analysis")),
         shinydashboardPlus::box(
           title = "Sampler Diagnostics",
@@ -33,7 +33,7 @@ model_diagnostics_tab_ui <- function(id) {
           id = ns("density_plots_box"),
           collapsible = TRUE,
           width = 12,
-          save_plot_ui( # nolint: object_usage
+          save_plot_ui( # nolint: object_name
             ns("save_density_plots"),
             output_name = "Density_Plots"
           ),
@@ -47,7 +47,7 @@ model_diagnostics_tab_ui <- function(id) {
           id = ns("trace_plots_box"),
           collapsible = TRUE,
           width = 12,
-          save_plot_ui( # nolint: object_usage
+          save_plot_ui( # nolint: object_name
             ns("save_trace_plots"),
             output_name = "Trace_Plots"
           ),
@@ -87,7 +87,7 @@ model_diagnostics_tab_ui <- function(id) {
           id = ns("density_plots_box_sens"),
           collapsible = TRUE,
           width = 12,
-          save_plot_ui( # nolint: object_usage
+          save_plot_ui( # nolint: object_name
             ns("save_density_plots_sens"),
             output_name = "Density_Plots_Sensitivity"
           ),
@@ -101,7 +101,7 @@ model_diagnostics_tab_ui <- function(id) {
           id = ns("trace_plots_box_sens"),
           collapsible = TRUE,
           width = 12,
-          save_plot_ui( # nolint: object_usage
+          save_plot_ui( # nolint: object_name
             ns("save_trace_plots_sens"),
             output_name = "Trace_Plots_Sensitivity"
           ),

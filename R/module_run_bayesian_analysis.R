@@ -7,7 +7,7 @@ run_bayesian_analysis_ui <- function(
     shiny::uiOutput(ns("info")),
     shiny::div(
       shiny::uiOutput(ns("run_analysis")),
-      stan_settings_ui(ns("bayesian_settings")), # nolint: object_usage
+      stan_settings_ui(ns("bayesian_settings")), # nolint: object_name
     ),
     shiny::br(),
     shinydashboardPlus::box(

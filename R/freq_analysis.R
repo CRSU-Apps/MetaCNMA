@@ -10,7 +10,7 @@ freq_pairwise <- function(df, data_type) {
     }
   },
   error = function(e) {
-    error_alert(e$message) # nolint: object_usage
+    error_alert(e$message) # nolint: object_name
     return(NULL)
   })
 }
@@ -18,11 +18,11 @@ freq_pairwise <- function(df, data_type) {
 run_pairwise_continuous <- function(df) {
 
   netmeta::pairwise(
-    treat = components, # nolint: object_usage
-    n = total, # nolint: object_usage
+    treat = components, # nolint: object_name
+    n = total, # nolint: object_name
     mean = mean,
     sd = sd,
-    studlab = study, # nolint: object_usage
+    studlab = study, # nolint: object_name
     data = df
   )
 
@@ -31,10 +31,10 @@ run_pairwise_continuous <- function(df) {
 run_pairwise_binary <- function(df) {
 
   netmeta::pairwise(
-    treat = components, # nolint: object_usage
-    n = total, # nolint: object_usage
-    event = events, # nolint: object_usage
-    studlab = study, # nolint: object_usage
+    treat = components, # nolint: object_name
+    n = total, # nolint: object_name
+    event = events, # nolint: object_name
+    studlab = study, # nolint: object_name
     data = df
   )
 
@@ -107,7 +107,7 @@ component_summary_as_df <- function(component_summary) {
     components
   )
   components <- components %>% dplyr::arrange(
-    dplyr::desc(`Number of Studies`) # nolint: object_usage
+    dplyr::desc(`Number of Studies`) # nolint: object_name
   )
   return(components)
 }
@@ -117,11 +117,40 @@ get_most_freq_component <- function(pw) {
   component_summary <- component_summary_as_df(
     pw_summary$combination_components
   )
-  component_summary$`Combination of Components`[1]
+  freq_comp <- component_summary$`Combination of Components`[1]
+  freq_comp <- gsub(" \\+.+", "", freq_comp)
+  return(freq_comp)
 }
 
 run_net_connection <- function(pw) {
   return(netmeta::netconnection(pw))
+}
+
+is_connected <- function(netconnection) {
+  if (!is.null(netconnection$n.subnets)) {
+    return(netconnection$n.subnets == 1)
+  } else {
+    return("UNKNOWN")
+  }
+}
+
+run_freq <- function(
+  pw,
+  is_network_connected,
+  ref = "Control",
+  random_eff = FALSE,
+  summary_measure = "OR"
+) {
+  print("Fitting Frequentist Model")
+  if (is_network_connected) {
+    nm <- run_netmeta(pw, ref, random_eff)
+    nc <- run_netcomb(nm, inactive = ref)
+    return(nc)
+  } else {
+    return(
+      run_discomb(pw, ref, random_eff, summary_measure)
+    )
+  }
 }
 
 run_netmeta <- function(pw, ref = "Control", random_eff = FALSE) {
@@ -132,23 +161,43 @@ run_netmeta <- function(pw, ref = "Control", random_eff = FALSE) {
 
 run_netcomb <- function(nm, inactive = "Control") {
   print("running netcomb")
-  return(netmeta::netcomb(nm, inactive = inactive))
-}
-
-netcomb_summary <- function(nc) {
-  data.frame(
-    "Characteristic" = c(
-      "Number of Studies",
-      "Number of Components",
-      "Number of Interventions"
-    ),
-    "Value" = c(
-      nc$k,
-      nc$c,
-      nc$n
-    )
+  return(
+    netmeta::netcomb(nm, inactive = inactive)
   )
 }
+
+run_discomb <- function(
+  pw,
+  ref = "Control",
+  random_eff = FALSE,
+  summary_measure = "OR"
+) {
+  netmeta::discomb(
+    TE = pw$TE,
+    seTE = pw$TE,
+    treat1 = pw$treat1,
+    treat2 = pw$treat2,
+    studlab = pw$studlab,
+    inactive = ref,
+    sm = summary_measure,
+    random = random_eff,
+  )
+}
+
+# netcomb_summary <- function(nc) {
+#   data.frame(
+#     "Characteristic" = c(
+#       "Number of Studies",
+#       "Number of Components",
+#       "Number of Interventions"
+#     ),
+#     "Value" = c(
+#       nc$k,
+#       nc$c,
+#       nc$n
+#     )
+#   )
+# }
 
 get_study_components <- function(data, components) {
   components <- levels(as.factor(components))
@@ -160,7 +209,7 @@ get_study_components <- function(data, components) {
   components <- levels(components)
 
   tmp_df <- dplyr::select(
-    data, study, components # nolint: object_usage
+    data, study, components # nolint: object_name
   )
 
   study_components <- setNames(

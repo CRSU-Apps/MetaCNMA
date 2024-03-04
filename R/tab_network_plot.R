@@ -2,7 +2,7 @@ network_plot_tab_ui <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
     shiny::h1("Network Diagram"),
-    message_tag_list(ns), # nolint: object_usage
+    message_tag_list(ns), # nolint: object_name
     shinycssloaders::withSpinner(shiny::uiOutput(ns("vis_network")), type = 6)
   )
 }
@@ -32,7 +32,7 @@ network_plot_tab_server <- function(
           shiny::req(
             freq_options$options_loaded(),
             !is.null(data_reactives$pairwise()),
-            !is.null(freq_reactives$netmeta()),
+            !is.null(freq_reactives$model()),
             cancelOutput = TRUE
           )
           tryCatch({
@@ -53,7 +53,7 @@ network_plot_tab_server <- function(
                 )
                 vis_network_server(
                   "vis_network_1",
-                  freq_reactives$netmeta(),
+                  freq_reactives$model(),
                   names(
                     get_combination_components(data_reactives$pairwise())
                   )

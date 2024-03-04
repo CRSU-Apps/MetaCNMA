@@ -2,7 +2,7 @@ data_upload_tab_ui <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
     shiny::h1("Upload Data"),
-    message_tag_list(ns), # nolint: object_usage
+    message_tag_list(ns), # nolint: object_name
     shiny::p("Data should be uploaded as either a .csv or .xlsx file"),
     shiny::p(
       "For help on uploading data see the ",
@@ -19,7 +19,7 @@ data_upload_tab_ui <- function(id) {
         shiny::conditionalPanel(
           condition = "output.data_uploaded == true",
           ns = ns,
-          default_reload_button(ns) # nolint: object_usage
+          default_reload_button(ns) # nolint: object_name
         )
       ),
       class = "vertical-align"
@@ -60,7 +60,7 @@ data_upload_tab_server <- function(
       )
 
       # Wrap the file_input from default_elements.R into a render function
-      file_input <- shiny::renderUI(default_file_input(ns)) # nolint: object_usage
+      file_input <- shiny::renderUI(default_file_input(ns)) # nolint: object_name
 
       # Logical to show reset button only when data uploaded
       data_reactives$data_uploaded <- shiny::reactiveVal(FALSE)

@@ -2,7 +2,7 @@ model_outcome_tab_ui <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
     shiny::h1("Model Settings"),
-    message_tag_list(ns), # nolint: object_usage
+    message_tag_list(ns), # nolint: object_name
     shiny::uiOutput(ns("outcome_measure")),
     shiny::uiOutput(ns("reference_component")),
     shiny::uiOutput(ns("desirable")),
@@ -141,6 +141,12 @@ model_outcome_tab_server <- function(
 
       model_options$desirable <- shiny::reactive({
         return(input$desirable)
+      })
+
+      model_options$summary_measure <- shiny::reactive({
+        return(
+          toupper(input$outcome_measure)
+        )
       })
 
       model_options$outcome_measure <- shiny::reactive({

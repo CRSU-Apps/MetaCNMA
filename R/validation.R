@@ -14,7 +14,7 @@
 #' }
 #' @rdname is_valid_file_format
 is_valid_file_format <- function(file_ext) {
-  return(file_ext %in% get_accepted_file_formats()) # nolint: object_usage
+  return(file_ext %in% get_accepted_file_formats()) # nolint: object_name
 }
 
 is_file_exists <- function(file_path) {
@@ -38,7 +38,7 @@ validate_column_names <- function(df, required_names) {
     if (purrr::is_empty(missing_columns)) {
       return(TRUE)
     } else {
-      error_alert( # nolint: object_usage
+      error_alert( # nolint: object_name
         paste0("Error column(s): '",
           paste0(missing_columns, collapse = ", "),
           "' are missing from the data"
@@ -48,7 +48,7 @@ validate_column_names <- function(df, required_names) {
     }
   },
   error = function(e) {
-    error_alert(e$message) # nolint: object_usage
+    error_alert(e$message) # nolint: object_name
     return(FALSE)
   })
 }
@@ -90,12 +90,11 @@ validate_wide <- function(df, required_columns) {
 
     split_cols <- split_wide_columns(wide_column_names)
     cols <- split_cols$cols
-    col_numbers <- split_cols$col_numbers # nolint: object_usage
+    col_numbers <- split_cols$col_numbers # nolint: object_name
     n_arms <- split_cols$n_arms
 
     n_expected_cols <- n_arms * length(wide_columns)
     missing_columns <- c()
-
     # Iterate through the wide columns (column names without the .n)
     for (col in wide_columns) {
       # Iterate the number of arms (derived from the maximum .n)
@@ -103,51 +102,50 @@ validate_wide <- function(df, required_columns) {
         # Check that for each arm there is a corresponding wide column
         if (!paste(col, i, sep = ".") %in% wide_column_names) {
           missing_columns <- c(missing_columns, paste(col, i, sep = "."))
-          return(FALSE)
         }
       }
     }
     # Check the number of columns are as expected
-
     if (! is.null(missing_columns)) {
-      error_alert( # nolint: object_usage
+      error_alert( # nolint: object_name
         paste0("Error column(s): '",
           paste0(missing_columns, collapse = ", "),
           "' are missing from the data"
         )
       )
+      return(FALSE)
     }
 
     if (length(cols) != n_expected_cols) {
-      error_alert("There is a problem with the number of columns, did you miss a column?") # nolint: object_usage
+      error_alert("There is a problem with the number of columns, did you miss a column?") # nolint: object_name
       return(FALSE)
     }
 
   },
   error = function(e) {
-    error_alert(e$message) # nolint: object_usage
+    error_alert(e$message) # nolint: object_name
     return(FALSE)
   })
   return(TRUE)
 }
 
 validate_binary_long <- function(df) {
-  required_columns <- get_required_binary_long_columns() # nolint: object_usage
+  required_columns <- get_required_binary_long_columns() # nolint: object_name
   validate_column_names(df, required_columns)
 }
 
 validate_continuous_long <- function(df) {
-  required_columns <- get_required_continuous_long_columns() # nolint: object_usage
+  required_columns <- get_required_continuous_long_columns() # nolint: object_name
   validate_column_names(df, required_columns)
 }
 
 validate_binary_wide <- function(df) {
-  required_columns <- get_required_binary_wide_columns() # nolint: object_usage
+  required_columns <- get_required_binary_wide_columns() # nolint: object_name
   validate_wide(df, required_columns)
 }
 
 validate_continuous_wide <- function(df) {
-  required_columns <- get_required_continuous_wide_columns() # nolint: object_usage
+  required_columns <- get_required_continuous_wide_columns() # nolint: object_name
   validate_wide(df, required_columns)
 }
 
@@ -156,29 +154,29 @@ validate_input <- function(input_file, type) { # nolint: cyclocomp
     print("Checking input file")
     if (is.null(input_file)) {
       print("Null input file")
-      error_alert("There is a problem with the uploaded file please try again") # nolint: object_usage
+      error_alert("There is a problem with the uploaded file please try again") # nolint: object_name
       return(FALSE)
     }
     if (is.null(type)) {
       print("Null Type")
-      error_alert("An internal error occured, please try again, if this problem persist please contact the developers", "Error #TP001") # nolint: object_usage
+      error_alert("An internal error occured, please try again, if this problem persist please contact the developers", "Error #TP001") # nolint: object_name
       return(FALSE)
     }
 
     if (is.null(input_file$datapath)) {
       print("Null datapath")
-      error_alert("An error occured, please try again, if this problem persist please contact the developers", "Error #FU001") # nolint: object_usage
+      error_alert("An error occured, please try again, if this problem persist please contact the developers", "Error #FU001") # nolint: object_name
       return(FALSE)
     }
 
     if (!is_file_exists(input_file$datapath)) {
       print("file doesn't exist")
-      error_alert("An internal rror occured, please try again, if this problem persist please contact the developers", "Error #FU002") # nolint: object_usage
+      error_alert("An internal rror occured, please try again, if this problem persist please contact the developers", "Error #FU002") # nolint: object_name
       return(FALSE)
     }
 
     if (!is_valid_file_format(tools::file_ext(input_file$name))) {
-      error_alert(paste0("Accepted Files: ", paste0(get_accepted_file_formats(), collapse = ", ")), "Error File Extension not Supported") # nolint: object_usage
+      error_alert(paste0("Accepted Files: ", paste0(get_accepted_file_formats(), collapse = ", ")), "Error File Extension not Supported") # nolint: object_name
       return(FALSE)
     }
 
@@ -186,7 +184,7 @@ validate_input <- function(input_file, type) { # nolint: cyclocomp
 
     if (is.null(df)) {
       print("Null Data Frame")
-      error_alert("An internal error occured, the data appears to be empty, please try again, if this problem consiste please contact the developers", "Error #FU003") # nolint: object_usage
+      error_alert("An internal error occured, the data appears to be empty, please try again, if this problem consiste please contact the developers", "Error #FU003") # nolint: object_name
       return(FALSE)
     }
 
@@ -195,7 +193,7 @@ validate_input <- function(input_file, type) { # nolint: cyclocomp
       if (type == "binary") {
         return(validate_binary_wide(df))
       } else if (type == "continuous") {
-        validate_continuous_wide(df)
+        return(validate_continuous_wide(df))
       }
     } else {
       print("Assuming long Format")
@@ -207,7 +205,7 @@ validate_input <- function(input_file, type) { # nolint: cyclocomp
     }
   },
   error = function(e) {
-    error_alert(e$message) # nolint: object_usage
+    error_alert(e$message) # nolint: object_name
     return(FALSE)
   })
 }

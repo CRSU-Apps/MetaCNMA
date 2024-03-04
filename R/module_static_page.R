@@ -1,5 +1,5 @@
 static_page_ui <- function(id, mark_down_file) {
-  ns <- shiny::NS(id) # nolint object_usage
+  ns <- shiny::NS(id) # nolint object_name
   shiny::tagList(
     if (!is.null(mark_down_file) & file.exists(mark_down_file)) {
       shiny::includeMarkdown(mark_down_file)
