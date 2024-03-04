@@ -83,12 +83,16 @@ get_sampler_diagnostics <- function(stan_fit) {
   return(
     data.frame(
       Info = c(
-        "divergent transitions", 
+        "divergent transitions",
         "iterations which exceeded max treedepth"
       ),
       Number = c(
         rstan::get_num_divergent(stan_fit),
         rstan::get_num_max_treedepth(stan_fit)
+      ),
+      Category = dplyr::case_when(
+        rstan::get_num_divergent(stan_fit) < 1 ~ "good",
+        rstan::get_num_max_treedepth(stan_fit) > 1 ~ "bad"
       )
     )
   )
@@ -124,7 +128,7 @@ get_rhat_diagnostics <- function(stan_fit, random_effects) {
     tibble(
       parameter = names(rhats),
       r_hat = rhats,
-      catergory = dplyr::case_when(
+      category = dplyr::case_when(
         r_hat < 1.05 ~ "good",
         r_hat %in% c(1.05, 1.10) ~ "borderline",
         r_hat > 1.10 ~ "bad"

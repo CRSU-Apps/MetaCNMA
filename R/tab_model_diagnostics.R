@@ -180,9 +180,22 @@ model_diagnostics_tab_server <- function(
                 )
               },
               {
+                sampler_diagnostics <- get_sampler_diagnostics(bayesian_reactives$model()$fit)
                 output$sampler_diagnostics <- shiny::renderUI(
                   DT::renderDataTable(
-                    get_sampler_diagnostics(bayesian_reactives$model()$fit)
+                    DT::datatable(
+                      sampler_diagnostics
+                    ) %>%
+                      DT::formatStyle(
+                        columns = c("Category"),
+                        valueColumns = c("Category"),
+                        target = 'row',
+                        backgroundColor =
+                          DT::styleEqual(
+                            c("bad", "good"),
+                            c("red", "green")
+                          )
+                      )
                   )
                 )
                 output$rhat_diagnostics <- shiny::renderUI(
