@@ -89,7 +89,6 @@ run_bayesian_analysis_server <- function(
       )
 
       shiny::observe({
-        print("Setting Model to NULL")
         bayesian_reactives$model(NULL)
       }) %>% shiny::bindEvent(
         bayesian_options$update_reactive(),

@@ -3,7 +3,7 @@
 #' @title Valid File Format
 #' @description Checks if the given file extention is valid
 #' @param file_ext The file extention to be validated
-#' @return TRUE if valid otherwise FALSE
+#' @return \code{TRUE} if valid otherwise \code{FALSE}
 #' @details Checks to see if the given file extension is
 #' in the accepted file formats list (see site_info.yaml)
 #' @examples
@@ -17,27 +17,87 @@ is_valid_file_format <- function(file_ext) {
   return(file_ext %in% get_accepted_file_formats()) # nolint: object_name
 }
 
+#' @title File Exists
+#' @description Checks to see if a given file exists
+#' wrapper for file.exists
+#' @param file_path path to file to be checked
+#' @return \code{TRUE} if file exists otherwise \code{FALSE}
+#' @details Prints the file path to the console fo debugging
+#' @examples
+#' \dontrun{
+#' if(interactive()){
+#'  is_file_exists("test.csv")
+#'  }
+#' }
+#' @rdname is_file_exists
 is_file_exists <- function(file_path) {
-  print(paste0("checking file ", file_path, " exists"))
+  print(paste0("Checking file ", file_path, " exists"))
   return(file.exists(file_path))
 }
 
+#' @title Determine if a dataframe is in a wide format
+#' @description attempts to determine if a given
+#' datafreame is in a wide format
+#' @param df \code{data.frame} to be checked
+#' @return \code{TRUE} if wide else \code{FALSE}
+#' @details This function checks for the presence of
+#' \code{.} in the column names to determine if the
+#' \code{data.frame} is considered to be wide format
+#' @examples
+#' \dontrun{
+#' if(interactive()){
+#'  is_wide(df)
+#'  }
+#' }
+#' @rdname is_wide
 is_wide <- function(df) {
   return(any(grepl("(.+)\\.(\\d+)", names(df))))
 }
 
+#' @title Check for required columns
+#' @description Check if required columns are present in
+#' a given \code{data.frame}
+#' @param df \code{data.frame} to be checked
+#' @param required_names \{character} of required columns
+#' @return \code{TRUE} if all required columns are present
+#' Otherwise \code{FALSE}
+#' @details Given a \code{character} vector of required
+#' columns and a \code{data.frame} check if all of the columns
+#' are present in the \code{data.frame}. On error return \code{FALSE}
+#' and display the error message
+#' @examples
+#' \dontrun{
+#' if(interactive()){
+#'  validate_column_names(
+#'    df
+#'    c("Study", "Components"),
+#'  )
+#'  }
+#' }
+#' @seealso
+#'  \code{\link[purrr]{keep}}, \code{\link[purrr]{reexports}}
+#' @rdname validate_column_names
+#' @importFrom purrr compact is_empty
 validate_column_names <- function(df, required_names) {
+  # Get the column names
   column_names <- names(df)
+  # Use a try catch
   tryCatch({
+    # Loop through required columns and check to see
+    # if they are in the given data.fram
     missing_columns <- lapply(required_names, function(name) {
       if (!tolower(name) %in% tolower(column_names)) {
         return(name)
       }
     })
+    # Collapse the missing columns into a string
     missing_columns <- purrr::compact(missing_columns)
+    # If there are no missing columns return TRUE
     if (purrr::is_empty(missing_columns)) {
       return(TRUE)
     } else {
+      # Otherwise display an error with the missing columns
+      # and return false
       error_alert( # nolint: object_name
         paste0("Error column(s): '",
           paste0(missing_columns, collapse = ", "),
@@ -48,6 +108,8 @@ validate_column_names <- function(df, required_names) {
     }
   },
   error = function(e) {
+    # If something goes wrong display the error and
+    # return FALSE
     error_alert(e$message) # nolint: object_name
     return(FALSE)
   })
@@ -57,11 +119,11 @@ split_wide_columns <- function(columns) {
   cols <- list()
   col_numbers <- list()
   for (col in columns) {
-    # get the column name (before the .)
+    # Get the column name (before the .)
     col_name <- sub("(.+)\\.(\\d+)", "\\1", col)
-    # get the column number (after the .)
+    # Get the column number (after the .)
     col_number <- sub("(.+)\\.(\\d+)", "\\2", col)
-    # store these in the lists initalised previously
+    # Store these in the lists initalised previously
     cols <- append(cols, col_name)
     col_numbers <- append(col_numbers, as.numeric(col_number))
   }

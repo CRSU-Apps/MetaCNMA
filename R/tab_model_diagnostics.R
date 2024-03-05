@@ -154,7 +154,9 @@ model_diagnostics_tab_server <- function(
       shiny::observe({
         if (tab() == id) {
           output$warning <- NULL
-          output$info <- NULL
+          output$info <- shiny::renderUI(
+            message_alert("Please run the model") # nolint: object_name
+          )
           output$sampler_diagnostics <- NULL
           output$rhat_diagnostics <- NULL
           output$density_plots <- NULL
@@ -167,6 +169,7 @@ model_diagnostics_tab_server <- function(
             bayesian_reactives$is_model_run(),
             cancelOutput = TRUE
           )
+          output$info <- NULL
           tryCatch({
             withCallingHandlers(
               warning = function(cond) {
@@ -180,7 +183,9 @@ model_diagnostics_tab_server <- function(
                 )
               },
               {
-                sampler_diagnostics <- get_sampler_diagnostics(bayesian_reactives$model()$fit)
+                sampler_diagnostics <- get_sampler_diagnostics(
+                  bayesian_reactives$model()$fit
+                )
                 output$sampler_diagnostics <- shiny::renderUI(
                   DT::renderDataTable(
                     DT::datatable(
@@ -189,21 +194,33 @@ model_diagnostics_tab_server <- function(
                       DT::formatStyle(
                         columns = c("Category"),
                         valueColumns = c("Category"),
-                        target = 'row',
+                        target = "row",
                         backgroundColor =
                           DT::styleEqual(
                             c("bad", "good"),
-                            c("red", "green")
+                            c("#e05555", "#5dc98e")
                           )
                       )
                   )
                 )
                 output$rhat_diagnostics <- shiny::renderUI(
                   DT::renderDataTable(
-                    get_rhat_diagnostics(
-                      bayesian_reactives$model()$fit,
-                      bayesian_options$random_effects()
-                    )
+                    DT::datatable(
+                      get_rhat_diagnostics(
+                        bayesian_reactives$model()$fit,
+                        bayesian_options$random_effects()
+                      )
+                    ) %>%
+                      DT::formatStyle(
+                        columns = c("Category"),
+                        valueColumns = c("Category"),
+                        target = "row",
+                        backgroundColor =
+                          DT::styleEqual(
+                            c("bad", "borderline", "good"),
+                            c("#e05555", "#ed8142", "#5dc98e")
+                          )
+                      )
                   )
                 )
                 density_plot <- function() {
@@ -261,7 +278,9 @@ model_diagnostics_tab_server <- function(
       shiny::observe({
         if (tab() == id) {
           output$warning_sens <- NULL
-          output$info_sens <- NULL
+          output$info_sens <- shiny::renderUI(
+            message_alert("Please run the model") # nolint: object_name
+          )
           output$sampler_diagnostics_sens <- NULL
           output$rhat_diagnostics_sens <- NULL
           output$density_plots_sens <- NULL
@@ -274,6 +293,7 @@ model_diagnostics_tab_server <- function(
             bayesian_sens_reactives$is_model_run(),
             cancelOutput = TRUE
           )
+          output$info_sens <- NULL
           tryCatch({
             withCallingHandlers(
               warning = function(cond) {

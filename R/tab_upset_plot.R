@@ -83,7 +83,9 @@ upset_plot_tab_server <- function(
                   )
                 )
                 output$upset_plot <- shiny::renderPlot(
-                  upset_plot()
+                  upset_plot(),
+                  width = 1200,
+                  height = 675
                 )
                 is_rendered(TRUE)
                 save_plot_server("save_upset_plot", # nolint: object_name

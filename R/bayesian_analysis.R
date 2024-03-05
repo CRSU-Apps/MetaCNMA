@@ -125,13 +125,13 @@ get_rhat_diagnostics <- function(stan_fit, random_effects) {
     )$summary[, "Rhat"], 2
   )
   return(
-    tibble(
-      parameter = names(rhats),
-      r_hat = rhats,
-      category = dplyr::case_when(
-        r_hat < 1.05 ~ "good",
-        r_hat %in% c(1.05, 1.10) ~ "borderline",
-        r_hat > 1.10 ~ "bad"
+    dplyr::tibble(
+      Parameter = names(rhats),
+      Rhat = rhats,
+      Category = dplyr::case_when(
+        Rhat < 1.05 ~ "good",
+        Rhat %in% c(1.05, 1.10) ~ "borderline",
+        Rhat > 1.10 ~ "bad"
       )
     )
   )

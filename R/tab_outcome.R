@@ -29,11 +29,23 @@ model_outcome_tab_server <- function(
 
       model_options <- shiny::reactiveValues()
 
-      model_options$update_reactive <- shiny::reactive({
-        data_reactives$data()
-        data_reactives$data_type()
-        data_reactives$is_default_data()
-      })
+      model_options$update_reactive <- shiny::reactiveVal(FALSE)
+
+      shiny::observe({
+        model_options$update_reactive(TRUE)
+        model_options$update_reactive(FALSE)
+      }) %>% shiny::bindEvent(
+        data_reactives$data(),
+        data_reactives$data_type(),
+        data_reactives$is_default_data(),
+        ignoreInit = TRUE
+      )
+
+      # model_options$update_reactive <- shiny::reactive({
+      #   data_reactives$data()
+      #   data_reactives$data_type()
+      #   data_reactives$is_default_data()
+      # })
 
       shiny::observe({
         print("Waiting on data_type and is_default_data")

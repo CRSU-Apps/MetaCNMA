@@ -94,6 +94,6 @@ warning_alert <- function(msg) {
 #' @importFrom shiny tags
 message_alert <- function(msg) {
   shiny::tags$div(
-    class = "alert alert-info", role = "alert", paste0("Message: ", msg)
+    class = "alert alert-help", role = "alert", paste0("Message: ", msg)
   )
 }
