@@ -80,6 +80,8 @@ fit_model <- function(
 }
 
 get_sampler_diagnostics <- function(stan_fit) {
+  no_divergent <- rstan::get_num_divergent(stan_fit)
+  no_tree_depth <- rstan::get_num_max_treedepth(stan_fit)
   return(
     data.frame(
       Info = c(
@@ -87,12 +89,18 @@ get_sampler_diagnostics <- function(stan_fit) {
         "iterations which exceeded max treedepth"
       ),
       Number = c(
-        rstan::get_num_divergent(stan_fit),
-        rstan::get_num_max_treedepth(stan_fit)
+        no_divergent,
+        no_tree_depth
       ),
-      Category = dplyr::case_when(
-        rstan::get_num_divergent(stan_fit) < 1 ~ "good",
-        rstan::get_num_max_treedepth(stan_fit) > 1 ~ "bad"
+      Category = c(
+        dplyr::case_when(
+          no_divergent < 1 ~ "good",
+          no_divergent > 1 ~ "bad"
+        ),
+        dplyr::case_when(
+          no_tree_depth < 1 ~ "good",
+          no_tree_depth > 1 ~ "bad"
+        )
       )
     )
   )
