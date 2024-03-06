@@ -118,9 +118,7 @@ bayes_forest_plot_tab_server <- function(
                     " of ",
                     bayesian_options$outcome_name(),
                     " when compared against ",
-                    get_most_freq_component( # nolint: object_name
-                      data_reactives$pairwise()
-                    )
+                    data_reactives$reference_component()
                   )
                 )
                 forest_plot <- function() {
@@ -183,9 +181,7 @@ bayes_forest_plot_tab_server <- function(
                     " of ",
                     bayesian_options$outcome_name(),
                     " when compared against ",
-                    get_most_freq_component( # nolint: object_name
-                      bayes_sens_data_reactives$pairwise()
-                    )
+                    data_reactives$reference_component()
                   )
                 )
                 forest_plot_sens <- function() {

@@ -55,7 +55,7 @@ network_plot_tab_server <- function(
                   "vis_network_1",
                   freq_reactives$model(),
                   names(
-                    get_combination_components(data_reactives$pairwise())
+                    get_combination_components(data_reactives$formatted_data())
                   )
                 )
               }

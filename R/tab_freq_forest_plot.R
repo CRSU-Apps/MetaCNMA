@@ -99,9 +99,7 @@ forest_plot_tab_server <- function(
                     " of ",
                     freq_options$outcome_name(),
                     " when compared against ",
-                    get_most_freq_component( # nolint: object_name
-                      data_reactives$pairwise()
-                    )
+                    data_reactives$reference_component()
                   )
                 )
                 forest_plot <- function() {
@@ -166,9 +164,7 @@ forest_plot_tab_server <- function(
                     " of ",
                     freq_options$outcome_name(),
                     " when compared against ",
-                    get_most_freq_component( # nolint: object_name
-                      freq_sens_reactives$pairwise()
-                    )
+                    data_reactives$reference_component()
                   )
                 )
                 forest_plot_sens <- function() {

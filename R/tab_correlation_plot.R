@@ -60,7 +60,6 @@ correlation_plot_tab_server <- function(
           is_rendered_heatmap(FALSE)
           print(tab())
           shiny::req(
-            !is.null(data_reactives$pairwise()),
             data_reactives$is_data_formatted(),
             cancelOutput = TRUE
           )
@@ -80,7 +79,7 @@ correlation_plot_tab_server <- function(
                 correlation_plot <- function() {
                   get_correlation_plot( # nolint: object_name
                     data_reactives$formatted_data(),
-                    get_components_no_reference(data_reactives$pairwise()) # nolint: object_name
+                    data_reactives$components() # nolint: object_name
                   )
                 }
                 output$correlation_plot <- shiny::renderPlot(
@@ -95,7 +94,7 @@ correlation_plot_tab_server <- function(
                   print(
                     get_heatmap( # nolint: object_name
                       data_reactives$formatted_data(),
-                      get_components(data_reactives$pairwise()) # nolint: object_name
+                      data_reactives$components() # nolint: object_name
                     )
                   )
                 }

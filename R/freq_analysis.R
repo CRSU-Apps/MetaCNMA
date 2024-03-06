@@ -40,44 +40,58 @@ run_pairwise_binary <- function(df) {
 
 }
 
-get_components <- function(pw) {
-  `%>%` <- magrittr::`%>%`
-  # Get all the components (treat columns)
-  components <- pw %>% dplyr::select(dplyr::contains("treat"))
-  tmp_comp <- NULL
-  for (i in seq_len(ncol(components))) {
-    tmp_comp <- cbind(tmp_comp, components[[i]])
-  }
-  components <- tmp_comp
-  # Add all components to a single character
-  # vector separating with extra + signs
-  components <- paste(components, collapse = "+")
-  # Split the single vector apart by +
-  components <- strsplit(components, "\\+")[[1]]
-  # Convert to factor (for speed)
-  components <- as.factor(components)
-  # Use levels to get unique components
-  components <- levels(components)
+# get_components <- function(pw) {
+#   `%>%` <- magrittr::`%>%`
+#   # Get all the components (treat columns)
+#   components <- pw %>% dplyr::select(dplyr::contains("treat"))
+#   tmp_comp <- NULL
+#   for (i in seq_len(ncol(components))) {
+#     tmp_comp <- cbind(tmp_comp, components[[i]])
+#   }
+#   components <- tmp_comp
+#   # Add all components to a single character
+#   # vector separating with extra + signs
+#   components <- paste(components, collapse = "+")
+#   # Split the single vector apart by +
+#   components <- strsplit(components, "\\+")[[1]]
+#   # Convert to factor (for speed)
+#   components <- as.factor(components)
+#   # Use levels to get unique components
+#   components <- levels(components)
+# }
+
+get_components <- function(formatted_df) {
+  return(MetaCNMABayes:::get_unique_components(formatted_df$components))
 }
 
-get_components_no_reference <- function(pw) {
-  # Get all components
-  components <- get_components(pw)
-  # Get the reference component
-  reference <- get_most_freq_component(pw)
-  # Remove the reference component
-  components <- components[! components == reference]
-  return(components)
+# get_components_no_reference <- function(pw) {
+#   # Get all components
+#   components <- get_components(pw)
+#   # Get the reference component
+#   reference <- get_most_freq_component(pw)
+#   # Remove the reference component
+#   components <- components[! components == reference]
+#   return(components)
+# }
+
+get_components_no_reference <- function(formatted_df, reference_component) {
+  return(
+    MetaCNMABayes:::get_components_no_ref(
+      formatted_df$components,
+      reference_component
+    )
+  )
 }
 
-get_combination_components <- function(pw) {
-  `%>%` <- magrittr::`%>%`
-  components <- pw %>% dplyr::select(dplyr::contains("treat"))
-  tmp_comp <- NULL
-  for (i in seq_len(ncol(components))) {
-    tmp_comp <- cbind(tmp_comp, components[[i]])
-  }
-  components <- as.factor(tmp_comp)
+get_combination_components <- function(formatted_df) {
+  #`%>%` <- magrittr::`%>%`
+  #components <- pw %>% dplyr::select(dplyr::contains("treat"))
+  components <- as.factor(formatted_df$components)
+  # tmp_comp <- NULL
+  # for (i in seq_len(ncol(components))) {
+  #   tmp_comp <- cbind(tmp_comp, components[[i]])
+  # }
+  # components <- as.factor(tmp_comp)
   level_list <- list()
   for (i in seq_len(length(levels(components)))) {
     level_list[levels(components)[[i]]] <- 0
@@ -88,11 +102,11 @@ get_combination_components <- function(pw) {
   return(level_list)
 }
 
-get_summary <- function(pw) {
+get_summary <- function(formatted_df) {
   list(
-    n_studies = nrow(pw),
-    components = get_components(pw),
-    combination_components = get_combination_components(pw)
+    n_studies = length(levels(as.factor(formatted_df$study))),
+    components = get_components(formatted_df),
+    combination_components = get_combination_components(formatted_df)
   )
 }
 
@@ -112,14 +126,36 @@ component_summary_as_df <- function(component_summary) {
   return(components)
 }
 
-get_most_freq_component <- function(pw) {
-  pw_summary <- get_summary(pw)
-  component_summary <- component_summary_as_df(
-    pw_summary$combination_components
+# get_most_freq_component <- function(pw) {
+#   pw_summary <- get_summary(pw)
+#   component_summary <- component_summary_as_df(
+#     pw_summary$combination_components
+#   )
+#   freq_comp <- component_summary$`Combination of Components`[1]
+#   freq_comp <- gsub(" \\+.+", "", freq_comp)
+#   return(freq_comp)
+# }
+
+get_individual_components <- function(formatted_df) {
+  return(
+    levels(
+      as.factor(
+        MetaCNMABayes:::get_single_components(formatted_df$components)
+      )
+    )
   )
-  freq_comp <- component_summary$`Combination of Components`[1]
-  freq_comp <- gsub(" \\+.+", "", freq_comp)
-  return(freq_comp)
+}
+
+get_most_freq_component <- function(formatted_df) {
+  combination_components <- get_combination_components(formatted_df)
+  individual_components <- get_individual_components(formatted_df)
+  combination_components <- combination_components[
+    names(combination_components) %in% individual_components
+  ]
+  most_freq_component <- combination_components[
+    which.max(combination_components)
+  ]
+  return(names(most_freq_component))
 }
 
 run_net_connection <- function(pw) {

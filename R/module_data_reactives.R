@@ -60,6 +60,43 @@ data_reactives_server <- function(
         }
       })
 
+      data_reactives$components <- shiny::reactive({
+        if (is.null(data_reactives$is_data_formatted())) {
+          return(NULL)
+        } else {
+          return(
+            get_components(data_reactives$formatted_data())
+          )
+        }
+      })
+
+      data_reactives$default_reference_component <- shiny::reactive({
+        if (is.null(data_reactives$is_data_formatted())) {
+          return(NULL)
+        } else {
+          return(
+            get_most_freq_component(data_reactives$formatted_data())
+          )
+        }
+      })
+
+      data_reactives$reference_component <- shiny::reactive({
+        return(data_reactives$default_reference_component())
+      })
+
+      data_reactives$components_no_reference <- shiny::reactive({
+        if (is.null(data_reactives$is_data_formatted())) {
+          return(NULL)
+        } else {
+          return(
+            get_components_no_reference(
+              data_reactives$formatted_data(),
+              data_reactives$default_reference_component()
+            )
+          )
+        }
+      })
+
       data_reactives$pairwise <- shiny::reactive({
         if (!data_reactives$is_data_formatted()) {
           return(NULL)
@@ -68,18 +105,6 @@ data_reactives_server <- function(
             freq_pairwise( # nolint: object_name
               data_reactives$formatted_data(),
               data_reactives$data_type()
-            )
-          )
-        }
-      })
-
-      data_reactives$default_reference_component <- shiny::reactive({
-        if (is.null(data_reactives$pairwise())) {
-          return(NULL)
-        } else {
-          return(
-            get_most_freq_component( # nolint: object_name
-              data_reactives$pairwise()
             )
           )
         }

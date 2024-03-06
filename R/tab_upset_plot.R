@@ -46,7 +46,6 @@ upset_plot_tab_server <- function(
           is_rendered(FALSE)
           print(tab())
           shiny::req(
-            !is.null(data_reactives$pairwise()),
             data_reactives$is_data_formatted(),
             cancelOutput = TRUE
           )
@@ -67,7 +66,7 @@ upset_plot_tab_server <- function(
                   print(
                     get_upset_plot( # nolint: object_name
                       data_reactives$formatted_data(),
-                      get_components(data_reactives$pairwise()) # nolint: object_name
+                      data_reactives$components() # nolint: object_name
                     )
                   )
                 }
@@ -75,9 +74,7 @@ upset_plot_tab_server <- function(
                   paste0(
                     "UpSet Plot of Component: ",
                     paste(
-                      get_components( # nolint: object_name# nolint: object_name
-                        data_reactives$pairwise()
-                      ),
+                      data_reactives$components(),
                       collapse = ", "
                     )
                   )

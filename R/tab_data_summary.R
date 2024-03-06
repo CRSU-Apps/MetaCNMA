@@ -38,6 +38,10 @@ data_summary_tab_server <- function(
           output$warning <- NULL
           output$info <- NULL
           output$data_summary <- shiny::renderText("Waiting for data")
+          shiny::req(
+            data_reactives$is_data_formatted(),
+            cancelOutput = TRUE
+          )
           tryCatch({
             withCallingHandlers(
               warning = function(cond) {
@@ -52,7 +56,7 @@ data_summary_tab_server <- function(
               },
               {
                 if (!is.null(freq_reactives$netconnection())) {
-                  pw_summary <- get_summary(data_reactives$pairwise()) # nolint: object_name
+                  pw_summary <- get_summary(data_reactives$formatted_data()) # nolint: object_name
                   output$data_summary <- shiny::renderUI(
                     shiny::tagList(
                       shiny::tags$ul(
