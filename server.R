@@ -5,17 +5,18 @@
 ##################################################################
 shinyServer(function(input, output, session) {
 
-  cookie_server(
-    id = "cookies",
-    cookies = reactive(input$cookies),
-    open_privacy_policy = reactive(input$open_privacy_policy)
-  )
-
   # Reactive Values
   # Current tab as a reactive
   tab <- reactive(input$tabs)
   log <- reactiveValues()
   load_default_data <- reactiveVal(TRUE)
+
+  cookie_server(
+    id = "cookies",
+    cookies = reactive(input$cookies),
+    google_analytics_id = "G-DYBCT85P4W",
+    tab = tab
+  )
 
   data_type <- data_type_module_server("data_type")
 
