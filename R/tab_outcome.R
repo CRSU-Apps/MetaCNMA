@@ -38,6 +38,7 @@ model_outcome_tab_server <- function(
         data_reactives$data(),
         data_reactives$data_type(),
         data_reactives$is_default_data(),
+        data_reactives$reference_component(),
         ignoreInit = TRUE
       )
 
@@ -59,6 +60,7 @@ model_outcome_tab_server <- function(
           !is.null(data_reactives$data()),
           !is.null(data_reactives$data_type()),
           !is.null(data_reactives$is_default_data()),
+          !is.null(data_reactives$reference_component()),
           cancelOutput = TRUE
         )
 

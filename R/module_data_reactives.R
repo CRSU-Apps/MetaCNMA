@@ -27,6 +27,8 @@ data_reactives_server <- function(
 
       data_reactives$data_type <- data_type
 
+      data_reactives$reference_component <- shiny::reactiveVal(NULL)
+
       data_reactives$is_data_loaded <- shiny::reactive({
         return(
           !is.null(data_reactives$data())
@@ -80,18 +82,14 @@ data_reactives_server <- function(
         }
       })
 
-      data_reactives$reference_component <- shiny::reactive({
-        return(data_reactives$default_reference_component())
-      })
-
       data_reactives$components_no_reference <- shiny::reactive({
-        if (is.null(data_reactives$is_data_formatted())) {
+        if (is.null(data_reactives$reference_component())) {
           return(NULL)
         } else {
           return(
             get_components_no_reference(
               data_reactives$formatted_data(),
-              data_reactives$default_reference_component()
+              data_reactives$reference_component()
             )
           )
         }

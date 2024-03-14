@@ -113,6 +113,10 @@ shinyServer(function(input, output, session) {
     bayesian_options
   )
 
+  shared_stan_settings <- shared_stan_settings_server(
+    "stan_settings"
+  )
+
   bayes_sens_data_reactives <- exclude_tab_server(
     "bayesian_exclude",
     data_reactives,
@@ -133,6 +137,7 @@ shinyServer(function(input, output, session) {
     bayesian_reactives,
     bayes_sens_data_reactives,
     bayesian_sens_reactive,
+    shared_stan_settings,
     tab
   )
 
@@ -143,6 +148,7 @@ shinyServer(function(input, output, session) {
     bayesian_reactives,
     bayes_sens_data_reactives,
     bayesian_sens_reactive,
+    shared_stan_settings,
     tab
   )
 

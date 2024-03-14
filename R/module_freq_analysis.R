@@ -36,15 +36,18 @@ freq_analysis_server <- function( # nolint: cyclocomp_linter.
       })
 
       freq_reactives$model <- shiny::reactive(
-        if (is.null(freq_reactives$is_network_connected())) {
+        if (
+          is.null(freq_reactives$is_network_connected())
+          || is.null(data_reactives$reference_component)
+        ) {
           return(NULL)
         } else {
-          print(data_reactives$default_reference_component())
+          print(data_reactives$reference_component())
           return(
             run_freq( # nolint: object_name
               freq_reactives$pairwise(),
               freq_reactives$is_network_connected(),
-              ref = data_reactives$default_reference_component(),
+              ref = data_reactives$reference_component(),
               random_eff = as.logical(
                 as.numeric(
                   freq_options$random_effects()

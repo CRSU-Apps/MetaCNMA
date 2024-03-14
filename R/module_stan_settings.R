@@ -7,7 +7,9 @@ stan_settings_ui <- function(
 
 stan_settings_server <- function(
   id,
-  bayesian_ready
+  bayesian_ready,
+  bayesian_reactives,
+  shared_stan_settings
 ) {
   shiny::moduleServer(
     id,
@@ -19,8 +21,6 @@ stan_settings_server <- function(
 
       ns <- session$ns
 
-      stan_settings <- shiny::reactiveValues()
-
       shiny::observe({
         shiny::req(
           bayesian_ready(),
@@ -30,42 +30,59 @@ stan_settings_server <- function(
           shiny::tagList(
             shiny::div(
               shinyWidgets::dropdown(
-                shiny::textInput(
+                shinyWidgets::autonumericInput(
                   ns("chains"),
                   label = "No. of Chains",
-                  value = "3"
+                  value = shared_stan_settings$chains(),
+                  decimalPlaces = 0
                 ),
-                shiny::textInput(
+                shinyWidgets::autonumericInput(
                   ns("warmup"),
                   label = "Warmup (Burn-in)",
-                  value = "1000"
+                  value = shared_stan_settings$warmup(),
+                  decimalPlaces = 0
                 ),
-                shiny::textInput(
+                shinyWidgets::autonumericInput(
                   ns("iter"),
                   label = "No. of Iterations",
-                  value = "3000"
+                  value = shared_stan_settings$iter(),
+                  decimalPlaces = 0
                 ),
-                shiny::textInput(
+                shinyWidgets::autonumericInput(
                   ns("seed"),
                   label = "Seed",
-                  value = "12345"
+                  value = shared_stan_settings$seed(),
+                  decimalPlaces = 0,
+                  digitGroupSeparator = ""
                 ),
-                shiny::textInput(
+                shinyWidgets::autonumericInput(
                   ns("max_treedepth"),
                   label = "Maximum Tree Depth",
-                  value = "10"
+                  value = shared_stan_settings$max_treedepth(),
+                  decimalPlaces = 0
                 ),
-                shiny::textInput(
+                shinyWidgets::autonumericInput(
                   ns("adapt_delta"),
                   label = "Adapt Delta",
-                  value = "0.95"
+                  value = shared_stan_settings$adapt_delta()
                 ),
-                shiny::textInput(
-                  ns("Step_Siz"),
+                shinyWidgets::autonumericInput(
+                  ns("stepsize"),
                   label = "Step Size",
-                  value = "0.01"
+                  value = shared_stan_settings$stepsize()
                 ),
-                shiny::uiOutput(ns("update_button")),
+                shiny::actionButton(
+                  ns("update_button"),
+                  "Update Sampler Settings",
+                  shiny::icon("rotate-right"),
+                  style =
+                    "
+                      color: #fff;
+                      background-color:#dc3545;
+                      border-color:#dc3545;
+                      float: left;
+                    "
+                ),
                 shiny::div(
                   class = "clearfix"
                 ),
@@ -85,7 +102,55 @@ stan_settings_server <- function(
         bayesian_ready()
       )
 
-      return(stan_settings)
+      shiny::observe({
+        shared_stan_settings$chains(input$chains)
+        shared_stan_settings$warmup(input$warmup)
+        shared_stan_settings$iter(input$iter)
+        shared_stan_settings$seed(input$seed)
+        shared_stan_settings$max_treedepth(input$max_treedepth)
+        shared_stan_settings$adapt_delta(input$adapt_delta)
+        shared_stan_settings$stepsize(input$stepsize)
+        shared_stan_settings$update_settings(shared_stan_settings$update + 1)
+        bayesian_reactives$model(NULL)
+      }) %>% shiny::bindEvent(
+        input$update_button
+      )
+
+      shiny::observe({
+        print("Updating Stan Settings")
+        shinyWidgets::updateAutonumericInput(
+          inputId = ns("chains"),
+          value = shared_stan_settings$chains()
+        )
+        shinyWidgets::updateAutonumericInput(
+          inputId = ns("warmup"),
+          value = shared_stan_settings$warmup()
+        )
+        shinyWidgets::updateAutonumericInput(
+          inputId = ns("iter"),
+          value = shared_stan_settings$iter()
+        )
+        shinyWidgets::updateAutonumericInput(
+          inputId = ns("seed"),
+          value = shared_stan_settings$seed()
+        )
+        shinyWidgets::updateAutonumericInput(
+          inputId = ns("max_treedepth"),
+          value = shared_stan_settings$max_treedepth()
+        )
+        shinyWidgets::updateAutonumericInput(
+          inputId = ns("adapt_delta"),
+          value = shared_stan_settings$adapt_delta()
+        )
+        shinyWidgets::updateAutonumericInput(
+          inputId = ns("stepsize"),
+          value = shared_stan_settings$stepsize()
+        )
+      }) %>% shiny::bindEvent(
+        shared_stan_settings$update_settings()
+      )
+
+      #return(shared_stan_settings())
 
     }
   )

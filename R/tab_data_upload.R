@@ -26,7 +26,8 @@ data_upload_tab_ui <- function(id) {
     ),
     shiny::column(
       width = 12,
-      shiny::uiOutput(ns("reference_component"))
+      shiny::uiOutput(ns("reference_component")),
+      shiny::div(class = "clearfix")
     )
   )
 }
@@ -146,8 +147,19 @@ data_upload_tab_server <- function(
             selected = data_reactives$default_reference_component()
           )
         )
+        shiny::outputOptions(
+          output,
+          "reference_component",
+          suspendWhenHidden = FALSE
+        )
       }) %>% shiny::bindEvent(
         data_reactives$formatted_data()
+      )
+
+      shiny::observe({
+        data_reactives$reference_component(input$reference_component)
+      }) %>% shiny::bindEvent(
+        input$reference_component
       )
 
       return(

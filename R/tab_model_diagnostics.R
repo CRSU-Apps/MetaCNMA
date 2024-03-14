@@ -122,6 +122,7 @@ model_diagnostics_tab_server <- function(
   bayesian_reactives,
   bayes_sens_data_reactives,
   bayesian_sens_reactives,
+  shared_stan_settings,
   tab
 ) {
   shiny::moduleServer(
@@ -138,14 +139,16 @@ model_diagnostics_tab_server <- function(
         "run_bayesian_analysis",
         data_reactives,
         bayesian_options,
-        bayesian_reactives
+        bayesian_reactives,
+        shared_stan_settings
       )
 
       run_bayesian_analysis_server(
         "run_bayesian_analysis_sens",
         bayes_sens_data_reactives,
         bayesian_options,
-        bayesian_sens_reactives
+        bayesian_sens_reactives,
+        shared_stan_settings
       )
 
       is_density_rendered <- shiny::reactiveVal(FALSE)
