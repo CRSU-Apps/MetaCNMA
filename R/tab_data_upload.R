@@ -23,6 +23,10 @@ data_upload_tab_ui <- function(id) {
         )
       ),
       class = "vertical-align"
+    ),
+    shiny::column(
+      width = 12,
+      shiny::uiOutput(ns("reference_component"))
     )
   )
 }
@@ -92,6 +96,7 @@ data_upload_tab_server <- function(
       # Render the file input intially
       output$file_input <- file_input
 
+      # Reset the data if invalidate_count is changed
       shiny::observe({
         data_reactives$data(NULL)
       }) %>% shiny::bindEvent(
@@ -129,6 +134,20 @@ data_upload_tab_server <- function(
       }) %>% shiny::bindEvent(
         input$data,
         ignoreInit = TRUE
+      )
+
+      shiny::observe({
+        shiny::req(data_reactives$is_data_formatted())
+        output$reference_component <- shiny::renderUI(
+          shiny::selectInput(
+            ns("reference_component"),
+            label = "Reference Component",
+            choices = data_reactives$components(),
+            selected = data_reactives$default_reference_component()
+          )
+        )
+      }) %>% shiny::bindEvent(
+        data_reactives$formatted_data()
       )
 
       return(
