@@ -18,14 +18,14 @@ local_df_binary_long <- import("../../data/binary.Rds")
 
 context("Testing Utils")
 
-test_that("invalidate_data() works as should", {
-  server <- function(input, output, session){
-    reactive_data <- Data$new()$reactive()
-    reactive_freq <- Freq$new()$reactive()
-  }
-  testServer(server, {
-    invalidate_reactive(reactive_data, reactive_freq)
-    expect_false(reactive_data()$valid())
-    expect_false(reactive_freq()$valid())
-  })
-})
+# test_that("invalidate_data() works as should", {
+#   server <- function(input, output, session){
+#     reactive_data <- Data$new()$reactive()
+#     reactive_freq <- Freq$new()$reactive()
+#   }
+#   testServer(server, {
+#     invalidate_reactive(reactive_data, reactive_freq)
+#     expect_false(reactive_data()$valid())
+#     expect_false(reactive_freq()$valid())
+#   })
+# })

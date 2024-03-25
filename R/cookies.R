@@ -31,13 +31,13 @@ cookie_server <- function(
 
       parent_session <- shiny::getDefaultReactiveDomain()$rootScope()
 
-      is_analytics <- reactiveVal(FALSE)
+      is_analytics <- shiny::reactiveVal(FALSE)
 
       add_analytics <- function() {
         shiny::renderUI({
           return(
-            tags$head(
-              singleton(
+            shiny::tags$head(
+              shiny::singleton(
                 tags$script(
                   stringr::str_replace_all(
                     readr::read_file("google_analytics.js"),
@@ -54,7 +54,7 @@ cookie_server <- function(
       shiny::observe({
         print("Cookie Message")
         print(cookies()$accept)
-        if(is.null(cookies()$accept)) {
+        if (is.null(cookies()$accept)) {
           cookie_alert()
         } else if (as.logical(cookies()$accept)) {
           print("accepted")

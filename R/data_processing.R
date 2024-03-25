@@ -1,15 +1,37 @@
+#' @title Get the required columns
+#' @description Function to get the required columns for validation
+#' give the data_type and whether or not the data.frame
+#' is in wide format.
+#' @param data_type \code(character) Data type either 'continuous'
+#' or 'binary'
+#' @param is_wide \code{boolean} is the data in wide format
+#' @param tmp_df \code{data.frame} the data
+#' @return a \code{character} vector of required columns
+#' @details DETAILS
+#' @examples
+#' \dontrun{
+#' if(interactive()){
+#'    get_required_columns(
+#'      "continuous",
+#'      TRUE,
+#'      df
+#'    )
+#'  }
+#' }
+#' @rdname get_required_columns
 get_required_columns <- function(data_type, is_wide, tmp_df) {
-  # Continuous
+  req_columns <- NULL # Forward declaration
+  # Long
   if (!is_wide) { # nolint: object_name
-    if (data_type == "continuous") {
+    if (data_type == "continuous") { # continuous long
       req_columns <- tolower(get_required_continuous_long_columns()) # nolint: object_name
-    } else {
+    } else if (data_type == "binary") { # binary long
       req_columns <- tolower(get_required_binary_long_columns()) # nolint: object_name
     }
-  } else if (is_wide) { # Else if wide
-    if (data_type == "continuous") {
+  } else { # Wide
+    if (data_type == "continuous") { # continuous wide
       req_columns <- tolower(get_required_continuous_wide_columns()) # nolint: object_name
-    } else {
+    } else if (data_type == "binary") { # continuous long
       req_columns <- tolower(get_required_binary_wide_columns()) # nolint: object_name
     }
     # Get the number of arms
@@ -22,9 +44,10 @@ get_required_columns <- function(data_type, is_wide, tmp_df) {
         req_columns <- append(req_columns, paste(col, i, sep = "."))
       }
     }
-  } else { # Else unknown format (sanity)
+  }
+  if (is.null(req_columns)) { # Unknown format (sanity)
     print("this error occured trying to format the data")
-    stop("An error occured with the data, 
+    stop("An error occured with the data,
     the format of the data could not be determined.")
   }
   return(req_columns)
@@ -37,8 +60,8 @@ get_required_columns <- function(data_type, is_wide, tmp_df) {
 #' @param data data_frame containing data
 #' @param data_type type of the data either "continuous" or "binary"
 #'
-#' @return \code{logical} TRUE if the data was successfully stored
-#' FALSE otherwise
+#' @return \code{data.frame} if the data was successfully stored
+#' NULL otherwise
 #' @export
 #'
 #' @examples
@@ -77,10 +100,29 @@ format_data <- function(df, data_type) {
   },
   error = function(e) {
     error_alert(e$message) # nolint: object_name
-    return(FALSE)
+    return(NULL)
   })
 }
 
+#' @title Convert from wide to long format
+#' @description Change a \code{data.frame} from wide (on trial per row)
+#' to long (one arm per row) format
+#' @param df A \code{data.frame} in wide format with
+#' column seperated by `.`
+#' @return A \code{data.frame} in long format (one arm per row)
+#' @details Given a data frame with columns in the format of
+#' column.1, column.2 convert that data frame so each arm (.n)
+#' is represented by it's own row.
+#' @examples
+#' \dontrun{
+#' if(interactive()){
+#'    data_wide_to_long(df)
+#'  }
+#' }
+#' @seealso
+#'  \code{\link[tidyr]{pivot_longer}}, \code{\link[tidyr]{reexports}}
+#' @rdname data_wide_to_long
+#' @importFrom tidyr pivot_longer contains
 data_wide_to_long <- function(df) {
   tidyr::pivot_longer(
     df,
