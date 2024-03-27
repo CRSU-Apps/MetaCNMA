@@ -95,19 +95,6 @@ data_reactives_server <- function(
         }
       })
 
-      data_reactives$pairwise <- shiny::reactive({
-        if (!data_reactives$is_data_formatted()) {
-          return(NULL)
-        } else {
-          return(
-            freq_pairwise( # nolint: object_name
-              data_reactives$formatted_data(),
-              data_reactives$data_type()
-            )
-          )
-        }
-      })
-
       return(data_reactives)
 
     }

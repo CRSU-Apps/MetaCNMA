@@ -53,6 +53,10 @@ exclude_tab_server <- function(
         shiny::reactive(data_reactives$data_type())
       )
 
+      exclude_reactives$reference_component <- shiny::reactive({
+        data_reactives$reference_component()
+      })
+
       .reactive_df <- shiny::reactiveVal(NULL)
       .reactive_exclude_df <- shiny::reactiveVal(NULL)
 

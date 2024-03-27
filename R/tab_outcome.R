@@ -42,12 +42,6 @@ model_outcome_tab_server <- function(
         ignoreInit = TRUE
       )
 
-      # model_options$update_reactive <- shiny::reactive({
-      #   data_reactives$data()
-      #   data_reactives$data_type()
-      #   data_reactives$is_default_data()
-      # })
-
       shiny::observe({
         print("Waiting on data_type and is_default_data")
 

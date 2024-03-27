@@ -31,7 +31,6 @@ network_plot_tab_server <- function(
           print(tab())
           shiny::req(
             freq_options$options_loaded(),
-            !is.null(data_reactives$pairwise()),
             !is.null(freq_reactives$model()),
             cancelOutput = TRUE
           )
