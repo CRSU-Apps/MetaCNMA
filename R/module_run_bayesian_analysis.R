@@ -7,17 +7,9 @@ run_bayesian_analysis_ui <- function(
     shiny::uiOutput(ns("info")),
     shiny::div(
       shiny::uiOutput(ns("run_analysis")),
-      stan_settings_ui(ns("bayesian_settings")), # nolint: object_usage
+      stan_settings_ui(ns("bayesian_settings")), # nolint: object_name
     ),
     shiny::br(),
-    shinydashboardPlus::box(
-      title = "Stan Output",
-      id = ns("stan_output_box"),
-      width = 12,
-      collapsible = TRUE,
-      collapsed = TRUE,
-      shiny::uiOutput(ns("stan_output"))
-    ),
     shiny::div(class = "clearfix"),
   )
 }
@@ -26,7 +18,8 @@ run_bayesian_analysis_server <- function(
   id,
   data_reactives,
   bayesian_options,
-  bayesian_reactives
+  bayesian_reactives,
+  shared_stan_settings
 ) {
   shiny::moduleServer(id,
     function(input,
@@ -38,10 +31,11 @@ run_bayesian_analysis_server <- function(
       `%>%` <- magrittr::`%>%`
 
       bayesian_ready <- shiny::reactiveVal(FALSE)
-
       stan_settings_server(
         "bayesian_settings",
-        bayesian_ready
+        bayesian_ready,
+        bayesian_reactives,
+        shared_stan_settings
       )
 
       shiny::observe({
@@ -59,6 +53,8 @@ run_bayesian_analysis_server <- function(
             !bayesian_reactives$is_model_run()
           )
         ) {
+          output$warning <- NULL
+          output$info <- NULL
           output$run_analysis <- shiny::renderUI(
             shiny::tagList(
               message_alert(
@@ -89,7 +85,6 @@ run_bayesian_analysis_server <- function(
       )
 
       shiny::observe({
-        print("Setting Model to NULL")
         bayesian_reactives$model(NULL)
       }) %>% shiny::bindEvent(
         bayesian_options$update_reactive(),
@@ -97,12 +92,11 @@ run_bayesian_analysis_server <- function(
       )
 
       shiny::observe({
+        warnings <- ""
         tryCatch({
           withCallingHandlers(
             warning = function(cond) {
-              output$warning <- shiny::renderUI(
-                warning_alert(conditionMessage(cond)) # nolint: object_name
-              )
+              warnings <<- paste(warnings, conditionMessage(cond), sep = "<br>")
             },
             message = function(cond) {
               output$info <- shiny::renderUI(
@@ -116,60 +110,42 @@ run_bayesian_analysis_server <- function(
                 color = "#005398",
                 text = "Running Model"
               )
-              tmp_df_file <- tempfile("df", fileext = ".Rds")
-              rio::export(data_reactives$formatted_data(), tmp_df_file)
-              tmp_output_file <- tempfile("output", fileext = ".Rds")
-              bayesian_reactives$console_out(system2(
-                command = file.path(R.home("bin"), "Rscript"),
-                args = c(
-                  "run_bayes.R",
-                  tmp_df_file,
-                  tmp_output_file,
+              bayesian_reactives$model(
+                fit_model(
+                  data_reactives$formatted_data(),
                   data_reactives$data_type(),
-                  paste0(
-                    "'",
-                    data_reactives$default_reference_component(),
-                    "'"
-                  ),
+                  data_reactives$reference_component(),
                   bayesian_options$random_effects(),
                   toupper(
                     bayesian_options$original_outcome_measure()
-                  )
-                ),
-                stdout = TRUE
-              ))
-              bayesian_reactives$model(rio::import(tmp_output_file))
-              unlink(tmp_df_file)
-              unlink(tmp_output_file)
+                  ),
+                  shared_stan_settings$chains(),
+                  shared_stan_settings$warmup(),
+                  shared_stan_settings$iter(),
+                  shared_stan_settings$seed(),
+                  shared_stan_settings$max_treedepth(),
+                  shared_stan_settings$adapt_delta(),
+                  shared_stan_settings$stepsize()
+                )
+              )
             }
           )
         },
         error = function(e) {
+          print(e)
           error_alert(e$message) # nolint: object_name
         },
         finally = {
+          if (warnings != "") {
+            output$warning <- shiny::renderUI(
+              warning_alert(warnings) # nolint: object_name
+            )
+          }
           shinybusy::remove_modal_spinner()
         })
       }) %>% shiny::bindEvent(
         input$run_model_button
       )
-
-      shiny::observe({
-        print("Outputting to console")
-        output$stan_output <- shiny::renderUI(
-          shiny::renderPrint(
-            {
-              cat(
-                bayesian_reactives$console_out(),
-                sep = "\n"
-              )
-            }
-          )
-        )
-      }) %>% shiny::bindEvent(
-        bayesian_reactives$console_out()
-      )
-
     }
   )
 }

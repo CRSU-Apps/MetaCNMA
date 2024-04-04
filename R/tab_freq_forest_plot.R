@@ -6,7 +6,7 @@ forest_plot_tab_ui <- function(id) {
       type = "tabs",
       shiny::tabPanel(
         "Main Forest Plot",
-        save_plot_ui( # nolint: object_usage
+        save_plot_ui( # nolint: object_name
           ns("save_forest_plot"),
           output_name = "Freq_Forest_Plot"
         ),
@@ -24,7 +24,7 @@ forest_plot_tab_ui <- function(id) {
       ),
       shiny::tabPanel(
         "Sensitivity Analysis Forest Plot",
-        save_plot_ui( # nolint: object_usage
+        save_plot_ui( # nolint: object_name
           ns("save_forest_plot_sens"),
           output_name = "Freq_Forest_Plot_Sensitivity"
         ),
@@ -75,9 +75,7 @@ forest_plot_tab_server <- function(
           print(tab())
           shiny::req(
             freq_options$options_loaded(),
-            !is.null(data_reactives$pairwise()),
-            !is.null(freq_reactives$netmeta()),
-            !is.null(freq_reactives$netcomb()),
+            !is.null(freq_reactives$model()),
             cancelOutput = TRUE
           )
           print("forest_plot")
@@ -100,14 +98,12 @@ forest_plot_tab_server <- function(
                     " of ",
                     freq_options$outcome_name(),
                     " when compared against ",
-                    get_most_freq_component( # nolint: object_name
-                      data_reactives$pairwise()
-                    )
+                    data_reactives$reference_component()
                   )
                 )
                 forest_plot <- function() {
                   get_net_forest( # nolint: object_name
-                    freq_reactives$netcomb(),
+                    freq_reactives$model(),
                     freq_options$data_type(),
                     freq_options$outcome_measure()
                   )
@@ -143,9 +139,7 @@ forest_plot_tab_server <- function(
           print(tab())
           shiny::req(
             freq_options$options_loaded(),
-            !is.null(data_reactives$pairwise()),
-            !is.null(freq_sens_reactives$netmeta()),
-            !is.null(freq_sens_reactives$netcomb()),
+            !is.null(freq_sens_reactives$model()),
             cancelOutput = TRUE
           )
           print("forest_plot_sens")
@@ -168,14 +162,12 @@ forest_plot_tab_server <- function(
                     " of ",
                     freq_options$outcome_name(),
                     " when compared against ",
-                    get_most_freq_component( # nolint: object_name
-                      freq_sens_reactives$pairwise()
-                    )
+                    data_reactives$reference_component()
                   )
                 )
                 forest_plot_sens <- function() {
                   get_net_forest( # nolint: object_name
-                    freq_sens_reactives$netcomb(),
+                    freq_sens_reactives$model(),
                     freq_options$data_type(),
                     freq_options$outcome_measure()
                   )
@@ -184,7 +176,8 @@ forest_plot_tab_server <- function(
                   forest_plot_sens()
                 )
                 is_rendered_sens(TRUE)
-                save_plot_server("save_forest_plot_sens",
+                save_plot_server( # nolint: object_name
+                  "save_forest_plot_sens",
                   forest_plot_sens,
                   is_rendered_sens
                 )

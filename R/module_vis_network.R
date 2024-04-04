@@ -30,7 +30,7 @@ vis_network_server <- function(id, nm, components) {
       # Use netgraph to get node and edges
       net_graph_obj <- netmeta::netgraph(
         nm,
-        seq = components
+        #seq = components
       )
 
       nodes <- data.frame(

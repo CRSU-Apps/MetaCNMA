@@ -12,58 +12,65 @@ freq_analysis_server <- function( # nolint: cyclocomp_linter.
       freq_reactives <- shiny::reactiveValues()
 
       freq_reactives$pairwise <- shiny::reactive(
-        data_reactives$pairwise()
-      )
-
-      freq_reactives$netconnection <- shiny::reactive({
-        if (is.null(data_reactives$pairwise())) {
+        if (
+          !data_reactives$is_data_formatted() ||
+            !freq_options$options_loaded()
+        ) {
           return(NULL)
         } else {
           return(
-            run_net_connection( # nolint: object_usage
-              data_reactives$pairwise()
+            freq_pairwise( # nolint: object_name
+              data_reactives$formatted_data(),
+              data_reactives$data_type(),
+              freq_options$summary_measure()
+            )
+          )
+        }
+      )
+
+      freq_reactives$netconnection <- shiny::reactive({
+        if (is.null(freq_reactives$pairwise())) {
+          return(NULL)
+        } else {
+          return(
+            run_net_connection( # nolint: object_name
+              freq_reactives$pairwise()
             )
           )
         }
       })
 
-      freq_reactives$netmeta <- shiny::reactive({
+      freq_reactives$is_network_connected <- shiny::reactive({
+        if (is.null(freq_reactives$netconnection())) {
+          return(NULL)
+        } else {
+          return(is_connected(freq_reactives$netconnection()))
+        }
+      })
+
+      freq_reactives$model <- shiny::reactive(
         if (
-          any(
-            is.null(data_reactives$default_reference_component()),
-            !freq_options$options_loaded()
-          )
+          is.null(freq_reactives$is_network_connected())
+          || is.null(data_reactives$reference_component)
         ) {
           return(NULL)
         } else {
+          print(data_reactives$reference_component())
           return(
-            run_netmeta( # nolint: object_usage
-              data_reactives$pairwise(),
-              ref = data_reactives$default_reference_component(),
+            run_freq( # nolint: object_name
+              freq_reactives$pairwise(),
+              freq_reactives$is_network_connected(),
+              ref = data_reactives$reference_component(),
               random_eff = as.logical(
                 as.numeric(
                   freq_options$random_effects()
                 )
-              )
+              ),
+              freq_options$summary_measure()
             )
           )
         }
-      })
-
-      freq_reactives$netcomb <- shiny::reactive({
-        if (
-          is.null(freq_reactives$netmeta())
-        ) {
-          return(NULL)
-        } else {
-          return(
-            run_netcomb( # nolint: object_usage
-              freq_reactives$netmeta(),
-              inactive = data_reactives$default_reference_component()
-            )
-          )
-        }
-      })
+      )
 
       return(freq_reactives)
 

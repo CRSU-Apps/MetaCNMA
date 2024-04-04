@@ -9,7 +9,7 @@ bayes_forest_plot_tab_ui <- function(id) {
         shiny::uiOutput(ns("warning")),
         shiny::uiOutput(ns("info")),
         run_bayesian_analysis_ui(ns("run_bayesian_analysis")),
-        save_plot_ui( # nolint: object_usage
+        save_plot_ui( # nolint: object_name
           ns("save_bayesian_forest_plot"),
           output_name = "Bayesian_Forest_Plot"
         ),
@@ -28,7 +28,7 @@ bayes_forest_plot_tab_ui <- function(id) {
         shiny::uiOutput(ns("warning_sens")),
         shiny::uiOutput(ns("info_sens")),
         run_bayesian_analysis_ui(ns("run_bayesian_analysis_sens")),
-        save_plot_ui( # nolint: object_usage
+        save_plot_ui( # nolint: object_name
           ns("save_bayesian_forest_plot_sens"),
           output_name = "Bayesian_Forest_Plot_Sensitivity"
         ),
@@ -53,6 +53,7 @@ bayes_forest_plot_tab_server <- function(
   bayesian_reactives,
   bayes_sens_data_reactives,
   bayesian_sens_reactives,
+  shared_stan_settings,
   tab
 ) {
   shiny::moduleServer(
@@ -69,14 +70,16 @@ bayes_forest_plot_tab_server <- function(
         "run_bayesian_analysis",
         data_reactives,
         bayesian_options,
-        bayesian_reactives
+        bayesian_reactives,
+        shared_stan_settings
       )
 
       run_bayesian_analysis_server(
         "run_bayesian_analysis_sens",
         bayes_sens_data_reactives,
         bayesian_options,
-        bayesian_sens_reactives
+        bayesian_sens_reactives,
+        shared_stan_settings
       )
 
       is_rendered <- shiny::reactiveVal(FALSE)
@@ -85,7 +88,9 @@ bayes_forest_plot_tab_server <- function(
       shiny::observe({
         if (tab() == id) {
           output$warning <- NULL
-          output$info <- NULL
+          output$info <- output$info <- shiny::renderUI(
+            message_alert("Please run the model") # nolint: object_name
+          )
           output$plot_title <- NULL
           output$forest_plot <- NULL
           is_rendered(FALSE)
@@ -95,6 +100,7 @@ bayes_forest_plot_tab_server <- function(
             bayesian_reactives$is_model_run(),
             cancelOutput = TRUE
           )
+          output$info <- NULL
           print("bayesian forest_plot")
           tryCatch({
             withCallingHandlers(
@@ -115,9 +121,7 @@ bayes_forest_plot_tab_server <- function(
                     " of ",
                     bayesian_options$outcome_name(),
                     " when compared against ",
-                    get_most_freq_component( # nolint: object_name
-                      data_reactives$pairwise()
-                    )
+                    data_reactives$reference_component()
                   )
                 )
                 forest_plot <- function() {
@@ -147,7 +151,9 @@ bayes_forest_plot_tab_server <- function(
       shiny::observe({
         if (tab() == id) {
           output$warning_sens <- NULL
-          output$info_sens <- NULL
+          output$info_sens <- shiny::renderUI(
+            message_alert("Please select studies to exclude and run the model") # nolint: object_name
+          )
           output$plot_title_sens <- NULL
           output$forest_plot_sens <- NULL
           is_rendered_sens(FALSE)
@@ -157,6 +163,7 @@ bayes_forest_plot_tab_server <- function(
             bayesian_sens_reactives$is_model_run(),
             cancelOutput = TRUE
           )
+          output$info_sens <- NULL
           print("bayesian forest_plot sens")
           tryCatch({
             withCallingHandlers(
@@ -177,9 +184,7 @@ bayes_forest_plot_tab_server <- function(
                     " of ",
                     bayesian_options$outcome_name(),
                     " when compared against ",
-                    get_most_freq_component( # nolint: object_name
-                      bayes_sens_data_reactives$pairwise()
-                    )
+                    data_reactives$reference_component()
                   )
                 )
                 forest_plot_sens <- function() {

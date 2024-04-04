@@ -1,7 +1,7 @@
 home_tab_ui <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
-    shiny::h1(paste(site_info$title, site_info$version, sep = " ")), # nolint object_usage
+    shiny::h1(paste(site_info$title, site_info$version, sep = " ")), # nolint object_name
     shiny::img(
       src = "images/MetaCNMALogo.png",
       alt = "Logo for Meta CNMA App",
@@ -14,7 +14,7 @@ home_tab_ui <- function(id) {
     ),
     shiny::includeMarkdown("md/freq_binary.md"),
     shiny::p(
-      "If you use this software for please cite it as:"
+      "If you use this software please cite it as:"
     ),
     shiny::fluidRow(shiny::column(
       width = 6,

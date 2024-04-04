@@ -2,7 +2,7 @@ model_outcome_tab_ui <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
     shiny::h1("Model Settings"),
-    message_tag_list(ns), # nolint: object_usage
+    message_tag_list(ns), # nolint: object_name
     shiny::uiOutput(ns("outcome_measure")),
     shiny::uiOutput(ns("reference_component")),
     shiny::uiOutput(ns("desirable")),
@@ -29,11 +29,18 @@ model_outcome_tab_server <- function(
 
       model_options <- shiny::reactiveValues()
 
-      model_options$update_reactive <- shiny::reactive({
-        data_reactives$data()
-        data_reactives$data_type()
-        data_reactives$is_default_data()
-      })
+      model_options$update_reactive <- shiny::reactiveVal(FALSE)
+
+      shiny::observe({
+        model_options$update_reactive(TRUE)
+        model_options$update_reactive(FALSE)
+      }) %>% shiny::bindEvent(
+        data_reactives$data(),
+        data_reactives$data_type(),
+        data_reactives$is_default_data(),
+        data_reactives$reference_component(),
+        ignoreInit = TRUE
+      )
 
       shiny::observe({
         print("Waiting on data_type and is_default_data")
@@ -47,6 +54,7 @@ model_outcome_tab_server <- function(
           !is.null(data_reactives$data()),
           !is.null(data_reactives$data_type()),
           !is.null(data_reactives$is_default_data()),
+          !is.null(data_reactives$reference_component()),
           cancelOutput = TRUE
         )
 
@@ -141,6 +149,12 @@ model_outcome_tab_server <- function(
 
       model_options$desirable <- shiny::reactive({
         return(input$desirable)
+      })
+
+      model_options$summary_measure <- shiny::reactive({
+        return(
+          toupper(input$outcome_measure)
+        )
       })
 
       model_options$outcome_measure <- shiny::reactive({

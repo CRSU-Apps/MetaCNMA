@@ -8,10 +8,18 @@ cookie_alert <- function() {
   )
 }
 
+cookie_ui <- function(id) {
+  ns <- shiny::NS(id)
+  shiny::tags$head(
+    shiny::uiOutput(outputId = ns("analytics_script"))
+  )
+}
+
 cookie_server <- function(
   id,
   cookies,
-  open_privacy_policy
+  google_analytics_id,
+  tab
 ) {
   shiny::moduleServer(
     id,
@@ -23,13 +31,35 @@ cookie_server <- function(
 
       parent_session <- shiny::getDefaultReactiveDomain()$rootScope()
 
+      is_analytics <- shiny::reactiveVal(FALSE)
+
+      add_analytics <- function() {
+        shiny::renderUI({
+          return(
+            shiny::tags$head(
+              shiny::singleton(
+                tags$script(
+                  stringr::str_replace_all(
+                    readr::read_file("google_analytics.js"),
+                    "<<GOOGLE_ANALYTICS_ID>>",
+                    google_analytics_id
+                  )
+                )
+              )
+            )
+          )
+        })
+      }
+
       shiny::observe({
         print("Cookie Message")
         print(cookies()$accept)
-        if(is.null(cookies()$accept)) {
+        if (is.null(cookies()$accept)) {
           cookie_alert()
         } else if (as.logical(cookies()$accept)) {
           print("accepted")
+          output$analytics_script <- add_analytics()
+          is_analytics(TRUE)
         } else {
           cookie_alert()
         }
@@ -54,18 +84,25 @@ cookie_server <- function(
         }
 
         print(cookies())
+        output$analytics_script <- add_analytics()
+        is_analytics(TRUE)
       }) %>% shiny::bindEvent(input$cookieAccept)
 
       shiny::observe({
-        print("Open Privacy Policy")
-        shinydashboard::updateTabItems(
-          parent_session,
-          "tabs",
-          "privacy_policy"
+        shiny::req(
+          is_analytics(),
+          cancelOutput = TRUE
         )
-        shinyalert::closeAlert()
-        shinyjs::delay(60000, cookie_alert())
-      }) %>% shiny::bindEvent(open_privacy_policy())
+        session$sendCustomMessage(
+          "add-event",
+          list(
+            value = tab()
+          )
+        )
+      }) %>% shiny::bindEvent(
+        tab()
+      )
+
     }
   )
 }

@@ -2,7 +2,7 @@ data_upload_tab_ui <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
     shiny::h1("Upload Data"),
-    message_tag_list(ns), # nolint: object_usage
+    message_tag_list(ns), # nolint: object_name
     shiny::p("Data should be uploaded as either a .csv or .xlsx file"),
     shiny::p(
       "For help on uploading data see the ",
@@ -19,10 +19,15 @@ data_upload_tab_ui <- function(id) {
         shiny::conditionalPanel(
           condition = "output.data_uploaded == true",
           ns = ns,
-          default_reload_button(ns) # nolint: object_usage
+          default_reload_button(ns) # nolint: object_name
         )
       ),
       class = "vertical-align"
+    ),
+    shiny::column(
+      width = 12,
+      shiny::uiOutput(ns("reference_component")),
+      shiny::div(class = "clearfix")
     )
   )
 }
@@ -60,7 +65,7 @@ data_upload_tab_server <- function(
       )
 
       # Wrap the file_input from default_elements.R into a render function
-      file_input <- shiny::renderUI(default_file_input(ns)) # nolint: object_usage
+      file_input <- shiny::renderUI(default_file_input(ns)) # nolint: object_name
 
       # Logical to show reset button only when data uploaded
       data_reactives$data_uploaded <- shiny::reactiveVal(FALSE)
@@ -92,6 +97,7 @@ data_upload_tab_server <- function(
       # Render the file input intially
       output$file_input <- file_input
 
+      # Reset the data if invalidate_count is changed
       shiny::observe({
         data_reactives$data(NULL)
       }) %>% shiny::bindEvent(
@@ -129,6 +135,31 @@ data_upload_tab_server <- function(
       }) %>% shiny::bindEvent(
         input$data,
         ignoreInit = TRUE
+      )
+
+      shiny::observe({
+        shiny::req(data_reactives$is_data_formatted())
+        output$reference_component <- shiny::renderUI(
+          shiny::selectInput(
+            ns("reference_component"),
+            label = "Reference Component",
+            choices = data_reactives$components(),
+            selected = data_reactives$default_reference_component()
+          )
+        )
+        shiny::outputOptions(
+          output,
+          "reference_component",
+          suspendWhenHidden = FALSE
+        )
+      }) %>% shiny::bindEvent(
+        data_reactives$formatted_data()
+      )
+
+      shiny::observe({
+        data_reactives$reference_component(input$reference_component)
+      }) %>% shiny::bindEvent(
+        input$reference_component
       )
 
       return(

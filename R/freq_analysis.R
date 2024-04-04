@@ -1,83 +1,69 @@
-freq_pairwise <- function(df, data_type) {
+freq_pairwise <- function(df, data_type, summary_measure) {
   tryCatch({
     print("running pairwise")
     if (data_type == "continuous") {
-      return(run_pairwise_continuous(df))
+      return(run_pairwise_continuous(df, summary_measure))
     } else if (data_type == "binary") {
-      run_pairwise_binary(df)
+      run_pairwise_binary(df, summary_measure)
     } else {
       stop("Error: DT001 data type unknown")
     }
   },
   error = function(e) {
-    error_alert(e$message) # nolint: object_usage
+    error_alert(e$message) # nolint: object_name
     return(NULL)
   })
 }
 
-run_pairwise_continuous <- function(df) {
+run_pairwise_continuous <- function(df, summary_measure = "MD") {
 
   netmeta::pairwise(
-    treat = components, # nolint: object_usage
-    n = total, # nolint: object_usage
+    treat = components, # nolint: object_name
+    n = total, # nolint: object_name
     mean = mean,
     sd = sd,
-    studlab = study, # nolint: object_usage
-    data = df
+    studlab = study, # nolint: object_name
+    data = df,
+    sm = summary_measure
   )
 
 }
 
-run_pairwise_binary <- function(df) {
+run_pairwise_binary <- function(df, summary_measure = "OR") {
 
   netmeta::pairwise(
-    treat = components, # nolint: object_usage
-    n = total, # nolint: object_usage
-    event = events, # nolint: object_usage
-    studlab = study, # nolint: object_usage
-    data = df
+    treat = components, # nolint: object_name
+    n = total, # nolint: object_name
+    event = events, # nolint: object_name
+    studlab = study, # nolint: object_name
+    data = df,
+    sm = summary_measure
   )
 
 }
 
-get_components <- function(pw) {
-  `%>%` <- magrittr::`%>%`
-  # Get all the components (treat columns)
-  components <- pw %>% dplyr::select(dplyr::contains("treat"))
-  tmp_comp <- NULL
-  for (i in seq_len(ncol(components))) {
-    tmp_comp <- cbind(tmp_comp, components[[i]])
-  }
-  components <- tmp_comp
-  # Add all components to a single character
-  # vector separating with extra + signs
-  components <- paste(components, collapse = "+")
-  # Split the single vector apart by +
-  components <- strsplit(components, "\\+")[[1]]
-  # Convert to factor (for speed)
-  components <- as.factor(components)
-  # Use levels to get unique components
-  components <- levels(components)
+get_components <- function(formatted_df) {
+  return(MetaCNMABayes:::get_unique_components(formatted_df$components))
 }
 
-get_components_no_reference <- function(pw) {
-  # Get all components
-  components <- get_components(pw)
-  # Get the reference component
-  reference <- get_most_freq_component(pw)
-  # Remove the reference component
-  components <- components[! components == reference]
-  return(components)
+get_components_no_reference <- function(formatted_df, reference_component) {
+  return(
+    MetaCNMABayes:::get_components_no_ref(
+      formatted_df$components,
+      reference_component
+    )
+  )
 }
 
-get_combination_components <- function(pw) {
-  `%>%` <- magrittr::`%>%`
-  components <- pw %>% dplyr::select(dplyr::contains("treat"))
-  tmp_comp <- NULL
-  for (i in seq_len(ncol(components))) {
-    tmp_comp <- cbind(tmp_comp, components[[i]])
-  }
-  components <- as.factor(tmp_comp)
+get_combination_components <- function(formatted_df) {
+  #`%>%` <- magrittr::`%>%`
+  #components <- pw %>% dplyr::select(dplyr::contains("treat"))
+  components <- as.factor(formatted_df$components)
+  # tmp_comp <- NULL
+  # for (i in seq_len(ncol(components))) {
+  #   tmp_comp <- cbind(tmp_comp, components[[i]])
+  # }
+  # components <- as.factor(tmp_comp)
   level_list <- list()
   for (i in seq_len(length(levels(components)))) {
     level_list[levels(components)[[i]]] <- 0
@@ -88,11 +74,11 @@ get_combination_components <- function(pw) {
   return(level_list)
 }
 
-get_summary <- function(pw) {
+get_summary <- function(formatted_df) {
   list(
-    n_studies = nrow(pw),
-    components = get_components(pw),
-    combination_components = get_combination_components(pw)
+    n_studies = length(levels(as.factor(formatted_df$study))),
+    components = get_components(formatted_df),
+    combination_components = get_combination_components(formatted_df)
   )
 }
 
@@ -107,46 +93,104 @@ component_summary_as_df <- function(component_summary) {
     components
   )
   components <- components %>% dplyr::arrange(
-    dplyr::desc(`Number of Studies`) # nolint: object_usage
+    dplyr::desc(`Number of Studies`) # nolint: object_name
   )
   return(components)
 }
 
-get_most_freq_component <- function(pw) {
-  pw_summary <- get_summary(pw)
-  component_summary <- component_summary_as_df(
-    pw_summary$combination_components
+get_individual_components <- function(formatted_df) {
+  return(
+    levels(
+      as.factor(
+        MetaCNMABayes:::get_single_components(formatted_df$components)
+      )
+    )
   )
-  component_summary$`Combination of Components`[1]
+}
+
+get_most_freq_component <- function(formatted_df) {
+  combination_components <- get_combination_components(formatted_df)
+  individual_components <- get_individual_components(formatted_df)
+  combination_components <- combination_components[
+    names(combination_components) %in% individual_components
+  ]
+  most_freq_component <- combination_components[
+    which.max(combination_components)
+  ]
+  return(names(most_freq_component))
 }
 
 run_net_connection <- function(pw) {
   return(netmeta::netconnection(pw))
 }
 
-run_netmeta <- function(pw, ref = "Control", random_eff = FALSE) {
+is_connected <- function(netconnection) {
+  if (!is.null(netconnection$n.subnets)) {
+    return(netconnection$n.subnets == 1)
+  } else {
+    return("UNKNOWN")
+  }
+}
+
+run_freq <- function(
+  pw,
+  is_network_connected,
+  ref,
+  random_eff,
+  summary_measure
+) {
+  print("Fitting Frequentist Model")
+  print(summary_measure)
+  if (is_network_connected) {
+    nm <- run_netmeta(pw, ref, random_eff, summary_measure)
+    nc <- run_netcomb(nm, inactive = ref, summary_measure)
+    return(nc)
+  } else {
+    return(
+      run_discomb(pw, ref, random_eff, summary_measure)
+    )
+  }
+}
+
+run_netmeta <- function(pw, ref, random_eff, summary_measure) {
   print("running netmeta")
   random_eff <- any(as.logical(random_eff))
-  return(netmeta::netmeta(pw, ref = ref, comb.random = random_eff))
-}
-
-run_netcomb <- function(nm, inactive = "Control") {
-  print("running netcomb")
-  return(netmeta::netcomb(nm, inactive = inactive))
-}
-
-netcomb_summary <- function(nc) {
-  data.frame(
-    "Characteristic" = c(
-      "Number of Studies",
-      "Number of Components",
-      "Number of Interventions"
-    ),
-    "Value" = c(
-      nc$k,
-      nc$c,
-      nc$n
+  return(
+    netmeta::netmeta(
+      pw,
+      ref = ref,
+      comb.random = random_eff,
+      sm = summary_measure
     )
+  )
+}
+
+run_netcomb <- function(nm, inactive, summary_measure) {
+  print("running netcomb")
+  return(
+    netmeta::netcomb(
+      nm,
+      inactive = inactive,
+      sm = summary_measure
+    )
+  )
+}
+
+run_discomb <- function(
+  pw,
+  ref,
+  random_eff,
+  summary_measure
+) {
+  netmeta::discomb(
+    TE = pw$TE,
+    seTE = pw$TE,
+    treat1 = pw$treat1,
+    treat2 = pw$treat2,
+    studlab = pw$studlab,
+    inactive = ref,
+    sm = summary_measure,
+    random = random_eff,
   )
 }
 
@@ -160,7 +204,7 @@ get_study_components <- function(data, components) {
   components <- levels(components)
 
   tmp_df <- dplyr::select(
-    data, study, components # nolint: object_usage
+    data, study, components # nolint: object_name
   )
 
   study_components <- setNames(

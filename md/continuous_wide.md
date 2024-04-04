@@ -8,4 +8,12 @@ Where each arm of a study contains a `Components`, `Events` and `Total` column.
 
 **Notes:** Study names should be unique per study
 
-Components should be separated by a `+` if and arm contains more than one component.
+Components should be separated by a `+` if an arm contains more than one component.
+
+If the data has more than two arms, and one or more trials are missing arms, these arms should be left blank. e.g.
+
+|  Study  | Components.1 | Mean.1 | SD.1 | Total.1 | Components.2 | Mean.2 | SD.2 | Total.2 | Components.3 | Mean.3 | SD.3 | Total.3 |
+|:-------:|:------------:|:------:|:----:|:-------:|:------------:|:------:|:----:|:-------:|:------------:|:------:|:----:|:-------:|
+| Study 1 |      UC      |   5.3  |  2.1 |    90   |      A+B     |   5.6  |  2.3 |   100   |       C      |   5.1  |   2  |    95   |
+| Study 2 |      UC      |   5.5  |  2.3 |   115   |       C      |   5.8  |  2.1 |   115   |              |        |      |         |
+| Study 3 |      UC      |   5.1  |  2.5 |    80   |       A      |   5.7  |  2.0 |    85   |       B      |   5.5  |  2.5 |    90   |

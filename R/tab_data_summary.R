@@ -2,8 +2,8 @@ data_summary_tab_ui <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
     shiny::h1("Data Summary"),
-    default_data_ui("summary_default_data"),
-    message_tag_list(ns), # nolint: object_usage
+    default_data_ui("summary_default_data"), # nolint: object_name
+    message_tag_list(ns), # nolint: object_name
     shinycssloaders::withSpinner(
       shiny::uiOutput(ns("data_summary")),
       type = 6
@@ -27,7 +27,7 @@ data_summary_tab_server <- function(
 
       `%>%` <- magrittr::`%>%`
 
-      default_data_server(
+      default_data_server( # nolint: object_name
         ns("summary_default_data"),
         data_reactives
       )
@@ -38,6 +38,10 @@ data_summary_tab_server <- function(
           output$warning <- NULL
           output$info <- NULL
           output$data_summary <- shiny::renderText("Waiting for data")
+          shiny::req(
+            data_reactives$is_data_formatted(),
+            cancelOutput = TRUE
+          )
           tryCatch({
             withCallingHandlers(
               warning = function(cond) {
@@ -52,7 +56,7 @@ data_summary_tab_server <- function(
               },
               {
                 if (!is.null(freq_reactives$netconnection())) {
-                  pw_summary <- get_summary(data_reactives$pairwise()) # nolint: object_name
+                  pw_summary <- get_summary(data_reactives$formatted_data()) # nolint: object_name
                   output$data_summary <- shiny::renderUI(
                     shiny::tagList(
                       shiny::tags$ul(
@@ -66,11 +70,11 @@ data_summary_tab_server <- function(
                           paste0(pw_summary$components, collapse = ", ")
                         )),
                         shiny::tags$li(paste0("Is the Network Connected: ",
-                          !freq_reactives$netconnection()$details.disconnected
+                          freq_reactives$is_network_connected() # nolint: object_name
                         ))
                       ),
                       DT::renderDataTable(
-                        component_summary_as_df(
+                        component_summary_as_df( # nolint: object_name
                           pw_summary$combination_components
                         ),
                         filter = "top",

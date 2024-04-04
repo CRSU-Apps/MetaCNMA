@@ -5,17 +5,18 @@
 ##################################################################
 shinyServer(function(input, output, session) {
 
-  cookie_server(
-    id = "cookies",
-    cookies = reactive(input$cookies),
-    open_privacy_policy = reactive(input$open_privacy_policy)
-  )
-
   # Reactive Values
   # Current tab as a reactive
   tab <- reactive(input$tabs)
   log <- reactiveValues()
   load_default_data <- reactiveVal(TRUE)
+
+  cookie_server(
+    id = "cookies",
+    cookies = reactive(input$cookies),
+    google_analytics_id = "G-DYBCT85P4W",
+    tab = tab
+  )
 
   data_type <- data_type_module_server("data_type")
 
@@ -112,6 +113,10 @@ shinyServer(function(input, output, session) {
     bayesian_options
   )
 
+  shared_stan_settings <- shared_stan_settings_server(
+    "stan_settings"
+  )
+
   bayes_sens_data_reactives <- exclude_tab_server(
     "bayesian_exclude",
     data_reactives,
@@ -132,6 +137,7 @@ shinyServer(function(input, output, session) {
     bayesian_reactives,
     bayes_sens_data_reactives,
     bayesian_sens_reactive,
+    shared_stan_settings,
     tab
   )
 
@@ -142,6 +148,7 @@ shinyServer(function(input, output, session) {
     bayesian_reactives,
     bayes_sens_data_reactives,
     bayesian_sens_reactive,
+    shared_stan_settings,
     tab
   )
 

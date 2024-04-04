@@ -27,6 +27,8 @@ data_reactives_server <- function(
 
       data_reactives$data_type <- data_type
 
+      data_reactives$reference_component <- shiny::reactiveVal(NULL)
+
       data_reactives$is_data_loaded <- shiny::reactive({
         return(
           !is.null(data_reactives$data())
@@ -38,7 +40,7 @@ data_reactives_server <- function(
           return(NULL)
         } else {
           return(
-            format_data( # nolint: object_usage
+            format_data( # nolint: object_name
               data_reactives$data(),
               data_reactives$data_type()
             )
@@ -60,26 +62,34 @@ data_reactives_server <- function(
         }
       })
 
-      data_reactives$pairwise <- shiny::reactive({
-        if (!data_reactives$is_data_formatted()) {
+      data_reactives$components <- shiny::reactive({
+        if (is.null(data_reactives$is_data_formatted())) {
           return(NULL)
         } else {
           return(
-            freq_pairwise( # nolint: object_usage
-              data_reactives$formatted_data(),
-              data_reactives$data_type()
-            )
+            get_components(data_reactives$formatted_data())
           )
         }
       })
 
       data_reactives$default_reference_component <- shiny::reactive({
-        if (is.null(data_reactives$pairwise())) {
+        if (is.null(data_reactives$is_data_formatted())) {
           return(NULL)
         } else {
           return(
-            get_most_freq_component( # nolint: object_usage
-              data_reactives$pairwise()
+            get_most_freq_component(data_reactives$formatted_data())
+          )
+        }
+      })
+
+      data_reactives$components_no_reference <- shiny::reactive({
+        if (is.null(data_reactives$reference_component())) {
+          return(NULL)
+        } else {
+          return(
+            get_components_no_reference(
+              data_reactives$formatted_data(),
+              data_reactives$reference_component()
             )
           )
         }

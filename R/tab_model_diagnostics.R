@@ -6,7 +6,7 @@ model_diagnostics_tab_ui <- function(id) {
       type = "tabs",
       shiny::tabPanel(
         "Main Stan Model Diagnostics",
-        message_tag_list(ns), # nolint: object_usage
+        message_tag_list(ns), # nolint: object_name
         run_bayesian_analysis_ui(ns("run_bayesian_analysis")),
         shinydashboardPlus::box(
           title = "Sampler Diagnostics",
@@ -33,7 +33,7 @@ model_diagnostics_tab_ui <- function(id) {
           id = ns("density_plots_box"),
           collapsible = TRUE,
           width = 12,
-          save_plot_ui( # nolint: object_usage
+          save_plot_ui( # nolint: object_name
             ns("save_density_plots"),
             output_name = "Density_Plots"
           ),
@@ -47,7 +47,7 @@ model_diagnostics_tab_ui <- function(id) {
           id = ns("trace_plots_box"),
           collapsible = TRUE,
           width = 12,
-          save_plot_ui( # nolint: object_usage
+          save_plot_ui( # nolint: object_name
             ns("save_trace_plots"),
             output_name = "Trace_Plots"
           ),
@@ -87,7 +87,7 @@ model_diagnostics_tab_ui <- function(id) {
           id = ns("density_plots_box_sens"),
           collapsible = TRUE,
           width = 12,
-          save_plot_ui( # nolint: object_usage
+          save_plot_ui( # nolint: object_name
             ns("save_density_plots_sens"),
             output_name = "Density_Plots_Sensitivity"
           ),
@@ -101,7 +101,7 @@ model_diagnostics_tab_ui <- function(id) {
           id = ns("trace_plots_box_sens"),
           collapsible = TRUE,
           width = 12,
-          save_plot_ui( # nolint: object_usage
+          save_plot_ui( # nolint: object_name
             ns("save_trace_plots_sens"),
             output_name = "Trace_Plots_Sensitivity"
           ),
@@ -122,6 +122,7 @@ model_diagnostics_tab_server <- function(
   bayesian_reactives,
   bayes_sens_data_reactives,
   bayesian_sens_reactives,
+  shared_stan_settings,
   tab
 ) {
   shiny::moduleServer(
@@ -138,14 +139,16 @@ model_diagnostics_tab_server <- function(
         "run_bayesian_analysis",
         data_reactives,
         bayesian_options,
-        bayesian_reactives
+        bayesian_reactives,
+        shared_stan_settings
       )
 
       run_bayesian_analysis_server(
         "run_bayesian_analysis_sens",
         bayes_sens_data_reactives,
         bayesian_options,
-        bayesian_sens_reactives
+        bayesian_sens_reactives,
+        shared_stan_settings
       )
 
       is_density_rendered <- shiny::reactiveVal(FALSE)
@@ -154,7 +157,9 @@ model_diagnostics_tab_server <- function(
       shiny::observe({
         if (tab() == id) {
           output$warning <- NULL
-          output$info <- NULL
+          output$info <- shiny::renderUI(
+            message_alert("Please run the model") # nolint: object_name
+          )
           output$sampler_diagnostics <- NULL
           output$rhat_diagnostics <- NULL
           output$density_plots <- NULL
@@ -167,6 +172,7 @@ model_diagnostics_tab_server <- function(
             bayesian_reactives$is_model_run(),
             cancelOutput = TRUE
           )
+          output$info <- NULL
           tryCatch({
             withCallingHandlers(
               warning = function(cond) {
@@ -180,17 +186,44 @@ model_diagnostics_tab_server <- function(
                 )
               },
               {
+                sampler_diagnostics <- get_sampler_diagnostics(
+                  bayesian_reactives$model()$fit
+                )
                 output$sampler_diagnostics <- shiny::renderUI(
                   DT::renderDataTable(
-                    get_sampler_diagnostics(bayesian_reactives$model()$fit)
+                    DT::datatable(
+                      sampler_diagnostics
+                    ) %>%
+                      DT::formatStyle(
+                        columns = c("Category"),
+                        valueColumns = c("Category"),
+                        target = "row",
+                        backgroundColor =
+                          DT::styleEqual(
+                            c("bad", "good"),
+                            c("#e05555", "#5dc98e")
+                          )
+                      )
                   )
                 )
                 output$rhat_diagnostics <- shiny::renderUI(
                   DT::renderDataTable(
-                    get_rhat_diagnostics(
-                      bayesian_reactives$model()$fit,
-                      bayesian_options$random_effects()
-                    )
+                    DT::datatable(
+                      get_rhat_diagnostics(
+                        bayesian_reactives$model()$fit,
+                        bayesian_options$random_effects()
+                      )
+                    ) %>%
+                      DT::formatStyle(
+                        columns = c("Category"),
+                        valueColumns = c("Category"),
+                        target = "row",
+                        backgroundColor =
+                          DT::styleEqual(
+                            c("bad", "borderline", "good"),
+                            c("#e05555", "#ed8142", "#5dc98e")
+                          )
+                      )
                   )
                 )
                 density_plot <- function() {
@@ -248,7 +281,9 @@ model_diagnostics_tab_server <- function(
       shiny::observe({
         if (tab() == id) {
           output$warning_sens <- NULL
-          output$info_sens <- NULL
+          output$info_sens <- shiny::renderUI(
+            message_alert("Please run the model") # nolint: object_name
+          )
           output$sampler_diagnostics_sens <- NULL
           output$rhat_diagnostics_sens <- NULL
           output$density_plots_sens <- NULL
@@ -261,6 +296,7 @@ model_diagnostics_tab_server <- function(
             bayesian_sens_reactives$is_model_run(),
             cancelOutput = TRUE
           )
+          output$info_sens <- NULL
           tryCatch({
             withCallingHandlers(
               warning = function(cond) {

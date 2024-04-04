@@ -28,11 +28,17 @@ shinyUI(
         content =
           "https://raw.githubusercontent.com/CRSU-Apps/MetaDTA/main/www/images/MetaCNMALogo.png" # nolint
       ),
+      cookie_ui(id = "cookies")
     ),
 
     # Set up Shinyjs
     useShinyjs(),
-    
+    shinybusy::add_busy_spinner(
+      spin = "semipolar",
+      height = "100px",
+      width = "100px",
+      margins = c(50, 50)
+    ),
     # Use dashboardPage from shinydashboardPlus
     shinydashboardPlus::dashboardPage(
       header = shinydashboardPlus::dashboardHeader(
