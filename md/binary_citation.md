@@ -1,3 +1,12 @@
-**Data derived from (with permission):**
+**Data derived (modified) from :**
 
-Burton JK, Craig L, Yong SQ, Siddiqi N, Teale EA, Woodhouse R, Barugh AJ, Shepherd AM, Brunton A, Freeman SC, Sutton AJ, Quinn TJ. Non‐pharmacological interventions for preventing delirium in hospitalised non‐ICU patients. Cochrane Database of Systematic Reviews 2021, Issue 11. Art. No.: CD013307. DOI:[10.1002/14651858.CD013307.pub3](https://doi.org/10.1002/14651858.CD013307.pub3). Accessed 10 May 2023.
+Derived (modified) from
+Balduzzi S, Rücker G, Nikolakopoulou A, Papakonstantinou T, Salanti G, Efthimiou O, Schwarzer G (2023):
+netmeta: An R package for network meta-analysis using frequentist methods.
+Journal of Statistical Software, 106, 1-40
+
+[DOI: 10.1002/14651858.CD013307.pub3](https://doi.org/10.1002/14651858.CD013307.pub3)
+
+**Under GPL-2.0 License**
+
+**Modified Date: 06/04/2024**

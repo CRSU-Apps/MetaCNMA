@@ -42,7 +42,9 @@ default_data_continuous <- function() {
     format = "long",
     measure = "md",
     desirable = 1,
-    outcome_name = "Length of Stay"
+    random_effects = 0,
+    outcome_name = "Length of Stay",
+    reference_component = "Usual Care"
   ))
 }
 
@@ -52,7 +54,9 @@ default_data_binary <- function() {
     format = "long",
     measure = "or",
     desirable = 0,
-    outcome_name = "Incidence of Delirium"
+    random_effects = 1,
+    outcome_name = "Response after Treatment",
+    reference_component = "Placebo"
   ))
 }
 
@@ -134,6 +138,19 @@ default_outcome_desirable <- function(data_type, is_default_data) {
   }
 }
 
+default_random_effects <- function(data_type, is_default_data) {
+  if (is_default_data) {
+    return(default_data_properties(data_type)$random_effects)
+  }
+  if (data_type == "continuous") {
+    return(1)
+  } else if (data_type == "binary") {
+    return(0)
+  } else {
+    return(NULL)
+  }
+}
+
 default_desirable_text <- function(data_type) {
   if (data_type == "continuous") {
     return("For treatment rankings a smaller 
@@ -152,4 +169,8 @@ default_outcome_name <- function(data_type, is_default_data) {
   } else {
     return("Outcome Name")
   }
+}
+
+default_reference_component <- function(data_type) {
+  return(default_data_properties(data_type)$reference_component)
 }
