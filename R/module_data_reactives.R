@@ -75,6 +75,11 @@ data_reactives_server <- function(
       data_reactives$default_reference_component <- shiny::reactive({
         if (is.null(data_reactives$is_data_formatted())) {
           return(NULL)
+        }
+        if (data_reactives$is_default_data()) {
+          return(
+            default_reference_component(data_reactives$data_type())
+          )
         } else {
           return(
             get_most_freq_component(data_reactives$formatted_data())

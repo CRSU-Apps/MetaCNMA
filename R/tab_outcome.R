@@ -112,7 +112,10 @@ model_outcome_tab_server <- function(
             "The model should use:",
             c("Fixed Effects" = 0,
               "Random Effects" = 1),
-            selected = 0
+            selected = default_random_effects(
+              data_reactives$data_type(),
+              data_reactives$is_default_data()
+            )
           )
         )
 
