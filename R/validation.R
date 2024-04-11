@@ -271,3 +271,35 @@ validate_input <- function(input_file, type) { # nolint: cyclocomp
     return(FALSE)
   })
 }
+
+check_outcome_measure <- function(
+  data_type,
+  outcome_measure
+) {
+  if (is.null(data_type) || is.null(outcome_measure)) {
+    return(FALSE)
+  } else if (data_type == "continuous") {
+    if (outcome_measure %in% c("MD", "SMD")){
+      return(TRUE)
+    }
+  } else if (data_type == "binary") {
+    if (outcome_measure %in% c("OR", "RR", "RD")) {
+      return(TRUE)
+    }
+  }
+
+  return(FALSE)
+
+}
+
+check_reference_component <- function(
+  reference_component,
+  components
+) {
+  if (is.null(reference_component) || is.null(components)) {
+    return(FALSE)
+  } else if (reference_component %in% components) {
+    return(TRUE)
+  }
+  return(FALSE)
+}

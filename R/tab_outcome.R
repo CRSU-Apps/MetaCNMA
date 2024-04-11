@@ -35,8 +35,8 @@ model_outcome_tab_server <- function(
         model_options$update_reactive(TRUE)
         model_options$update_reactive(FALSE)
       }) %>% shiny::bindEvent(
-        data_reactives$data(),
         data_reactives$data_type(),
+        data_reactives$data(),
         data_reactives$is_default_data(),
         data_reactives$reference_component(),
         ignoreInit = TRUE
@@ -51,8 +51,8 @@ model_outcome_tab_server <- function(
         output$outcome_name <- NULL
 
         shiny::req(
-          !is.null(data_reactives$data()),
           !is.null(data_reactives$data_type()),
+          !is.null(data_reactives$data()),
           !is.null(data_reactives$is_default_data()),
           !is.null(data_reactives$reference_component()),
           cancelOutput = TRUE
@@ -190,6 +190,7 @@ model_outcome_tab_server <- function(
       model_options$options_loaded <- shiny::reactive({
         if (
           any(
+            model_options$update_reactive(),
             is.null(input$outcome_measure),
             is.null(input$desirable),
             is.null(input$random_effects),
