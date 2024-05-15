@@ -39,6 +39,8 @@ data_reactives_server <- function(
         if (!data_reactives$is_data_loaded()) {
           return(NULL)
         } else {
+          # Call data to update reactive
+          data_reactives$data()
           return(
             format_data( # nolint: object_name
               data_reactives$data(),

@@ -221,6 +221,28 @@ model_outcome_tab_server <- function(
                 )
             )
           )
+          shinyjs::delay(
+            5,
+            shinyjs::disable(
+              selector =
+                paste0(
+                  "#",
+                  ns("outcome_measure"),
+                  " [type='radio'][value='rr']"
+                )
+            )
+          )
+          shinyjs::delay(
+            5,
+            shinyjs::disable(
+              selector =
+                paste0(
+                  "#",
+                  ns("outcome_measure"),
+                  " [type='radio'][value='rd']"
+                )
+            )
+          )
         }
       }) %>% shiny::bindEvent(tab(), model_options$update_reactive())
 

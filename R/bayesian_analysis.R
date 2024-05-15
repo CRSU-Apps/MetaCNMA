@@ -186,6 +186,33 @@ get_pars <- function(random_effects) {
   )
 }
 
+#' @title Get Rhat Diagnostics
+#' @description Produces a tibble of Rhat diagnostics
+#' @param stan_fit Fitted Stan Model
+#' @param random_effects BOOLEAN was the model fit with
+#' random effects?
+#' @return tibble of Rhat diagnostics
+#' @details Produces a tibble of Rhat diagnostics for parameters
+#' dependant on whether or not the model used random effects
+#' including the Rhat values and there respective category:
+#' good: <1.05
+#' borderline: ≥1.05 ≤1.10
+#' bad > 1.10
+#' @examples
+#' \dontrun{
+#' if(interactive()){
+#'    get_rhat_diagnostics(
+#'      model_fit,
+#'      TRUE
+#'    )
+#'  }
+#' }
+#' @seealso
+#'  \code{\link[rstan]{character(0)}}
+#'  \code{\link[dplyr]{reexports}}, \code{\link[dplyr]{case_when}}
+#' @rdname get_rhat_diagnostics
+#' @importFrom rstan summary
+#' @importFrom dplyr tibble case_when
 get_rhat_diagnostics <- function(stan_fit, random_effects) {
   pars <- get_pars(random_effects)
   rhats <- round(
