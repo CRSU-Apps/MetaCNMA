@@ -41,7 +41,7 @@ data_type_module_server <- function(
       )
 
       shiny::observe({
-        data_type(input$data_type)
+        shiny::debounce(data_type(input$data_type), 1000)
         print(input$data_type)
       }) %>% shiny::bindEvent(input$data_type)
 

@@ -139,11 +139,11 @@ get_sampler_diagnostics <- function(stan_fit) {
       Category = c(
         dplyr::case_when(
           no_divergent < 1 ~ "good",
-          no_divergent > 1 ~ "bad"
+          no_divergent >= 1 ~ "bad"
         ),
         dplyr::case_when(
           no_tree_depth < 1 ~ "good",
-          no_tree_depth > 1 ~ "bad"
+          no_tree_depth >= 1 ~ "bad"
         )
       )
     )
@@ -178,7 +178,7 @@ get_pars <- function(random_effects) {
       )
     )
   }
-  return (
+  return(
     c(
       "mu",
       "d"
