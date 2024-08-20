@@ -11,7 +11,8 @@ shinyServer(function(input, output, session) {
   log <- reactiveValues()
   load_default_data <- reactiveVal(TRUE)
 
-  cookie_server(
+  # GDPR Module Server (R/analytics_header.R)
+  GdprServer(
     id = "cookies",
     cookies = reactive(input$cookies),
     google_analytics_id = "G-DYBCT85P4W",

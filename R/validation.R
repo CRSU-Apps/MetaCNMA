@@ -1,4 +1,6 @@
-# This file contains functions used for validation of the data
+#################################################################
+##                Functions for Data Validation                ##
+#################################################################
 
 #' @title Valid File Format
 #' @description Checks if the given file extention is valid
@@ -116,8 +118,11 @@ validate_column_names <- function(df, required_names) {
 }
 
 split_wide_columns <- function(columns) {
+  # Forward declare cols list (list of column names)
   cols <- list()
+  # forward declare col_numbers list (list of numbers in column names)
   col_numbers <- list()
+  # loop through columns
   for (col in columns) {
     # Get the column name (before the .)
     col_name <- sub("(.+)\\.(\\d+)", "\\1", col)
@@ -127,11 +132,14 @@ split_wide_columns <- function(columns) {
     cols <- append(cols, col_name)
     col_numbers <- append(col_numbers, as.numeric(col_number))
   }
+  # The number of arms will be the maximum of the column numbers
   n_arms <- max(as.numeric(col_numbers))
+  # return the lists and number of arms
   return(list(cols = cols, col_numbers = col_numbers, n_arms = n_arms))
 }
 
 get_wide_columns <- function(column_names, required_columns) {
+  # get only the columns needed for wide format
   wide_columns <- required_columns[grep("(.+)\\.(\\d+)", required_columns)]
   # get the column names without the .n
   return(gsub("(.+)\\.(\\d+)", "\\1", wide_columns))

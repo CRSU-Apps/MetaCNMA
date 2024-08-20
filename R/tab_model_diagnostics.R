@@ -228,7 +228,7 @@ model_diagnostics_tab_server <- function(
                 )
                 density_plot <- function() {
                   print(
-                    get_denisty_plots(
+                    get_density_plots(
                       bayesian_reactives$model()$fit,
                       bayesian_options$random_effects()
                     )
@@ -325,7 +325,7 @@ model_diagnostics_tab_server <- function(
                 )
                 density_plot_sens <- function() {
                   print(
-                    get_denisty_plots(
+                    get_density_plots(
                       bayesian_sens_reactives$model()$fit,
                       bayesian_options$random_effects()
                     )

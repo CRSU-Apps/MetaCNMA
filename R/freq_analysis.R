@@ -1,3 +1,7 @@
+#################################################################
+##          Helper Functions for Frequentist Analysis          ##
+#################################################################
+
 freq_pairwise <- function(df, data_type, summary_measure) {
   tryCatch({
     print("running pairwise")
