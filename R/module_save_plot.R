@@ -69,7 +69,7 @@ save_plot_server <- function(
         shiny::req(
           is_rendered()
         )
-        print("loading download button")
+        #print("loading download button")
         output$download_button <- shiny::renderUI(
           shiny::downloadButton(
             ns("save_button"),

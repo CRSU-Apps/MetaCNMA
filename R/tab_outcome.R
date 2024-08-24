@@ -43,7 +43,7 @@ model_outcome_tab_server <- function(
       )
 
       shiny::observe({
-        print("Waiting on data_type and is_default_data")
+        #print("Waiting on data_type and is_default_data")
 
         output$outcome_measure <- shiny::renderText("No Data Loaded")
         output$desirable <- NULL
@@ -58,9 +58,9 @@ model_outcome_tab_server <- function(
           cancelOutput = TRUE
         )
 
-        print("Rendering outcome measure radio")
+        #print("Rendering outcome measure radio")
 
-        print(data_reactives$data_type())
+        #print(data_reactives$data_type())
 
         output$outcome_measure <- shiny::renderUI(
           shiny::radioButtons(
@@ -197,10 +197,10 @@ model_outcome_tab_server <- function(
             is.null(model_options$outcome_name())
           )
         ) {
-          print("Options Not Loaded")
+          #print("Options Not Loaded")
           return(FALSE)
         } else {
-          print("Options Loaded")
+          #print("Options Loaded")
           return(TRUE)
         }
       })

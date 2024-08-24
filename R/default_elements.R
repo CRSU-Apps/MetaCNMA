@@ -86,7 +86,7 @@ default_data_properties <- function(data_type) {
 #'
 #' @examples
 default_data <- function(data_type) {
-  print("Attempting to Load Default Data")
+  #print("Attempting to Load Default Data")
   # Try catch to display an error if one occures
   tryCatch({
     # Determine whether to load binary or continous data

@@ -63,7 +63,7 @@ freq_analysis_server <- function( # nolint: cyclocomp_linter.
         ) {
           return(NULL)
         } else {
-          print(data_reactives$reference_component())
+          #print(data_reactives$reference_component())
           return(
             run_freq( # nolint: object_name
               freq_reactives$pairwise(),

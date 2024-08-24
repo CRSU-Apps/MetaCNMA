@@ -117,7 +117,7 @@ stan_settings_server <- function(
       )
 
       shiny::observe({
-        print("Updating Stan Settings")
+        #"Updating Stan Settings")
         shinyWidgets::updateAutonumericInput(
           inputId = ns("chains"),
           value = shared_stan_settings$chains()

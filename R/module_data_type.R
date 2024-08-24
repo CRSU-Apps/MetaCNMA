@@ -47,8 +47,8 @@ data_type_module_server <- function(
       # Debouce the data_type and store in reactive
       shiny::observe({
         # Debounce to prevent excessive waterfall of reactives
-        shiny::debounce(data_type(input$data_type), 1000)
-        print(input$data_type)
+        shiny::debounce(data_type(input$data_type), 1500)
+        #print(input$data_type)
       }) %>% shiny::bindEvent(input$data_type)
 
       # Return the data_type to allow access outside of module

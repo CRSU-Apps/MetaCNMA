@@ -104,7 +104,7 @@ run_bayesian_analysis_server <- function(
               )
             },
             {
-              print("Running Bayesian Model")
+              #print("Running Bayesian Model")
               shinybusy::show_modal_spinner(
                 spin = "atom",
                 color = "#005398",

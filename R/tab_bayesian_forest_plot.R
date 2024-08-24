@@ -94,14 +94,14 @@ bayes_forest_plot_tab_server <- function(
           output$plot_title <- NULL
           output$forest_plot <- NULL
           is_rendered(FALSE)
-          print(tab())
+          #print(tab())
           shiny::req(
             bayesian_options$options_loaded(),
             bayesian_reactives$is_model_run(),
             cancelOutput = TRUE
           )
           output$info <- NULL
-          print("bayesian forest_plot")
+          #print("bayesian forest_plot")
           tryCatch({
             withCallingHandlers(
               warning = function(cond) {
@@ -157,14 +157,14 @@ bayes_forest_plot_tab_server <- function(
           output$plot_title_sens <- NULL
           output$forest_plot_sens <- NULL
           is_rendered_sens(FALSE)
-          print(tab())
+          #print(tab())
           shiny::req(
             bayesian_options$options_loaded(),
             bayesian_sens_reactives$is_model_run(),
             cancelOutput = TRUE
           )
           output$info_sens <- NULL
-          print("bayesian forest_plot sens")
+          #print("bayesian forest_plot sens")
           tryCatch({
             withCallingHandlers(
               warning = function(cond) {

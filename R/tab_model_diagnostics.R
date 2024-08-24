@@ -166,7 +166,7 @@ model_diagnostics_tab_server <- function(
           output$trace_plots <- NULL
           is_density_rendered(FALSE)
           is_trace_rendered(FALSE)
-          print(tab())
+          #print(tab())
           shiny::req(
             bayesian_options$options_loaded(),
             bayesian_reactives$is_model_run(),
@@ -290,7 +290,7 @@ model_diagnostics_tab_server <- function(
           output$trace_plots_sens <- NULL
           is_density_rendered_sens(FALSE)
           is_trace_rendered_sens(FALSE)
-          print(tab())
+          #print(tab())
           shiny::req(
             bayesian_options$options_loaded(),
             bayesian_sens_reactives$is_model_run(),

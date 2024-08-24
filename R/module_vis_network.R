@@ -26,7 +26,7 @@ vis_network_server <- function(id, nm, components) {
              session) {
       `%>%` <- magrittr::`%>%`
       ns <- session$ns
-      print("renderinet_graph_obj visNetwork")
+      #print("renderinet_graph_obj visNetwork")
       # Use netgraph to get node and edges
       net_graph_obj <- netmeta::netgraph(
         nm,
@@ -63,8 +63,8 @@ vis_network_server <- function(id, nm, components) {
         visNetwork::visExport()
 
       shiny::observeEvent(input$reload_button, {
-        print("Reloading")
-        print(ns("network"))
+        #print("Reloading")
+        #print(ns("network"))
         output$network <- NULL
         output$network <- visNetwork::renderVisNetwork(
           vn

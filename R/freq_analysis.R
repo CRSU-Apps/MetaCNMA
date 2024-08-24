@@ -4,7 +4,7 @@
 
 freq_pairwise <- function(df, data_type, summary_measure) {
   tryCatch({
-    print("running pairwise")
+    #print("running pairwise")
     if (data_type == "continuous") {
       return(run_pairwise_continuous(df, summary_measure))
     } else if (data_type == "binary") {
@@ -143,8 +143,8 @@ run_freq <- function(
   random_eff,
   summary_measure
 ) {
-  print("Fitting Frequentist Model")
-  print(summary_measure)
+  #print("Fitting Frequentist Model")
+  #print(summary_measure)
   if (is_network_connected) {
     nm <- run_netmeta(pw, ref, random_eff, summary_measure)
     nc <- run_netcomb(nm, inactive = ref, summary_measure)
@@ -157,7 +157,7 @@ run_freq <- function(
 }
 
 run_netmeta <- function(pw, ref, random_eff, summary_measure) {
-  print("running netmeta")
+  #print("running netmeta")
   random_eff <- any(as.logical(random_eff))
   return(
     netmeta::netmeta(
@@ -170,7 +170,7 @@ run_netmeta <- function(pw, ref, random_eff, summary_measure) {
 }
 
 run_netcomb <- function(nm, inactive, summary_measure) {
-  print("running netcomb")
+  #print("running netcomb")
   return(
     netmeta::netcomb(
       nm,
@@ -346,7 +346,7 @@ get_net_forest <- function(
   component = TRUE
 ) {
   if (component) {
-    print("rendering plot")
+    #print("rendering plot")
     return(
       metafor::forest(
         ifelse(rep(nc$random, length(nc$comps)),

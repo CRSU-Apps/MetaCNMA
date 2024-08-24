@@ -18,7 +18,7 @@ default_data_server <- function(
     `%>%` <- magrittr::`%>%`
 
     shiny::observe({
-      print("Data Change")
+      #print("Data Change")
       shiny::req(
         !data_reactives$is_data_loaded(),
         cancelOutput = TRUE

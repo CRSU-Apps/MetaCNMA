@@ -108,7 +108,7 @@ data_upload_tab_server <- function(
 
       # Trigger a data reload on reload button or data_type change
       shiny::observe({
-        print("Reloading Data")
+        #print("Reloading Data")
         data_reactives$reload(TRUE)
         output$file_input <- file_input
         data_reactives$data_uploaded(FALSE)
@@ -122,9 +122,9 @@ data_upload_tab_server <- function(
 
       # Set data_uploaded when file_input changes
       shiny::observe({
-        print("Setting Data Upload")
+        #print("Setting Data Upload")
         if (validate_input(input$data, data_reactives$data_type())) {
-          print("Data Validated Loading Data")
+          #print("Data Validated Loading Data")
           data_reactives$reload(FALSE)
           data_reactives$data_uploaded(TRUE)
           data_reactives$is_default_data(FALSE)

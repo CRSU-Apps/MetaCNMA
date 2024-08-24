@@ -72,13 +72,13 @@ forest_plot_tab_server <- function(
           output$plot_title <- NULL
           output$forest_plot <- NULL
           is_rendered(FALSE)
-          print(tab())
+          #print(tab())
           shiny::req(
             freq_options$options_loaded(),
             !is.null(freq_reactives$model()),
             cancelOutput = TRUE
           )
-          print("forest_plot")
+          #print("forest_plot")
           tryCatch({
             withCallingHandlers(
               warning = function(cond) {
@@ -136,13 +136,13 @@ forest_plot_tab_server <- function(
           output$plot_title_sens <- NULL
           output$forest_plot_sens <- NULL
           is_rendered_sens(FALSE)
-          print(tab())
+          #print(tab())
           shiny::req(
             freq_options$options_loaded(),
             !is.null(freq_sens_reactives$model()),
             cancelOutput = TRUE
           )
-          print("forest_plot_sens")
+          #print("forest_plot_sens")
           tryCatch({
             withCallingHandlers(
               warning = function(cond) {

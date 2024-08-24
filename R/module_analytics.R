@@ -198,7 +198,7 @@ GdprServer <- function(
           # Else if the user has previously accepted the GDPR notice
         } else if (as.logical(cookies()$accept)) {
           # Debug Message
-          print("Previously Accepted")
+          #print("Previously Accepted")
           # Include the analytics sctipt
           output$analytics_script <- shiny::renderUI(
             AddAnalytics(google_analytics_id)
@@ -212,11 +212,11 @@ GdprServer <- function(
         }
         # Bind once to cookies.js being initialised
       }) %>% shiny::bindEvent(cookies(), once = TRUE)
-      
+
       # Observe the GDPR notice response
       shiny::observe({
         # Debug Message
-        print(input$cookie_accept)
+        #print(input$cookie_accept)
         # List for 'accept cookie' either
         # TRUE if GDPR notice accepted or
         # FALSE if GDPR notice declined
@@ -233,19 +233,19 @@ GdprServer <- function(
           ) == "https:"
         ) {
           # Debug Message
-          print("Running in HTTPS")
+          #print("Running in HTTPS")
           # If running in HTTPS set a secure cookie
           session$sendCustomMessage("cookie-set-secure", msg)
         } else {
           # Debug Message
-          print("Running in HTTP")
+          #print("Running in HTTP")
           # If running in HTTP set a 'normal cookie'
           session$sendCustomMessage("cookie-set", msg)
         }
         # If the GDPR notice was accepted
         if (as.logical(input$cookie_accept)) {
           # Debug Message
-          print("Adding Analytics")
+          #print("Adding Analytics")
           # Add the analytics script
           output$analytics_script <- shiny::renderUI({
             AddAnalytics(google_analytics_id)
@@ -254,10 +254,10 @@ GdprServer <- function(
         # Set the Reactive Val to the response
         is_analytics(as.logical(input$cookie_accept))
         # Debug Message
-        print("Stored Cookie")
+        #print("Stored Cookie")
         # Bind to GDPR response
       }) %>% shiny::bindEvent(input$cookie_accept)
-      
+
       # Analytic 4 records events
       # Therefore observe the tab changes
       shiny::observe({
@@ -267,7 +267,7 @@ GdprServer <- function(
           cancelOutput = TRUE
         )
         # Debug Message
-        print(paste0("Recording ", tab()))
+        #paste0("Recording ", tab()))
         # Send the tab to Google Analytics through a js event
         session$sendCustomMessage(
           "add-event",
@@ -279,7 +279,7 @@ GdprServer <- function(
       }) %>% shiny::bindEvent(
         tab()
       )
-      
+
     }
   )
 }

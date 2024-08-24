@@ -33,7 +33,7 @@ is_valid_file_format <- function(file_ext) {
 #' }
 #' @rdname is_file_exists
 is_file_exists <- function(file_path) {
-  print(paste0("Checking file ", file_path, " exists"))
+  #print(paste0("Checking file ", file_path, " exists"))
   return(file.exists(file_path))
 }
 
@@ -221,26 +221,26 @@ validate_continuous_wide <- function(df) {
 
 validate_input <- function(input_file, type) { # nolint: cyclocomp
   tryCatch({
-    print("Checking input file")
+    #print("Checking input file")
     if (is.null(input_file)) {
-      print("Null input file")
+      #print("Null input file")
       error_alert("There is a problem with the uploaded file please try again") # nolint: object_name
       return(FALSE)
     }
     if (is.null(type)) {
-      print("Null Type")
+      #print("Null Type")
       error_alert("An internal error occured, please try again, if this problem persist please contact the developers", "Error #TP001") # nolint: object_name
       return(FALSE)
     }
 
     if (is.null(input_file$datapath)) {
-      print("Null datapath")
+      #print("Null datapath")
       error_alert("An error occured, please try again, if this problem persist please contact the developers", "Error #FU001") # nolint: object_name
       return(FALSE)
     }
 
     if (!is_file_exists(input_file$datapath)) {
-      print("file doesn't exist")
+      #print("file doesn't exist")
       error_alert("An internal rror occured, please try again, if this problem persist please contact the developers", "Error #FU002") # nolint: object_name
       return(FALSE)
     }
@@ -253,20 +253,20 @@ validate_input <- function(input_file, type) { # nolint: cyclocomp
     df <- rio::import(input_file$datapath)
 
     if (is.null(df)) {
-      print("Null Data Frame")
+      #print("Null Data Frame")
       error_alert("An internal error occured, the data appears to be empty, please try again, if this problem consiste please contact the developers", "Error #FU003") # nolint: object_name
       return(FALSE)
     }
 
     if (is_wide(df)) {
-      print("Assuming Wide Format")
+      #print("Assuming Wide Format")
       if (type == "binary") {
         return(validate_binary_wide(df))
       } else if (type == "continuous") {
         return(validate_continuous_wide(df))
       }
     } else {
-      print("Assuming long Format")
+      #print("Assuming long Format")
       if (type == "binary") {
         return(validate_binary_long(df))
       } else if (type == "continuous") {
