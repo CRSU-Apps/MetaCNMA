@@ -59,7 +59,7 @@ default_data_binary <- function() {
     format = "long",
     measure = "or",
     desirable = 0,
-    random_effects = 1,
+    random_effects = 0,
     outcome_name = "Response after Treatment",
     reference_component = "Placebo"
   ))
@@ -148,7 +148,7 @@ default_random_effects <- function(data_type, is_default_data) {
     return(default_data_properties(data_type)$random_effects)
   }
   if (data_type == "continuous") {
-    return(1)
+    return(0)
   } else if (data_type == "binary") {
     return(0)
   } else {

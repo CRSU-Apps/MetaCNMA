@@ -325,3 +325,39 @@ get_trace_plots <- function(
     )
   )
 }
+
+get_bayes_model_output <- function(
+  data_type,
+  outcome_measure,
+  model
+) {
+  `%>%` <- magrittr::`%>%`
+  # Extract components for naming
+  components <- model$components
+  # Save the summary as a dataframe
+  stan_summary <- as.data.frame(
+    rstan::summary(model$fit, pars = c("d"))$summary
+  )
+  # Set the row names to the components
+  row.names(stan_summary) <- components
+  # Convert rownames to column and drop unnessasary columns
+  stan_summary <- stan_summary %>%
+    tibble::rownames_to_column(var = "Component") %>%
+    dplyr::select(
+      Component, #nolint object_usage
+      mean, #nolint object_usage
+      SD = sd, #nolint object_usage
+      `2.5%`, #nolint object_usage
+      `97.5%` #nolint object_usage
+    )
+  # Log the mean if binary
+  if (data_type == "binary") {
+    stan_summary <- stan_summary %>%
+      dplyr::mutate(
+        mean = exp(mean)
+      )
+  }
+  # Rename mean to the outcome measure
+  names(stan_summary)[names(stan_summary) == "mean"] <- outcome_measure
+  return(stan_summary)
+}

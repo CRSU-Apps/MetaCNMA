@@ -101,6 +101,15 @@ shinyServer(function(input, output, session) {
     tab
   )
 
+  freq_model_output_tab_server(
+    "freq_model_output",
+    data_reactives,
+    freq_options,
+    freq_reactives,
+    freq_sens_reactives,
+    tab
+  )
+
   bayesian_options <- model_outcome_tab_server(
     "bayesian_outcome_tab",
     data_reactives,
@@ -144,6 +153,17 @@ shinyServer(function(input, output, session) {
 
   model_diagnostics_tab_server(
     "model_diagnostics",
+    data_reactives,
+    bayesian_options,
+    bayesian_reactives,
+    bayes_sens_data_reactives,
+    bayesian_sens_reactive,
+    shared_stan_settings,
+    tab
+  )
+
+  bayes_model_output_tab_server(
+    "bayesian_model_output",
     data_reactives,
     bayesian_options,
     bayesian_reactives,

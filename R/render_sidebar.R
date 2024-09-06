@@ -64,6 +64,11 @@ render_sidebar <- function() {
         icon = shiny::icon("text-slash")
       ),
       shinydashboard::menuSubItem(
+        "Model Output",
+        tabName = "freq_model_output",
+        icon = shiny::icon("table-list")
+      ),
+      shinydashboard::menuSubItem(
         "Forest Plot",
         tabName = "freq_forest_plot",
         icon = shiny::icon("chart-gantt")
@@ -82,6 +87,11 @@ render_sidebar <- function() {
         "Sensitivity Analysis: Exclude Studies",
         tabName = "bayesian_exclude",
         icon = shiny::icon("text-slash")
+      ),
+      shinydashboard::menuSubItem(
+        "Model Output",
+        tabName = "bayesian_model_output",
+        icon = shiny::icon("table-list")
       ),
       shinydashboard::menuSubItem(
         "Forest Plot",

@@ -371,3 +371,37 @@ get_net_forest <- function(
     return(metafor::forest(nc))
   }
 }
+
+get_freq_model_output <- function(
+  nc,
+  data_type,
+  random_eff,
+  outcome_measure = "Outcome Measure"
+) {
+  if (! is(nc, "netcomb")){
+    stop("Model output is only implemented for connected networks")
+  }
+  `%>%` <- magrittr::`%>%`
+  model_output <- invisible(summary(nc))
+  if (random_eff) {
+    model_output <- model_output$components.random
+  } else {
+    model_output <- model_output$components.common
+  }
+  model_output <- model_output %>%
+    tibble::rownames_to_column(var = "Component")
+  if (data_type == "binary") {
+    model_output$TE <- exp(model_output$TE)
+  }
+  model_output <- model_output %>%
+    dplyr::select(
+      Component, #nolint: object_usage
+      TE, #nolint: object_usage
+      SE = seTE, #nolint: object_usage
+      `2.5%` = lower, #nolint: object_usage
+      `97.5%` = upper #nolint: object_usage
+    )
+  # Rename mean to the outcome measure
+  names(model_output)[names(model_output) == "TE"] <- outcome_measure
+  return(model_output)
+}
