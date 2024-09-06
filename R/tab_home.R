@@ -14,7 +14,10 @@ home_tab_ui <- function(id) {
     ),
     shiny::includeMarkdown("md/freq_binary.md"),
     shiny::p(
-      "If you use this software please cite it as:"
+      "If you use this software please cite it as: 
+      Field, R., Freeman, S., Smith, E., & Morris, T. (2024). 
+      MetaBayesDTA (v0.2.0-beta). Zenodo. 
+      https://doi.org/10.5281/zenodo.13718869"
     ),
     shiny::fluidRow(shiny::column(
       width = 6,
