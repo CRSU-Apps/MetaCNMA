@@ -68,7 +68,7 @@ get_required_columns <- function(data_type, is_wide, tmp_df) {
 format_data <- function(df, data_type) {
   `%>%` <- magrittr::`%>%`
   tryCatch({
-    print("formatting data")
+    #print("formatting data")
     # Copy data from uploaded data to temporary data frame
     tmp_df <- df
     # Use lowercase column names
@@ -95,7 +95,7 @@ format_data <- function(df, data_type) {
     } else {
       tmp_df <- tmp_df %>% filter(! is.na(events))
     }
-    print("Saving Formatted Data")
+    #print("Saving Formatted Data")
     return(tmp_df)
   },
   error = function(e) {

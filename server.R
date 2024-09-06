@@ -11,7 +11,8 @@ shinyServer(function(input, output, session) {
   log <- reactiveValues()
   load_default_data <- reactiveVal(TRUE)
 
-  cookie_server(
+  # GDPR Module Server (R/analytics_header.R)
+  GdprServer(
     id = "cookies",
     cookies = reactive(input$cookies),
     google_analytics_id = "G-DYBCT85P4W",
@@ -100,6 +101,15 @@ shinyServer(function(input, output, session) {
     tab
   )
 
+  freq_model_output_tab_server(
+    "freq_model_output",
+    data_reactives,
+    freq_options,
+    freq_reactives,
+    freq_sens_reactives,
+    tab
+  )
+
   bayesian_options <- model_outcome_tab_server(
     "bayesian_outcome_tab",
     data_reactives,
@@ -143,6 +153,17 @@ shinyServer(function(input, output, session) {
 
   model_diagnostics_tab_server(
     "model_diagnostics",
+    data_reactives,
+    bayesian_options,
+    bayesian_reactives,
+    bayes_sens_data_reactives,
+    bayesian_sens_reactive,
+    shared_stan_settings,
+    tab
+  )
+
+  bayes_model_output_tab_server(
+    "bayesian_model_output",
     data_reactives,
     bayesian_options,
     bayesian_reactives,

@@ -31,6 +31,9 @@ render_body <- function() {
     shinydashboard::tabItem(tabName = "freq_exclude",
       exclude_tab_ui("freq_exclude") # nolint object_name
     ),
+    shinydashboard::tabItem(tabName = "freq_model_output",
+      freq_model_output_tab_ui("freq_model_output") # nolint object_name
+    ),
     shinydashboard::tabItem(tabName = "freq_forest_plot",
       forest_plot_tab_ui("freq_forest_plot") # nolint object_name
     ),
@@ -42,6 +45,9 @@ render_body <- function() {
     ),
     shinydashboard::tabItem(tabName = "bayesian_forest_plot",
       bayes_forest_plot_tab_ui("bayesian_forest_plot") # nolint object_name
+    ),
+    shinydashboard::tabItem(tabName = "bayesian_model_output",
+      bayes_model_output_tab_ui("bayesian_model_output") # nolint object_name
     ),
     shinydashboard::tabItem(tabName = "model_diagnostics",
       model_diagnostics_tab_ui("model_diagnostics") # nolint object_name

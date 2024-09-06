@@ -58,7 +58,7 @@ correlation_plot_tab_server <- function(
           output$component_heatmap <- NULL
           is_rendered_correlation_plot(FALSE)
           is_rendered_heatmap(FALSE)
-          print(tab())
+          #print(tab())
           shiny::req(
             data_reactives$is_data_formatted(),
             cancelOutput = TRUE

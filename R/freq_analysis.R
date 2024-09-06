@@ -1,6 +1,10 @@
+#################################################################
+##          Helper Functions for Frequentist Analysis          ##
+#################################################################
+
 freq_pairwise <- function(df, data_type, summary_measure) {
   tryCatch({
-    print("running pairwise")
+    #print("running pairwise")
     if (data_type == "continuous") {
       return(run_pairwise_continuous(df, summary_measure))
     } else if (data_type == "binary") {
@@ -139,8 +143,8 @@ run_freq <- function(
   random_eff,
   summary_measure
 ) {
-  print("Fitting Frequentist Model")
-  print(summary_measure)
+  #print("Fitting Frequentist Model")
+  #print(summary_measure)
   if (is_network_connected) {
     nm <- run_netmeta(pw, ref, random_eff, summary_measure)
     nc <- run_netcomb(nm, inactive = ref, summary_measure)
@@ -153,7 +157,7 @@ run_freq <- function(
 }
 
 run_netmeta <- function(pw, ref, random_eff, summary_measure) {
-  print("running netmeta")
+  #print("running netmeta")
   random_eff <- any(as.logical(random_eff))
   return(
     netmeta::netmeta(
@@ -166,7 +170,7 @@ run_netmeta <- function(pw, ref, random_eff, summary_measure) {
 }
 
 run_netcomb <- function(nm, inactive, summary_measure) {
-  print("running netcomb")
+  #print("running netcomb")
   return(
     netmeta::netcomb(
       nm,
@@ -342,7 +346,7 @@ get_net_forest <- function(
   component = TRUE
 ) {
   if (component) {
-    print("rendering plot")
+    #print("rendering plot")
     return(
       metafor::forest(
         ifelse(rep(nc$random, length(nc$comps)),
@@ -366,4 +370,38 @@ get_net_forest <- function(
   } else {
     return(metafor::forest(nc))
   }
+}
+
+get_freq_model_output <- function(
+  nc,
+  data_type,
+  random_eff,
+  outcome_measure = "Outcome Measure"
+) {
+  if (! is(nc, "netcomb")){
+    stop("Model output is only implemented for connected networks")
+  }
+  `%>%` <- magrittr::`%>%`
+  model_output <- invisible(summary(nc))
+  if (random_eff) {
+    model_output <- model_output$components.random
+  } else {
+    model_output <- model_output$components.common
+  }
+  model_output <- model_output %>%
+    tibble::rownames_to_column(var = "Component")
+  if (data_type == "binary") {
+    model_output$TE <- exp(model_output$TE)
+  }
+  model_output <- model_output %>%
+    dplyr::select(
+      Component, #nolint: object_usage
+      TE, #nolint: object_usage
+      SE = seTE, #nolint: object_usage
+      `2.5%` = lower, #nolint: object_usage
+      `97.5%` = upper #nolint: object_usage
+    )
+  # Rename mean to the outcome measure
+  names(model_output)[names(model_output) == "TE"] <- outcome_measure
+  return(model_output)
 }

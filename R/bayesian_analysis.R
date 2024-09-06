@@ -123,9 +123,32 @@ fit_model <- function(
   }
 }
 
+#' @title Get Bayesian Sampler Diagnostics
+#' @description Returns the sampler diagnostics from a fitter STAN model
+#' @param stan_fit a fitted STAN model
+#' @return a data.frame containing divergent transitions
+#' and iterations which exceeded the max treedepth
+#' @details Internal function to get sampler diagnostics from
+#' a fitted stan model, categorising them as good or bad
+#' @examples
+#' \dontrun{
+#' if(interactive()){
+#'  get_sampler_diagnostics(model)
+#'  }
+#' }
+#' @seealso
+#'  \code{\link[rstan]{check_hmc_diagnostics}}
+#'  \code{\link[dplyr]{case_when}}
+#' @rdname get_sampler_diagnostics
+#' @importFrom rstan get_num_divergent get_num_max_treedepth
+#' @importFrom dplyr case_when
 get_sampler_diagnostics <- function(stan_fit) {
+  # Get the number of divergent transitions
   no_divergent <- rstan::get_num_divergent(stan_fit)
+  # Get the number of iterations which exceeded the max tree depth
   no_tree_depth <- rstan::get_num_max_treedepth(stan_fit)
+  # Return as a data.frame, categorising them as good or bad
+  # if they exceeded 1.
   return(
     data.frame(
       Info = c(
@@ -139,11 +162,11 @@ get_sampler_diagnostics <- function(stan_fit) {
       Category = c(
         dplyr::case_when(
           no_divergent < 1 ~ "good",
-          no_divergent > 1 ~ "bad"
+          no_divergent >= 1 ~ "bad"
         ),
         dplyr::case_when(
           no_tree_depth < 1 ~ "good",
-          no_tree_depth > 1 ~ "bad"
+          no_tree_depth >= 1 ~ "bad"
         )
       )
     )
@@ -178,7 +201,7 @@ get_pars <- function(random_effects) {
       )
     )
   }
-  return (
+  return(
     c(
       "mu",
       "d"
@@ -186,13 +209,43 @@ get_pars <- function(random_effects) {
   )
 }
 
+#' @title Get Rhat Diagnostics
+#' @description Produces a tibble of Rhat diagnostics
+#' @param stan_fit Fitted Stan Model
+#' @param random_effects BOOLEAN was the model fit with
+#' random effects?
+#' @return tibble of Rhat diagnostics
+#' @details Produces a tibble of Rhat diagnostics for parameters
+#' dependant on whether or not the model used random effects
+#' including the Rhat values and there respective category:
+#' good: <1.05
+#' borderline: ≥1.05 ≤1.10
+#' bad > 1.10
+#' @examples
+#' \dontrun{
+#' if(interactive()){
+#'    get_rhat_diagnostics(
+#'      model_fit,
+#'      TRUE
+#'    )
+#'  }
+#' }
+#' @seealso
+#'  \code{\link[rstan]{character(0)}}
+#'  \code{\link[dplyr]{reexports}}, \code{\link[dplyr]{case_when}}
+#' @rdname get_rhat_diagnostics
+#' @importFrom rstan summary
+#' @importFrom dplyr tibble case_when
 get_rhat_diagnostics <- function(stan_fit, random_effects) {
+  # Get the relevent stan parameters
   pars <- get_pars(random_effects)
+  # Extract the RHATS (rounding to 2dp)
   rhats <- round(
     rstan::summary(
       stan_fit, pars = pars
     )$summary[, "Rhat"], 2
   )
+  # Return as tibble categorising based on thresholds
   return(
     dplyr::tibble(
       Parameter = names(rhats),
@@ -206,12 +259,32 @@ get_rhat_diagnostics <- function(stan_fit, random_effects) {
   )
 }
 
-get_denisty_plots <- function(
+#' @title Get density plots
+#' @description Get the density plots from a fitted STAN model.
+#' @param stan_fit A fitted STAN model
+#' @param random_effects Whether the model was fit with random effects
+#' @param ncol Number of columns per row of plots, Default: 5
+#' @return A ggplot2 object of density plots
+#' @details Returns a ggplot2 object of density plots
+#' from a given fitted STAN model.
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  get_density_plots(stan_fit, TRUE)
+#'  }
+#' }
+#' @seealso
+#'  \code{\link[rstan]{Plots}}
+#' @rdname get_density_plots
+#' @importFrom rstan stan_dens
+get_density_plots <- function(
   stan_fit,
   random_effects,
   ncol = 5
 ) {
+  # Get the model parametes of interest
   pars <- get_pars(random_effects)
+  # Return the density plots
   return(
     rstan::stan_dens(
       stan_fit,
@@ -220,15 +293,71 @@ get_denisty_plots <- function(
   )
 }
 
+#' @title Get Trace Plots
+#' @description Get the trace plots from a fitted STAN model.
+#' @param stan_fit A fitted STAN model
+#' @param random_effects Whether the model was fit with random effects
+#' @return A ggplot2 object of trace plots
+#' @details Returns a ggplot3 object of trace plots
+#' from a given STAN model.
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  get_tract_plots(stan_fit, TRUE)
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[rstan]{Plots}}
+#' @rdname get_trace_plots
+#' @export 
+#' @importFrom rstan stan_trace
 get_trace_plots <- function(
   stan_fit,
   random_effects
 ) {
+  # Get the model parametes of interest
   pars <- get_pars(random_effects)
+  # Return the trace plots
   return(
     rstan::stan_trace(
       stan_fit,
       pars = pars
     )
   )
+}
+
+get_bayes_model_output <- function(
+  data_type,
+  outcome_measure,
+  model
+) {
+  `%>%` <- magrittr::`%>%`
+  # Extract components for naming
+  components <- model$components
+  # Save the summary as a dataframe
+  stan_summary <- as.data.frame(
+    rstan::summary(model$fit, pars = c("d"))$summary
+  )
+  # Set the row names to the components
+  row.names(stan_summary) <- components
+  # Convert rownames to column and drop unnessasary columns
+  stan_summary <- stan_summary %>%
+    tibble::rownames_to_column(var = "Component") %>%
+    dplyr::select(
+      Component, #nolint object_usage
+      mean, #nolint object_usage
+      SD = sd, #nolint object_usage
+      `2.5%`, #nolint object_usage
+      `97.5%` #nolint object_usage
+    )
+  # Log the mean if binary
+  if (data_type == "binary") {
+    stan_summary <- stan_summary %>%
+      dplyr::mutate(
+        mean = exp(mean)
+      )
+  }
+  # Rename mean to the outcome measure
+  names(stan_summary)[names(stan_summary) == "mean"] <- outcome_measure
+  return(stan_summary)
 }

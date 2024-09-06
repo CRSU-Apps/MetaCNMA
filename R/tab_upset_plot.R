@@ -44,7 +44,7 @@ upset_plot_tab_server <- function(
           output$plot_title <- NULL
           output$upset_plot <- NULL
           is_rendered(FALSE)
-          print(tab())
+          #print(tab())
           shiny::req(
             data_reactives$is_data_formatted(),
             cancelOutput = TRUE

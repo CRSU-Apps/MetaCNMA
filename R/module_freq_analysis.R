@@ -13,8 +13,16 @@ freq_analysis_server <- function( # nolint: cyclocomp_linter.
 
       freq_reactives$pairwise <- shiny::reactive(
         if (
-          !data_reactives$is_data_formatted() ||
-            !freq_options$options_loaded()
+          !freq_options$options_loaded() ||
+            !data_reactives$is_data_formatted() ||
+            !check_outcome_measure(
+              data_reactives$data_type(),
+              freq_options$summary_measure()
+            ) ||
+            !check_reference_component(
+              data_reactives$reference_component(),
+              data_reactives$components()
+            )
         ) {
           return(NULL)
         } else {
@@ -51,11 +59,11 @@ freq_analysis_server <- function( # nolint: cyclocomp_linter.
       freq_reactives$model <- shiny::reactive(
         if (
           is.null(freq_reactives$is_network_connected())
-          || is.null(data_reactives$reference_component)
+          || is.null(data_reactives$reference_component())
         ) {
           return(NULL)
         } else {
-          print(data_reactives$reference_component())
+          #print(data_reactives$reference_component())
           return(
             run_freq( # nolint: object_name
               freq_reactives$pairwise(),

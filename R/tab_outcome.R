@@ -35,15 +35,15 @@ model_outcome_tab_server <- function(
         model_options$update_reactive(TRUE)
         model_options$update_reactive(FALSE)
       }) %>% shiny::bindEvent(
-        data_reactives$data(),
         data_reactives$data_type(),
+        data_reactives$data(),
         data_reactives$is_default_data(),
         data_reactives$reference_component(),
         ignoreInit = TRUE
       )
 
       shiny::observe({
-        print("Waiting on data_type and is_default_data")
+        #print("Waiting on data_type and is_default_data")
 
         output$outcome_measure <- shiny::renderText("No Data Loaded")
         output$desirable <- NULL
@@ -51,16 +51,16 @@ model_outcome_tab_server <- function(
         output$outcome_name <- NULL
 
         shiny::req(
-          !is.null(data_reactives$data()),
           !is.null(data_reactives$data_type()),
+          !is.null(data_reactives$data()),
           !is.null(data_reactives$is_default_data()),
           !is.null(data_reactives$reference_component()),
           cancelOutput = TRUE
         )
 
-        print("Rendering outcome measure radio")
+        #print("Rendering outcome measure radio")
 
-        print(data_reactives$data_type())
+        #print(data_reactives$data_type())
 
         output$outcome_measure <- shiny::renderUI(
           shiny::radioButtons(
@@ -190,16 +190,17 @@ model_outcome_tab_server <- function(
       model_options$options_loaded <- shiny::reactive({
         if (
           any(
+            model_options$update_reactive(),
             is.null(input$outcome_measure),
             is.null(input$desirable),
             is.null(input$random_effects),
             is.null(model_options$outcome_name())
           )
         ) {
-          print("Options Not Loaded")
+          #print("Options Not Loaded")
           return(FALSE)
         } else {
-          print("Options Loaded")
+          #print("Options Loaded")
           return(TRUE)
         }
       })
@@ -217,6 +218,28 @@ model_outcome_tab_server <- function(
                   "#",
                   ns("outcome_measure"),
                   " [type='radio'][value='smd']"
+                )
+            )
+          )
+          shinyjs::delay(
+            5,
+            shinyjs::disable(
+              selector =
+                paste0(
+                  "#",
+                  ns("outcome_measure"),
+                  " [type='radio'][value='rr']"
+                )
+            )
+          )
+          shinyjs::delay(
+            5,
+            shinyjs::disable(
+              selector =
+                paste0(
+                  "#",
+                  ns("outcome_measure"),
+                  " [type='radio'][value='rd']"
                 )
             )
           )

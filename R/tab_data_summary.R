@@ -34,7 +34,7 @@ data_summary_tab_server <- function(
 
       shiny::observe({
         if (tab() == id) {
-          print(tab())
+          #print(tab())
           output$warning <- NULL
           output$info <- NULL
           output$data_summary <- shiny::renderText("Waiting for data")

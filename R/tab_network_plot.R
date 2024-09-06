@@ -28,7 +28,7 @@ network_plot_tab_server <- function(
           output$warning <- NULL
           output$info <- NULL
           output$vis_network <- NULL
-          print(tab())
+          #print(tab())
           shiny::req(
             freq_options$options_loaded(),
             !is.null(freq_reactives$model()),

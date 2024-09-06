@@ -1,4 +1,6 @@
-# This file contains functions used for validation of the data
+#################################################################
+##                Functions for Data Validation                ##
+#################################################################
 
 #' @title Valid File Format
 #' @description Checks if the given file extention is valid
@@ -31,7 +33,7 @@ is_valid_file_format <- function(file_ext) {
 #' }
 #' @rdname is_file_exists
 is_file_exists <- function(file_path) {
-  print(paste0("Checking file ", file_path, " exists"))
+  #print(paste0("Checking file ", file_path, " exists"))
   return(file.exists(file_path))
 }
 
@@ -116,8 +118,11 @@ validate_column_names <- function(df, required_names) {
 }
 
 split_wide_columns <- function(columns) {
+  # Forward declare cols list (list of column names)
   cols <- list()
+  # forward declare col_numbers list (list of numbers in column names)
   col_numbers <- list()
+  # loop through columns
   for (col in columns) {
     # Get the column name (before the .)
     col_name <- sub("(.+)\\.(\\d+)", "\\1", col)
@@ -127,11 +132,14 @@ split_wide_columns <- function(columns) {
     cols <- append(cols, col_name)
     col_numbers <- append(col_numbers, as.numeric(col_number))
   }
+  # The number of arms will be the maximum of the column numbers
   n_arms <- max(as.numeric(col_numbers))
+  # return the lists and number of arms
   return(list(cols = cols, col_numbers = col_numbers, n_arms = n_arms))
 }
 
 get_wide_columns <- function(column_names, required_columns) {
+  # get only the columns needed for wide format
   wide_columns <- required_columns[grep("(.+)\\.(\\d+)", required_columns)]
   # get the column names without the .n
   return(gsub("(.+)\\.(\\d+)", "\\1", wide_columns))
@@ -213,26 +221,26 @@ validate_continuous_wide <- function(df) {
 
 validate_input <- function(input_file, type) { # nolint: cyclocomp
   tryCatch({
-    print("Checking input file")
+    #print("Checking input file")
     if (is.null(input_file)) {
-      print("Null input file")
+      #print("Null input file")
       error_alert("There is a problem with the uploaded file please try again") # nolint: object_name
       return(FALSE)
     }
     if (is.null(type)) {
-      print("Null Type")
+      #print("Null Type")
       error_alert("An internal error occured, please try again, if this problem persist please contact the developers", "Error #TP001") # nolint: object_name
       return(FALSE)
     }
 
     if (is.null(input_file$datapath)) {
-      print("Null datapath")
+      #print("Null datapath")
       error_alert("An error occured, please try again, if this problem persist please contact the developers", "Error #FU001") # nolint: object_name
       return(FALSE)
     }
 
     if (!is_file_exists(input_file$datapath)) {
-      print("file doesn't exist")
+      #print("file doesn't exist")
       error_alert("An internal rror occured, please try again, if this problem persist please contact the developers", "Error #FU002") # nolint: object_name
       return(FALSE)
     }
@@ -245,20 +253,20 @@ validate_input <- function(input_file, type) { # nolint: cyclocomp
     df <- rio::import(input_file$datapath)
 
     if (is.null(df)) {
-      print("Null Data Frame")
+      #print("Null Data Frame")
       error_alert("An internal error occured, the data appears to be empty, please try again, if this problem consiste please contact the developers", "Error #FU003") # nolint: object_name
       return(FALSE)
     }
 
     if (is_wide(df)) {
-      print("Assuming Wide Format")
+      #print("Assuming Wide Format")
       if (type == "binary") {
         return(validate_binary_wide(df))
       } else if (type == "continuous") {
         return(validate_continuous_wide(df))
       }
     } else {
-      print("Assuming long Format")
+      #print("Assuming long Format")
       if (type == "binary") {
         return(validate_binary_long(df))
       } else if (type == "continuous") {
@@ -270,4 +278,36 @@ validate_input <- function(input_file, type) { # nolint: cyclocomp
     error_alert(e$message) # nolint: object_name
     return(FALSE)
   })
+}
+
+check_outcome_measure <- function(
+  data_type,
+  outcome_measure
+) {
+  if (is.null(data_type) || is.null(outcome_measure)) {
+    return(FALSE)
+  } else if (data_type == "continuous") {
+    if (outcome_measure %in% c("MD", "SMD")){
+      return(TRUE)
+    }
+  } else if (data_type == "binary") {
+    if (outcome_measure %in% c("OR", "RR", "RD")) {
+      return(TRUE)
+    }
+  }
+
+  return(FALSE)
+
+}
+
+check_reference_component <- function(
+  reference_component,
+  components
+) {
+  if (is.null(reference_component) || is.null(components)) {
+    return(FALSE)
+  } else if (reference_component %in% components) {
+    return(TRUE)
+  }
+  return(FALSE)
 }

@@ -28,7 +28,8 @@ shinyUI(
         content =
           "https://raw.githubusercontent.com/CRSU-Apps/MetaDTA/main/www/images/MetaCNMALogo.png" # nolint
       ),
-      cookie_ui(id = "cookies")
+      # GDPR notice UI (R/module_analytics.R)
+      GdprUi(id = "cookies")
     ),
 
     # Set up Shinyjs
