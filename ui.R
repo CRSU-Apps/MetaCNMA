@@ -53,6 +53,9 @@ shinyUI(
         id = "sidebar" # ID for access from modules
       ),
       body = shinydashboard::dashboardBody(
+        message_alert(
+          "MetaCNMA is currently in BETA"
+        ),
         render_body() # Render body from R/render_body.R
       ),
       controlbar = shinydashboardPlus::dashboardControlbar(
