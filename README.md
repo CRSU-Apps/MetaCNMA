@@ -1,4 +1,5 @@
 # MetaCNMA
+[![DOI](https://zenodo.org/badge/630833804.svg)](https://zenodo.org/doi/10.5281/zenodo.13718868)
 MetaCNMA is an interactive application written in R using the RShiny package.
 
 Currently the application is in alpha development so only core functionality is present.
