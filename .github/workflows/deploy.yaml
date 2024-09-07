@@ -42,14 +42,14 @@ jobs:
       - name: Print deployment type
         run: |
           echo "Deploying to: $appName"
-      - name: Install gcc 11
-        run: |
-          sudo apt update
-          sudo apt install gcc-11 g++-11 -y
-          sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 110 --slave /usr/bin/g++ g++ /usr/bin/g++-11 --slave /usr/bin/gcov gcov /usr/bin/gcov-11
-      - name: Install package system dependencies
-        run: |
-          sudo apt install libcurl4-openssl-dev libgdal-dev libfribidi-dev libharfbuzz-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev -y
+      #- name: Install gcc 11
+      #  run: |
+      #    sudo apt update
+      #    sudo apt install gcc-11 g++-11 -y
+      #    sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 110 --slave /usr/bin/g++ g++ /usr/bin/g++-11 --slave /usr/bin/gcov gcov /usr/bin/gcov-11
+      #- name: Install package system dependencies
+      #  run: |
+      #    sudo apt install libcurl4-openssl-dev libgdal-dev libfribidi-dev libharfbuzz-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev -y
       # Checkout the repo
       - uses: actions/checkout@v4
       # Setup R (4.4.0)
@@ -58,10 +58,10 @@ jobs:
           r-version: '4.4.0'
       # Setup and install dependencies using renv
       - uses: r-lib/actions/setup-renv@v2
-      - name: Check GCC Version
-        run: |
-          gcc --version
-          if ! gcc --version | grep -q 11; then exit 1; fi
+      #- name: Check GCC Version
+      #  run: |
+      #    gcc --version
+      #    if ! gcc --version | grep -q 11; then exit 1; fi
       # Deploy using rsconnect
       - name: Deploy
         run: |
