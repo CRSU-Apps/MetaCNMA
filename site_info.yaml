@@ -1,5 +1,5 @@
 title: MetaCNMA
-version: V0.2.0
+version: V0.2.1
 accepted_file_formats: [csv, xlsx]
 required_binary_long_columns: [Study, Components, Events, Total]
 required_continuous_long_columns: [Study, Components, Mean, SD, Total]
