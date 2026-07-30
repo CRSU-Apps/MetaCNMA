@@ -1,6 +1,6 @@
 {
   "R": {
-    "Version": "4.3.2",
+    "Version": "4.4.2",
     "Repositories": [
       {
         "Name": "BioCsoft",
@@ -73,7 +73,6 @@
       "Package": "BiocVersion",
       "Version": "3.18.1",
       "Source": "Bioconductor",
-      "Repository": "Bioconductor 3.18",
       "Requirements": [
         "R"
       ],
@@ -522,7 +521,7 @@
     },
     "boot": {
       "Package": "boot",
-      "Version": "1.3-31",
+      "Version": "1.3-32",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -530,7 +529,7 @@
         "graphics",
         "stats"
       ],
-      "Hash": "de2a4646c18661d6a0a08ec67f40b7ed"
+      "Hash": "d39b147eb7fe9df64a1a55f72346360c"
     },
     "brew": {
       "Package": "brew",
@@ -1735,7 +1734,7 @@
     },
     "lattice": {
       "Package": "lattice",
-      "Version": "0.22-6",
+      "Version": "0.22-7",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -1746,7 +1745,7 @@
         "stats",
         "utils"
       ],
-      "Hash": "cc5ac1ba4c238c7ca9fa6a87ca11a7e2"
+      "Hash": "934f30aea6442867f57a610034ab06d3"
     },
     "lazyeval": {
       "Package": "lazyeval",
@@ -1946,7 +1945,7 @@
     },
     "meta": {
       "Package": "meta",
-      "Version": "7.0-0",
+      "Version": "8.0-2",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -1964,7 +1963,7 @@
         "stringr",
         "xml2"
       ],
-      "Hash": "35bc1ee36895e9bd3c003bbe28062a26"
+      "Hash": "97c6e09d7dd95f93d4d02bcee0dca46f"
     },
     "metadat": {
       "Package": "metadat",
@@ -2002,7 +2001,7 @@
     },
     "mgcv": {
       "Package": "mgcv",
-      "Version": "1.9-1",
+      "Version": "1.9-3",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -2015,7 +2014,7 @@
         "stats",
         "utils"
       ],
-      "Hash": "110ee9d83b496279960e162ac97764ce"
+      "Hash": "51fcbccd59569cdad6da6b8e49cdf4f2"
     },
     "mime": {
       "Package": "mime",
@@ -2078,20 +2077,38 @@
       ],
       "Hash": "4fd8900853b746af55b81fda99da7695"
     },
+    "mvtnorm": {
+      "Package": "mvtnorm",
+      "Version": "1.4-2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "stats",
+        "utils"
+      ],
+      "Hash": "f12b9432ec251666c49e7d01f1aff3c7"
+    },
     "netmeta": {
       "Package": "netmeta",
-      "Version": "2.9-0",
+      "Version": "3.0-2",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
         "MASS",
+        "Matrix",
         "R",
+        "colorspace",
+        "dplyr",
         "ggplot2",
+        "grid",
         "magic",
+        "magrittr",
         "meta",
-        "metafor"
+        "metafor",
+        "mvtnorm"
       ],
-      "Hash": "c4c6f63cbd07086067e64bbd70db9c28"
+      "Hash": "9fcb1d18c44355a633c2c88dccd5deaa"
     },
     "nlme": {
       "Package": "nlme",
