@@ -202,6 +202,7 @@ get_study_components <- function(data, components) {
   components <- levels(as.factor(components))
   components <- paste(components, collapse = "+")
   components <- strsplit(components, "\\+")[[1]]
+  components <- trimws(components)
   # Convert to factor (for speed)
   components <- as.factor(components)
   # Use levels to get unique components
@@ -392,6 +393,8 @@ get_freq_model_output <- function(
     tibble::rownames_to_column(var = "Component")
   if (data_type == "binary") {
     model_output$TE <- exp(model_output$TE)
+    model_output$lower <- exp(model_output$lower)
+    model_output$upper <- exp(model_output$upper)
   }
   model_output <- model_output %>%
     dplyr::select(
