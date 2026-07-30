@@ -21,7 +21,7 @@ freq_pairwise <- function(df, data_type, summary_measure) {
 
 run_pairwise_continuous <- function(df, summary_measure = "MD") {
 
-  netmeta::pairwise(
+  meta::pairwise(
     treat = components, # nolint: object_name
     n = total, # nolint: object_name
     mean = mean,
@@ -35,7 +35,7 @@ run_pairwise_continuous <- function(df, summary_measure = "MD") {
 
 run_pairwise_binary <- function(df, summary_measure = "OR") {
 
-  netmeta::pairwise(
+  meta::pairwise(
     treat = components, # nolint: object_name
     n = total, # nolint: object_name
     event = events, # nolint: object_name
@@ -202,6 +202,7 @@ get_study_components <- function(data, components) {
   components <- levels(as.factor(components))
   components <- paste(components, collapse = "+")
   components <- strsplit(components, "\\+")[[1]]
+  components <- trimws(components)
   # Convert to factor (for speed)
   components <- as.factor(components)
   # Use levels to get unique components
@@ -224,6 +225,7 @@ get_study_components <- function(data, components) {
       current_components <- tmp_df[i, ]$components
       current_components <- paste(current_components, collapse = "+")
       current_components <- strsplit(current_components, "\\+")[[1]]
+      current_components <- trimws(current_components)
       tmp_components[component] <- ifelse(
         component %in% current_components, 1, 0
       )
@@ -235,7 +237,6 @@ get_study_components <- function(data, components) {
 
 get_correlation_plot <- function(data, components) {
   study_components <- get_study_components(data, components)
-
   y <- cor(study_components)
   return(
     corrplot::corrplot(
@@ -392,6 +393,8 @@ get_freq_model_output <- function(
     tibble::rownames_to_column(var = "Component")
   if (data_type == "binary") {
     model_output$TE <- exp(model_output$TE)
+    model_output$lower <- exp(model_output$lower)
+    model_output$upper <- exp(model_output$upper)
   }
   model_output <- model_output %>%
     dplyr::select(

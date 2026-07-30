@@ -354,7 +354,9 @@ get_bayes_model_output <- function(
   if (data_type == "binary") {
     stan_summary <- stan_summary %>%
       dplyr::mutate(
-        mean = exp(mean)
+        mean = exp(mean),
+        `2.5%` = exp(`2.5%`),
+        `97.5%` = exp(`97.5%`)
       )
   }
   # Rename mean to the outcome measure
